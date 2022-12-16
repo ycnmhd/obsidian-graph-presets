@@ -1,3 +1,3 @@
-import { MyPlugin } from "./plugin";
+import { GraphPresets } from "./graph-presets/graph-presets";
 
-export default MyPlugin;
+export default GraphPresets;
