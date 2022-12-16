@@ -1,11 +1,17 @@
 import { GraphSettings } from "src/types/graph-settings";
 
-export type PluginSettings = {
+export type GraphPresetsSettings = {
 	presets: {
-		[key: string]: GraphSettings;
+		[key: string]: {
+			settings: GraphSettings;
+			meta: {
+				created: number;
+				updated: number;
+			};
+		};
 	};
 };
 
-export const DEFAULT_SETTINGS: PluginSettings = {
+export const DEFAULT_SETTINGS: GraphPresetsSettings = {
 	presets: {},
 };

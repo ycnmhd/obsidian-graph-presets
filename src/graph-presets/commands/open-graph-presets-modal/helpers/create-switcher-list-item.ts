@@ -27,14 +27,22 @@ export const createSwitcherListItem = ({
 	const controls = listItem.createEl("div", {
 		cls: "setting-item-control",
 	});
-	info.createEl("div", {
-		text: presetName,
-		cls: "setting-item-name",
-	});
-	info.createEl("div", {
-		text: "Graph preset",
-		cls: "setting-item-description",
-	});
+	if (presetName) {
+		info.createEl("div", {
+			text: presetName,
+			cls: "setting-item-name",
+		});
+		const description = info.createEl("div", {
+			cls: "setting-item-description",
+		});
+		
+		
+		description.createEl("div", {
+			text: `Last updated ${new Date(
+				presets[presetName].meta.updated
+			).toLocaleString()}.`,
+		});
+	}
 
 	if (state.editing) {
 		controls.createEl("input", {
@@ -49,12 +57,20 @@ export const createSwitcherListItem = ({
 
 		saveButton.addEventListener("click", async () => {
 			const settings = await getGraphSettings();
-			const existingSettings = presets[presetName];
+			const existingPreset = presets[presetName];
+			delete presets[presetName];
+
 			const input = listItem.querySelector("input") as HTMLInputElement;
 
 			const value = input.value;
 			if (value) {
-				plugin.settings.presets[value] = existingSettings || settings;
+				plugin.settings.presets[value] = {
+					settings,
+					meta: {
+						created: existingPreset?.meta.created || Date.now(),
+						updated: Date.now(),
+					},
+				};
 				await plugin.saveSettings();
 				new Notice(`"${value}" saved`);
 				listItem.empty();
@@ -69,6 +85,7 @@ export const createSwitcherListItem = ({
 		cancelButton.innerHTML = svgs["x-circle"];
 		cancelButton.addEventListener("click", () => {
 			listItem.empty();
+			delete presets[presetName];
 			createSwitcherListItem({
 				listItem,
 				presetName: presetName,
@@ -80,8 +97,8 @@ export const createSwitcherListItem = ({
 			cls: "mod-cta",
 		});
 		applyButton.addEventListener("click", async () => {
-			const settings = presets[presetName];
-			await saveGraphSettings(settings);
+			const preset = presets[presetName];
+			await saveGraphSettings(preset.settings);
 			new Notice(`"${presetName}" applied`);
 		});
 		createThreeDotsMenu({ listItem, presetName: presetName });

@@ -1,6 +1,9 @@
 import { Plugin } from "obsidian";
 import { openGraphPresetsModal } from "./commands/open-graph-presets-modal/open-graph-presets-modal";
-import { DEFAULT_SETTINGS, PluginSettings } from "./settings/default-settings";
+import {
+	DEFAULT_SETTINGS,
+	GraphPresetsSettings,
+} from "./settings/default-settings";
 
 export class GraphPresets extends Plugin {
 	private static instance: GraphPresets;
@@ -8,7 +11,7 @@ export class GraphPresets extends Plugin {
 		return this.instance;
 	}
 
-	settings: PluginSettings;
+	settings: GraphPresetsSettings;
 
 	async onload() {
 		GraphPresets.instance = this;

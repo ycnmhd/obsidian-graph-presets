@@ -8,10 +8,7 @@ type Props = {
 	listItem: HTMLElement;
 	presetName: string;
 };
-export const createThreeDotsMenu = ({
-	listItem,
-	presetName
-}: Props) => {
+export const createThreeDotsMenu = ({ listItem, presetName }: Props) => {
 	const plugin = GraphPresets.getInstance();
 	const controls = listItem.querySelector(
 		".setting-item-control"
@@ -25,8 +22,19 @@ export const createThreeDotsMenu = ({
 			item.setIcon("edit");
 			item.onClick(async () => {
 				const settings = await getGraphSettings();
-				plugin.settings.presets[presetName] = settings;
+				plugin.settings.presets[presetName] = {
+					meta: {
+						...plugin.settings.presets[presetName].meta,
+						updated: Date.now(),
+					},
+					settings,
+				};
 				await plugin.saveSettings();
+				listItem.empty();
+				createSwitcherListItem({
+					listItem,
+					presetName: presetName,
+				});
 				new Notice(`Preset "${presetName}" updated`);
 			});
 		});
