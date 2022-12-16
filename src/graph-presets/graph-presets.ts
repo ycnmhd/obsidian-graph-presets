@@ -1,4 +1,5 @@
-import { Plugin } from "obsidian";
+import { addIcon, Plugin } from "obsidian";
+import { svgs } from "src/assets/svgs";
 import { openGraphPresetsModal } from "./commands/open-graph-presets-modal/open-graph-presets-modal";
 import {
 	DEFAULT_SETTINGS,
@@ -18,8 +19,8 @@ export class GraphPresets extends Plugin {
 		await this.loadSettings();
 
 		this.addCommand(openGraphPresetsModal);
-
-		this.addRibbonIcon("dice", "Sample Plugin", () => {
+		addIcon("graph-presets", svgs["graph-presets"]);
+		this.addRibbonIcon("graph-presets", "Graph presets", () => {
 			const callback = openGraphPresetsModal.callback as () => void;
 			callback();
 		});
