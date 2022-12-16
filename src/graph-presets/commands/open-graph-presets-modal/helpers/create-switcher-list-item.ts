@@ -77,10 +77,10 @@ export const createSwitcherListItem = async ({
 			const value = input.value;
 			if (value) {
 				plugin.settings.presets[value] = {
-					settings,
+					settings: existingPreset?.settings || settings,
 					meta: {
 						created: existingPreset?.meta.created || Date.now(),
-						updated: Date.now(),
+						updated: existingPreset?.meta.updated || Date.now(),
 					},
 				};
 				await plugin.saveSettings();
