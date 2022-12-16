@@ -24,7 +24,6 @@ export const openGraphPresetsModal: Command = {
 					renderList: renderList,
 				})
 			);
-			// add a create button to the modal
 		};
 		createCreateButton({
 			list,

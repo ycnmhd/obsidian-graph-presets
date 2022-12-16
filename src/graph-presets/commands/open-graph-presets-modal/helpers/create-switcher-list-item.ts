@@ -97,13 +97,16 @@ export const createSwitcherListItem = async ({
 		const cancelButton = controls.createEl("button", {});
 		cancelButton.innerHTML = svgs["x-circle"];
 		cancelButton.addEventListener("click", () => {
-			listItem.empty();
-			delete presets[presetName];
-			createSwitcherListItem({
-				listItem,
-				presetName: presetName,
-				renderList,
-			});
+			if (!presetName) {
+				listItem.remove();
+			} else {
+				listItem.empty();
+				createSwitcherListItem({
+					listItem,
+					presetName: presetName,
+					renderList,
+				});
+			}
 		});
 	} else {
 		const applyButton = controls.createEl("button", {
