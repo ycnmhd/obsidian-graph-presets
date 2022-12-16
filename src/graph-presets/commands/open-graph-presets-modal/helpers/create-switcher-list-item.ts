@@ -9,13 +9,15 @@ type Props = {
 	listItem: HTMLElement;
 	presetName: string;
 	editing?: boolean;
+	renderList: () => void;
 };
 
 type State = { editing: boolean };
-export const createSwitcherListItem = ({
+export const createSwitcherListItem = async ({
 	listItem,
 	presetName,
 	editing,
+	renderList,
 }: Props) => {
 	const state: State = { editing: editing || presetName === "" };
 	const plugin = GraphPresets.getInstance();
@@ -28,19 +30,29 @@ export const createSwitcherListItem = ({
 		cls: "setting-item-control",
 	});
 	if (presetName) {
-		info.createEl("div", {
+		const isSelected =
+			JSON.stringify(presets[presetName]?.settings) ===
+			JSON.stringify(await getGraphSettings());
+		const name = info.createEl("div", {
 			text: presetName,
 			cls: "setting-item-name",
 		});
+		if (isSelected) {
+			const span = name.createEl("span");
+			span.innerHTML = svgs["check-circle"];
+		}
+
 		const description = info.createEl("div", {
 			cls: "setting-item-description",
 		});
-		
-		
+
 		description.createEl("div", {
 			text: `Last updated ${new Date(
 				presets[presetName].meta.updated
 			).toLocaleString()}.`,
+		});
+		description.createEl("div", {
+			text: `Search query: "${presets[presetName].settings.search}"`,
 		});
 	}
 
@@ -77,6 +89,7 @@ export const createSwitcherListItem = ({
 				createSwitcherListItem({
 					listItem,
 					presetName: value,
+					renderList: renderList,
 				});
 			}
 		});
@@ -89,6 +102,7 @@ export const createSwitcherListItem = ({
 			createSwitcherListItem({
 				listItem,
 				presetName: presetName,
+				renderList,
 			});
 		});
 	} else {
@@ -99,8 +113,9 @@ export const createSwitcherListItem = ({
 		applyButton.addEventListener("click", async () => {
 			const preset = presets[presetName];
 			await saveGraphSettings(preset.settings);
+			renderList();
 			new Notice(`"${presetName}" applied`);
 		});
-		createThreeDotsMenu({ listItem, presetName: presetName });
+		createThreeDotsMenu({ listItem, presetName: presetName, renderList });
 	}
 };

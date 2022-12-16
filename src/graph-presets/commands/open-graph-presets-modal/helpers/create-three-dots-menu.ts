@@ -7,8 +7,9 @@ import { createSwitcherListItem } from "./create-switcher-list-item";
 type Props = {
 	listItem: HTMLElement;
 	presetName: string;
+	renderList: () => void;
 };
-export const createThreeDotsMenu = ({ listItem, presetName }: Props) => {
+export const createThreeDotsMenu = ({ listItem, presetName, renderList }: Props) => {
 	const plugin = GraphPresets.getInstance();
 	const controls = listItem.querySelector(
 		".setting-item-control"
@@ -34,6 +35,7 @@ export const createThreeDotsMenu = ({ listItem, presetName }: Props) => {
 				createSwitcherListItem({
 					listItem,
 					presetName: presetName,
+					renderList,
 				});
 				new Notice(`Preset "${presetName}" updated`);
 			});
@@ -48,6 +50,7 @@ export const createThreeDotsMenu = ({ listItem, presetName }: Props) => {
 					listItem,
 					presetName: presetName,
 					editing: true,
+					renderList,
 				});
 			});
 		});

@@ -4,9 +4,10 @@ import { createSwitcherListItem } from "./create-switcher-list-item";
 type Props = {
 	list: HTMLElement;
 	modal: Modal;
+	renderList: () => void;
 };
 
-export const createCreateButton = ({ list, modal }: Props) => {
+export const createCreateButton = ({ list, modal, renderList }: Props) => {
 	const listItem = modal.contentEl.createEl("div", {
 		cls: "setting-item",
 	});
@@ -23,6 +24,7 @@ export const createCreateButton = ({ list, modal }: Props) => {
 				cls: "setting-item",
 			}),
 			presetName: "",
+			renderList,
 		});
 	});
 };

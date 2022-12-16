@@ -40,6 +40,6 @@ esbuild
 		sourcemap: prod ? false : "inline",
 		treeShaking: true,
 		outfile:
-			"vault/.obsidian/plugins/graph-profile-switcher/main.js",
+			"vault/.obsidian/plugins/graph-presets/main.js",
 	})
 	.catch(() => process.exit(1));
