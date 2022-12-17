@@ -10,7 +10,7 @@ export const setGraphSettings = async (
 	await graph.disable();
 	await graph.enable();
 	if (graphIsOpen) {
-		await new Promise((res) => setTimeout(res, 300));
+		await new Promise((res) => setTimeout(res, 3000));
 		(app as any).commands.commands["graph:open"].callback();
 	}
 };
