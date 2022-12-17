@@ -1,5 +1,5 @@
 import { Modal } from "obsidian";
-import { createSwitcherListItem } from "./create-switcher-list-item";
+import { Preset } from "./presets-list/components/preset/preset";
 
 type Props = {
 	list: HTMLElement;
@@ -7,7 +7,7 @@ type Props = {
 	renderList: () => void;
 };
 
-export const createCreateButton = ({ list, modal, renderList }: Props) => {
+export const AddPreset = ({ list, modal, renderList }: Props) => {
 	const listItem = modal.contentEl.createEl("div", {
 		cls: "setting-item",
 	});
@@ -19,7 +19,7 @@ export const createCreateButton = ({ list, modal, renderList }: Props) => {
 		cls: "mod-cta",
 	});
 	createButton.addEventListener("click", async () => {
-		createSwitcherListItem({
+		Preset({
 			listItem: list.createEl("div", {
 				cls: "setting-item",
 			}),

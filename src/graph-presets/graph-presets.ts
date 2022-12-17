@@ -1,6 +1,7 @@
 import { addIcon, Plugin } from "obsidian";
 import { svgs } from "src/assets/svgs";
-import { openGraphPresetsModal } from "./commands/open-graph-presets-modal/open-graph-presets-modal";
+import { applyGraphPreset } from "./commands/apply-graph-preset";
+import { openGraphPresetsModal } from "./commands/open-graph-presets-modal";
 import {
 	DEFAULT_SETTINGS,
 	GraphPresetsSettings,
@@ -19,6 +20,7 @@ export class GraphPresets extends Plugin {
 		await this.loadSettings();
 
 		this.addCommand(openGraphPresetsModal);
+		this.loadPresetCommands();
 		addIcon("graph-presets", svgs["graph-presets"]);
 		this.addRibbonIcon("graph-presets", "Graph presets", () => {
 			const callback = openGraphPresetsModal.callback as () => void;
@@ -38,5 +40,12 @@ export class GraphPresets extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+		this.loadPresetCommands();
+	}
+
+	loadPresetCommands() {
+		applyGraphPreset().forEach((command) => {
+			this.addCommand(command);
+		});
 	}
 }
