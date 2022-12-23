@@ -10,9 +10,7 @@ export const PresetsList = ({ list, renderList }: Props) => {
 	const presets = plugin.settings.presets;
 	Object.keys(presets).forEach((presetName) =>
 		Preset({
-			listItem: list.createEl("div", {
-				cls: "setting-item",
-			}),
+			listItem: list.createEl("div", ),
 			presetName,
 			renderList,
 		})

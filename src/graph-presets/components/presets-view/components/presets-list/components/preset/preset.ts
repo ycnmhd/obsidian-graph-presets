@@ -5,6 +5,7 @@ import { RenderItem } from "./components/three-dots-menu/components/toggle-renam
 import { DeleteItem } from "./components/three-dots-menu/components/delete-preset";
 import { SavePreset } from "./components/save-preset";
 import { PresetLabel } from "./components/preset-label";
+import { PresetPreview } from "./components/preset-preview/preset-preview";
 
 type Props = {
 	listItem: HTMLElement;
@@ -19,6 +20,26 @@ export const Preset = async ({
 	editing,
 	renderList,
 }: Props) => {
+	const mainDiv = listItem.createEl("div", {
+		cls: "setting-item",
+	});
+	const previewDiv = listItem.createEl("div");
+	const info = mainDiv.createEl("div", {
+		cls: "setting-item-info",
+	});
+	const controls = mainDiv.createEl("div", {
+		cls: "setting-item-control",
+	});
+	const state = {
+		showPreview: false,
+	};
+	const togglePreview = () => {
+		state.showPreview = !state.showPreview;
+		if (state.showPreview)
+			PresetPreview({ containerEl: previewDiv, presetName });
+		else previewDiv.empty();
+		return state.showPreview;
+	};
 	const reRenderItem: RenderItem = (props = {}) => {
 		listItem.empty();
 		Preset({
@@ -31,13 +52,6 @@ export const Preset = async ({
 	const deleteItem: DeleteItem = () => {
 		listItem.remove();
 	};
-
-	const info = listItem.createEl("div", {
-		cls: "setting-item-info",
-	});
-	const controls = listItem.createEl("div", {
-		cls: "setting-item-control",
-	});
 
 	PresetLabel({ info, presetName });
 
@@ -62,7 +76,12 @@ export const Preset = async ({
 			presetName,
 		});
 	} else {
-		ApplyPreset({ controls, presetName, renderList });
+		ApplyPreset({
+			controls,
+			presetName,
+			renderList,
+			togglePreview,
+		});
 		ThreeDotsMenu({ deleteItem, listItem, presetName, reRenderItem });
 	}
 };

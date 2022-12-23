@@ -8,25 +8,41 @@ export interface ColorGroup {
 	color: Color;
 }
 
-export interface GraphSettings {
+export interface FilterOptions {
 	"collapse-filter": boolean;
 	search: string;
 	showTags: boolean;
 	showAttachments: boolean;
 	hideUnresolved: boolean;
 	showOrphans: boolean;
+}
+
+export interface ColorGroupOptions {
 	"collapse-color-groups": boolean;
 	colorGroups: ColorGroup[];
+}
+
+export interface DisplayOptions {
 	"collapse-display": boolean;
 	showArrow: boolean;
 	textFadeMultiplier: number;
 	nodeSizeMultiplier: number;
 	lineSizeMultiplier: number;
+}
+
+export interface ForceOptions {
 	"collapse-forces": boolean;
 	centerStrength: number;
 	repelStrength: number;
 	linkStrength: number;
 	linkDistance: number;
 	scale: number;
+}
+
+export interface GraphSettings
+	extends FilterOptions,
+		ColorGroupOptions,
+		DisplayOptions,
+		ForceOptions {
 	close: boolean;
 }
