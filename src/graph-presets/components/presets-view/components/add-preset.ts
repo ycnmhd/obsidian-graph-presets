@@ -1,14 +1,13 @@
-import { Modal } from "obsidian";
 import { Preset } from "./presets-list/components/preset/preset";
 
 type Props = {
 	list: HTMLElement;
-	modal: Modal;
+	bar: HTMLElement;
 	renderList: () => void;
 };
 
-export const AddPreset = ({ list, modal, renderList }: Props) => {
-	const listItem = modal.contentEl.createEl("div", {
+export const AddPreset = ({ list, bar, renderList }: Props) => {
+	const listItem = bar.createEl("div", {
 		cls: "setting-item",
 	});
 	const controls = listItem.createEl("div", {

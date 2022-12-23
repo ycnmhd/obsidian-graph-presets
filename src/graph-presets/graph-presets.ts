@@ -1,7 +1,11 @@
 import { addIcon, Plugin } from "obsidian";
-import { svgs } from "src/assets/svgs";
 import { applyGraphPreset } from "./commands/apply-graph-preset";
-import { openGraphPresetsModal } from "./commands/open-graph-presets-modal";
+import { openGraphPresetsView } from "./commands/open-graph-presets-view";
+import {
+	GraphPresetsItemView,
+	GraphPresetsItemViewIcon,
+	GraphPresetsItemViewType,
+} from "./components/presets-view/graph-presets-item-view";
 import {
 	DEFAULT_SETTINGS,
 	GraphPresetsSettings,
@@ -18,14 +22,15 @@ export class GraphPresets extends Plugin {
 	async onload() {
 		GraphPresets.instance = this;
 		await this.loadSettings();
-
-		this.addCommand(openGraphPresetsModal);
+		this.addCommand(openGraphPresetsView);
 		this.loadPresetCommands();
-		addIcon("graph-presets", svgs["graph-presets"]);
-		this.addRibbonIcon("graph-presets", "Graph presets", () => {
-			const callback = openGraphPresetsModal.callback as () => void;
-			callback();
-		});
+		addIcon(GraphPresetsItemViewIcon.name, GraphPresetsItemViewIcon.svg);
+
+		this.registerView(
+			GraphPresetsItemViewType,
+			(leaf) => new GraphPresetsItemView(leaf)
+		);
+		app.workspace.onLayoutReady(this.initView);
 	}
 
 	onunload() {}
@@ -48,4 +53,20 @@ export class GraphPresets extends Plugin {
 			this.addCommand(command);
 		});
 	}
+
+	private initView = async (): Promise<void> => {
+		const leafs = app.workspace.getLeavesOfType(GraphPresetsItemViewType);
+		await Promise.all(
+			leafs
+				.filter((leaf) => !(leaf.view instanceof GraphPresetsItemView))
+				.map(async (leaf) => {
+					return await leaf.setViewState({ type: "empty" });
+				})
+		);
+		const leaf = leafs.at(-1) || app.workspace.getLeftLeaf(false);
+		leaf.setViewState({
+			type: GraphPresetsItemViewType,
+			active: true,
+		});
+	};
 }

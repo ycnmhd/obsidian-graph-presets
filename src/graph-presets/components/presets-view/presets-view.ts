@@ -1,15 +1,13 @@
-import { Modal } from "obsidian";
 import { AddPreset } from "./components/add-preset";
 import { PresetsList } from "./components/presets-list/presets-list";
 
 type Props = {
-	modal: Modal;
+	containerEl: HTMLElement;
 };
 
-export const PresetsModal = ({ modal }: Props) => {
-	modal.titleEl.innerText = "Graph presets";
-	const list = modal.contentEl.createEl("div");
-
+export const PresetsView = ({ containerEl }: Props) => {
+	const bar = containerEl.createEl("div");
+	const list = containerEl.createEl("div");
 	const renderList = () => {
 		list.empty();
 		PresetsList({
@@ -19,7 +17,7 @@ export const PresetsModal = ({ modal }: Props) => {
 	};
 	AddPreset({
 		list,
-		modal,
+		bar,
 		renderList,
 	});
 	PresetsList({
