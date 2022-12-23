@@ -1,4 +1,5 @@
 import { Command } from "obsidian";
+import { GraphPresetsItemViewType } from "../components/presets-view/graph-presets-item-view";
 
 
 export const openGraphPresetsView: Command = {

@@ -1,12 +1,21 @@
 import { DisplayOptions } from "src/types/graph-settings";
+import { RenderItem } from "../three-dots-menu/components/toggle-rename-preset";
 import { settingItemProps, sharedPreviewStyles } from "./shared-props";
+import { groupPreview } from "./components/group-preview";
 
 type Props = {
 	containerEl: HTMLElement;
 	options: DisplayOptions;
+	presetName: string;
+	renderItem: RenderItem;
 };
-export const DisplayOptionsPreview = ({ containerEl, options }: Props) => {
-	const innerHTML = `
+export const DisplayOptionsPreview = ({
+	containerEl,
+	options,
+	presetName,
+	renderItem,
+}: Props) => {
+	const html = `
     <div class="tree-item graph-control-section mod-display" ${sharedPreviewStyles}>
 	<div class="tree-item-self mod-collapsible">
 	
@@ -88,5 +97,11 @@ export const DisplayOptionsPreview = ({ containerEl, options }: Props) => {
 </div>
 `;
 
-	containerEl.insertAdjacentHTML("beforeend", innerHTML);
+	groupPreview({
+		html,
+		containerEl,
+		presetName,
+		group: "display",
+		renderItem,
+	});
 };

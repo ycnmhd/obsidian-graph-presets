@@ -12,6 +12,7 @@ type Props = {
 	presetName: string;
 	editing?: boolean;
 	renderList: () => void;
+	showPreview?: boolean;
 };
 
 export const Preset = async ({
@@ -19,6 +20,7 @@ export const Preset = async ({
 	presetName,
 	editing,
 	renderList,
+	showPreview = false,
 }: Props) => {
 	const mainDiv = listItem.createEl("div", {
 		cls: "setting-item",
@@ -31,14 +33,7 @@ export const Preset = async ({
 		cls: "setting-item-control",
 	});
 	const state = {
-		showPreview: false,
-	};
-	const togglePreview = () => {
-		state.showPreview = !state.showPreview;
-		if (state.showPreview)
-			PresetPreview({ containerEl: previewDiv, presetName });
-		else previewDiv.empty();
-		return state.showPreview;
+		showPreview: showPreview,
 	};
 	const reRenderItem: RenderItem = (props = {}) => {
 		listItem.empty();
@@ -47,8 +42,27 @@ export const Preset = async ({
 			presetName: props.presetName || presetName,
 			editing: props.editing,
 			renderList,
+			showPreview: state.showPreview,
 		});
 	};
+	const togglePreview = () => {
+		state.showPreview = !state.showPreview;
+		if (state.showPreview)
+			PresetPreview({
+				containerEl: previewDiv,
+				presetName,
+				renderItem: reRenderItem,
+			});
+		else previewDiv.empty();
+		return state.showPreview;
+	};
+	if (state.showPreview)
+		PresetPreview({
+			containerEl: previewDiv,
+			presetName,
+			renderItem: reRenderItem,
+		});
+
 	const deleteItem: DeleteItem = () => {
 		listItem.remove();
 	};

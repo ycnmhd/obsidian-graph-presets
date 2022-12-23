@@ -1,12 +1,21 @@
 import { ForceOptions } from "src/types/graph-settings";
+import { RenderItem } from "../three-dots-menu/components/toggle-rename-preset";
 import { settingItemProps, sharedPreviewStyles } from "./shared-props";
+import { groupPreview } from "./components/group-preview";
 
 type Props = {
 	containerEl: HTMLElement;
 	options: ForceOptions;
+	presetName: string;
+	renderItem: RenderItem;
 };
-export const ForcesOptionsPreview = ({ containerEl, options }: Props) => {
-	const innerHTML = `<div class="tree-item graph-control-section mod-forces" ${sharedPreviewStyles}>
+export const ForcesOptionsPreview = ({
+	containerEl,
+	options,
+	presetName,
+	renderItem,
+}: Props) => {
+	const html = `<div class="tree-item graph-control-section mod-forces" ${sharedPreviewStyles}>
 	<div class="tree-item-self mod-collapsible">
 		
 		<div class="tree-item-inner">
@@ -70,5 +79,11 @@ export const ForcesOptionsPreview = ({ containerEl, options }: Props) => {
 </div>
 `;
 
-	containerEl.insertAdjacentHTML("beforeend", innerHTML);
+	groupPreview({
+		html,
+		containerEl,
+		group: "forces",
+		presetName,
+		renderItem,
+	});
 };

@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-graph-presets",
 	"name": "Graph Presets",
-	"version": "0.2.1",
+	"version": "0.3.0",
 	"minAppVersion": "0.15.0",
 	"description": "Save and load graph settings",
 	"author": "ycnmhd",

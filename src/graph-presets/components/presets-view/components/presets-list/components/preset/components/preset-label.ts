@@ -1,6 +1,4 @@
-import { svgs } from "src/assets/svgs";
 import { GraphPresets } from "src/graph-presets/graph-presets";
-import { obsidian } from "src/obsidian/obsidian";
 
 type Props = {
 	info: HTMLElement;
@@ -9,17 +7,17 @@ type Props = {
 export const PresetLabel = async ({ info, presetName }: Props) => {
 	if (presetName) {
 		const presets = GraphPresets.getInstance().settings.presets;
-		const isSelected =
-			JSON.stringify(presets[presetName]?.settings) ===
-			JSON.stringify(await obsidian.getGraphSettings());
-		const name = info.createEl("div", {
+		// const isSelected =
+		// 	JSON.stringify(presets[presetName]?.settings) ===
+		// 	JSON.stringify(await obsidian.getGraphSettings());
+		info.createEl("div", {
 			text: presetName,
 			cls: "setting-item-name",
 		});
-		if (isSelected) {
-			const span = name.createEl("span");
-			span.innerHTML = svgs["check-circle"];
-		}
+		// if (isSelected) {
+		// 	const span = name.createEl("span");
+		// 	span.innerHTML = svgs["check-circle"];
+		// }
 
 		const description = info.createEl("div", {
 			cls: "setting-item-description",

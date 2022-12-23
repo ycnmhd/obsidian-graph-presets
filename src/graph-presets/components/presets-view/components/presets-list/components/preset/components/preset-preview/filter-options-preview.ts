@@ -1,12 +1,21 @@
 import { FilterOptions } from "src/types/graph-settings";
+import { RenderItem } from "../three-dots-menu/components/toggle-rename-preset";
 import { settingItemProps, sharedPreviewStyles } from "./shared-props";
+import { groupPreview } from "./components/group-preview";
 
 type Props = {
 	containerEl: HTMLElement;
 	options: FilterOptions;
+	presetName: string;
+	renderItem: RenderItem;
 };
-export const FilterOptionsPreview = ({ containerEl, options }: Props) => {
-	const innerHTML = `
+export const FilterOptionsPreview = ({
+	containerEl,
+	options,
+	presetName,
+	renderItem,
+}: Props) => {
+	const html = `
     <div class="tree-item graph-control-section mod-filter" ${sharedPreviewStyles}>
 	<div class="tree-item-self mod-collapsible">
 		
@@ -105,5 +114,11 @@ export const FilterOptionsPreview = ({ containerEl, options }: Props) => {
 </div>
 
     `;
-	containerEl.insertAdjacentHTML("beforeend", innerHTML);
+	groupPreview({
+		html,
+		containerEl,
+		group: "filter",
+		presetName,
+		renderItem,
+	});
 };

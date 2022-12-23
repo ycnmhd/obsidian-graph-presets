@@ -34,6 +34,6 @@ export const ApplyPreset = ({
 
 	applyButton.addEventListener("click", () => {
 		actions.applyPreset(presetName);
-		setTimeout(renderList, 2000);
+		renderList();
 	});
 };
