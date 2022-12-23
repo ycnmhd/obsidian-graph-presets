@@ -12,6 +12,6 @@ export const ApplyPreset = ({ controls, presetName, renderList }: Props) => {
 	});
 	applyButton.addEventListener("click", () => {
 		actions.applyPreset(presetName);
-		renderList();
+		setTimeout(renderList, 2000);
 	});
 };

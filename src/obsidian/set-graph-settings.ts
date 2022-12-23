@@ -1,4 +1,5 @@
 import { GraphSettings } from "src/types/graph-settings";
+import { obsidian } from "./obsidian";
 
 export const setGraphSettings = async (
 	settings: GraphSettings
@@ -11,6 +12,6 @@ export const setGraphSettings = async (
 	await graph.enable();
 	if (graphIsOpen) {
 		await new Promise((res) => setTimeout(res, 3000));
-		(app as any).commands.commands["graph:open"].callback();
+		obsidian.openGraphView();	
 	}
 };
