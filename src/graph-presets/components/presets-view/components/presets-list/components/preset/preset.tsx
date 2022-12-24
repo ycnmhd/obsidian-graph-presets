@@ -44,6 +44,7 @@ export const Preset: React.FC<Props> = ({
 					placeholder="Preset name"
 					defaultValue={presetName}
 					ref={inputRef}
+					autoFocus={true}
 				/>
 				<SavePreset
 					getInputValue={() => inputRef.current?.value || ""}

@@ -3,13 +3,13 @@ import { GraphDataEngine } from "src/types/graph-data-engine";
 import { GraphSettings } from "src/types/graph-settings";
 import { obsidian } from "./obsidian";
 
-export const applyGraphSettings = (
+export const applyGraphSettings = async (
 	settings: GraphSettings,
 	group?: graphSettingsGroup
 ) => {
 	let view = app.workspace.getLeavesOfType("graph")[0];
 	if (!view) {
-		obsidian.openGraphView();
+		await obsidian.openGraphView();
 		view = app.workspace.getLeavesOfType("graph")[0];
 	} else {
 		app.workspace.revealLeaf(view);

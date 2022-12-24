@@ -12,5 +12,7 @@ export const applyPreset = async (
 	const presets = plugin.settings.presets;
 	const preset = presets[presetName];
 	await obsidian.applyGraphSettings(preset.settings, group);
+	preset.meta.applied = Date.now();
+	await plugin.saveSettings();
 	new Notice(`"${presetName}" applied`);
 };

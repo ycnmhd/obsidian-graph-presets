@@ -6,6 +6,7 @@ export const renamePreset = async (presetName: string, newName: string) => {
 	const presets = plugin.settings.presets;
 	const existingPreset = presets[presetName];
 	if(!existingPreset) throw new Error(`Preset "${presetName}" does not exist`);
+	if(presets[newName]) throw new Error(`Preset "${newName}" already exists`);
 	delete presets[presetName];
 	presets[newName] = existingPreset;
 	await plugin.saveSettings();

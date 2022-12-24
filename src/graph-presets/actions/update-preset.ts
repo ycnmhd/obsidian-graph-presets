@@ -24,7 +24,7 @@ export const pickGroup = (
 			showTags: settings.showTags,
 		};
 		return group;
-	} else if (group === "color-groups") {
+	} else if (group === "groups") {
 		const group: ColorGroupOptions = {
 			colorGroups: settings.colorGroups,
 			"collapse-color-groups": settings["collapse-color-groups"],

@@ -19,14 +19,15 @@ const reducer = (state: PresetsViewState, action: Action): PresetsViewState => {
 			return {
 				...state,
 				unsavedPresets: [
-					...state.unsavedPresets,
-					{
-						meta: {
-							created: ts,
+                    {
+                        meta: {
+                            created: ts,
 							updated: ts,
+                            applied: 0,
 						},
 						settings: null as any,
 					},
+                    ...state.unsavedPresets,
 				],
 			};
 		}

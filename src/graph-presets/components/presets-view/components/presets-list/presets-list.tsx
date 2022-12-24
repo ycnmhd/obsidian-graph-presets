@@ -16,9 +16,6 @@ export const PresetsList: React.FC<Props> = ({
 }) => {
 	return (
 		<div style={{ height: `calc(100% - ${navBarHeight}px)` , padding: "5px", overflowY: "scroll"}}>
-			{Object.keys(presets).map((presetName) => (
-				<Preset presetName={presetName} key={presetName} />
-			))}
 			{unsavedPresets.map((preset) => (
 				<Preset
 					presetName={""}
@@ -28,6 +25,9 @@ export const PresetsList: React.FC<Props> = ({
 					}
 				/>
 			))}
+			{Object.keys(presets).map((presetName) => (
+				<Preset presetName={presetName} key={presetName} />
+				))}
 		</div>
 	);
 };
