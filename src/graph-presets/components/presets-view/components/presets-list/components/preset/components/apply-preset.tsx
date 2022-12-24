@@ -1,3 +1,4 @@
+import { svgs } from "src/assets/svgs";
 import { actions } from "src/graph-presets/actions/actions";
 
 type Props = {
@@ -14,8 +15,9 @@ export const ApplyPreset: React.FC<Props> = ({
 			onClick={() => {
 				actions.applyPreset(presetName);
 			}}
+			aria-label="Apply preset"
 		>
-			Apply
+			{svgs["document-check"]}
 		</button>
 	);
 };

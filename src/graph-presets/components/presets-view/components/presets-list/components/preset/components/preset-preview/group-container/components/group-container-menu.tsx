@@ -1,4 +1,5 @@
 import { MouseEvent } from "react";
+import { svgs } from "src/assets/svgs";
 import { actions } from "src/graph-presets/actions/actions";
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
 
@@ -36,15 +37,17 @@ export const GroupContainerMenu: React.FC<Props> = ({ group, presetName }) => {
 				className="mod-cta"
 				style={{ width: "70px" }}
 				onClick={apply}
+				aria-label={`Apply ${group}`}
 			>
-				Apply
+				{svgs["document-check"]}
 			</button>
 			<button
 				className="mod-cta"
 				style={{ width: "70px" }}
 				onClick={update}
+				aria-label={`Update ${group}`}
 			>
-				Update
+				{svgs["pencil"]}
 			</button>
 		</div>
 	);

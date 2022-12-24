@@ -25,6 +25,7 @@ export const ThreeDotsMenu: React.FC<Props> = ({
 				menu.addItem((item) => DeletePreset({ item, presetName }));
 				menu.showAtMouseEvent(event as any as MouseEvent);
 			}}
+			aria-label="More options"
 		>
 			{svgs["ellipsis-vertical"]}
 		</button>

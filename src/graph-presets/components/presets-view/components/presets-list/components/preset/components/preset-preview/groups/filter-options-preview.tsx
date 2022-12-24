@@ -15,7 +15,7 @@ export const FilterOptionsPreview: React.FC<Props> = ({
 		<GroupContainer
 			className="mod-filter"
 			presetName={presetName}
-			group="filter"
+			group="filters"
 		>
 			<div className="tree-item-self mod-collapsible">
 				<div className="tree-item-inner">

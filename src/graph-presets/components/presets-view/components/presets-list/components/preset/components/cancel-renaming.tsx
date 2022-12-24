@@ -5,5 +5,5 @@ type Props = {
 };
 
 export const CancelRenaming: React.FC<Props> = ({ cancelRenaming }) => {
-	return <button onClick={cancelRenaming}>{svgs["x-circle"]}</button>;
+	return <button onClick={cancelRenaming} aria-label="Cancel">{svgs["x-circle"]}</button>;
 };

@@ -1,7 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { GraphPresets } from "src/graph-presets/graph-presets";
-
-import { AddPreset } from "./components/add-preset";
+import { NavHeader } from "./components/nav-header/nav-header";
 import { PresetsList } from "./components/presets-list/presets-list";
 import { useUnsavedPresets } from "./hooks/unsaved-presets";
 
@@ -15,13 +14,13 @@ export const PresetsView: React.FC = () => {
 	const { unsavedPresets, createPreset, deletePreset } = useUnsavedPresets();
 
 	return (
-		<div>
-			<AddPreset createPreset={createPreset} />
+		<>
+			<NavHeader createPreset={createPreset} />
 			<PresetsList
 				presets={store.presets}
 				deleteUnsavedPreset={deletePreset}
 				unsavedPresets={unsavedPresets}
 			/>
-		</div>
+		</>
 	);
 };

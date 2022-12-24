@@ -1,3 +1,4 @@
+import { svgs } from "src/assets/svgs";
 import { actions } from "src/graph-presets/actions/actions";
 
 type Props = {
@@ -21,8 +22,9 @@ export const SavePreset: React.FC<Props> = ({
 				else actions.createPreset(value);
 				if (deleteUnsavedPreset) deleteUnsavedPreset();
 			}}
+			aria-label="Save preset"
 		>
-			Save
+			{svgs["check-circle"]}
 		</button>
 	);
 };

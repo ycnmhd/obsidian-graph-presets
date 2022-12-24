@@ -14,7 +14,7 @@ export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 		<GroupContainer
 			className=" mod-color-groups"
 			presetName={presetName}
-			group="color-groups"
+			group="groups"
 		>
 			<div className="tree-item-self mod-collapsible">
 				<div className="tree-item-inner">
@@ -26,7 +26,7 @@ export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 			<div className="tree-item-children">
 				<div className="graph-color-groups-container">
 					{options.colorGroups.map((color) => (
-						<ColorOption color={color} key={color.color.rgb}/>
+						<ColorOption color={color} key={color.color.rgb} />
 					))}
 				</div>
 			</div>

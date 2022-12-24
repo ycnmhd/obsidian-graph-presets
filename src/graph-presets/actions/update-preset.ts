@@ -14,7 +14,7 @@ export const pickGroup = (
 	group: graphSettingsGroup,
 	settings: GraphSettings
 ): FilterOptions | ColorGroupOptions | ForceOptions | DisplayOptions => {
-	if (group === "filter") {
+	if (group === "filters") {
 		const group: FilterOptions = {
 			hideUnresolved: settings.hideUnresolved,
 			search: settings.search,

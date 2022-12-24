@@ -17,8 +17,7 @@ export const applyGraphSettings = (
 
 	const engine = (view as any).view.dataEngine as GraphDataEngine;
 
-	
-	if (!group || group === "filter") {
+	if (!group || group === "filters") {
 		const filterOptionListeners = engine.filterOptions.optionListeners;
 		filterOptionListeners.hideUnresolved(settings.hideUnresolved);
 		filterOptionListeners.search(settings.search);
@@ -26,7 +25,7 @@ export const applyGraphSettings = (
 		filterOptionListeners.showOrphans(settings.showOrphans);
 	}
 
-	if (!group || group === "color-groups") {
+	if (!group || group === "groups") {
 		const colorGroupOptionListeners =
 			engine.colorGroupOptions.optionListeners;
 		colorGroupOptionListeners.colorGroups(settings.colorGroups);
