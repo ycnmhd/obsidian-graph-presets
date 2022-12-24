@@ -1,14 +1,14 @@
 import { GraphSettings } from "src/types/graph-settings";
-
-export type GraphPresetsSettings = {
-	presets: {
-		[key: string]: {
+export type Preset = {
 			settings: GraphSettings;
 			meta: {
 				created: number;
 				updated: number;
 			};
-		};
+		}
+export type GraphPresetsSettings = {
+	presets: {
+		[key: string]: Preset;
 	};
 };
 

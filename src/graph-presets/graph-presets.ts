@@ -6,16 +6,20 @@ import {
 	GraphPresetsItemViewIcon,
 	GraphPresetsItemViewType,
 } from "./components/presets-view/graph-presets-item-view";
+import { Store } from "./helpers/store";
 import {
 	DEFAULT_SETTINGS,
 	GraphPresetsSettings,
 } from "./settings/default-settings";
+
+
 
 export class GraphPresets extends Plugin {
 	private static instance: GraphPresets;
 	public static getInstance(): GraphPresets {
 		return this.instance;
 	}
+	store: Store<GraphPresetsSettings> = new Store();
 
 	settings: GraphPresetsSettings;
 
@@ -41,10 +45,12 @@ export class GraphPresets extends Plugin {
 			DEFAULT_SETTINGS,
 			await this.loadData()
 		);
+		this.store.set(this.settings);
 	}
 
 	async saveSettings() {
 		await this.saveData(this.settings);
+		this.store.set(this.settings);
 		this.loadPresetCommands();
 	}
 

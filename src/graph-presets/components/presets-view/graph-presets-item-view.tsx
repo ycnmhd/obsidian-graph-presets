@@ -1,6 +1,11 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import { svgs } from "src/assets/svgs";
 import { PresetsView } from "./presets-view";
+import * as ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
+import { StrictMode } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { ErrorFallback } from "src/graph-presets/components/shared/error-fallback";
 
 export const GraphPresetsItemViewType = "graph-presets-list-view";
 export const GraphPresetsItemViewIcon = {
@@ -23,7 +28,18 @@ export class GraphPresetsItemView extends ItemView {
 	}
 
 	async onOpen(): Promise<void> {
-		this.redraw();
+		const root = createRoot(this.containerEl.children[1]);
+		root.render(
+			<StrictMode>
+				<ErrorBoundary FallbackComponent={ErrorFallback}>
+					<PresetsView />
+				</ErrorBoundary>
+			</StrictMode>
+		);
+	}
+
+	async onClose() {
+		ReactDOM.unmountComponentAtNode(this.containerEl);
 	}
 	private redraw() {
 		const rootEl = this.containerEl.createDiv();

@@ -17,6 +17,7 @@ esbuild
 		},
 		entryPoints: ["src/main.ts"],
 		bundle: true,
+		jsx: "automatic",
 		external: [
 			"obsidian",
 			"electron",
@@ -39,7 +40,6 @@ esbuild
 		logLevel: "info",
 		sourcemap: prod ? false : "inline",
 		treeShaking: true,
-		outfile:
-			"vault/.obsidian/plugins/obsidian-graph-presets/main.js",
+		outfile: "vault/.obsidian/plugins/obsidian-graph-presets/main.js",
 	})
 	.catch(() => process.exit(1));

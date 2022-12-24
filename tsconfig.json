@@ -1,24 +1,37 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "module": "ESNext",
-    "target": "ES6",
-    "allowJs": true,
-    "noImplicitAny": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "isolatedModules": true,
-	"strictNullChecks": true,
-    "lib": [
-      "DOM",
-      "ES5",
-      "ES6",
-      "ES7"
-    ]
-  },
-  "include": [
-    "**/*.ts"
-  ]
+	"compilerOptions": {
+		"baseUrl": ".",
+		"inlineSourceMap": true,
+		"inlineSources": true,
+		"module": "ESNext",
+		"target": "ES6",
+		"allowJs": true,
+		"noImplicitAny": true,
+		"moduleResolution": "node",
+		"importHelpers": true,
+		"isolatedModules": true,
+		"strictNullChecks": true,
+		"jsx": "react-jsx",
+		"lib": ["DOM", "ES5", "ES6", "ES7"]
+	},
+	"include": [
+		"**/*.ts",
+		"src/graph-presets/components/presets-view/graph-presets-item-view.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/cancel-renaming.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/apply-preset.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-label.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/save-preset.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/preset.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/three-dots-menu/three-dots-menu.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/groups/color-groups-options-preview.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/groups/display-options-preview.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/groups/filter-options-preview.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/groups/forces-options-preview.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/preset-preview.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/group-container/group-container.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/presets-list.tsx",
+		"src/graph-presets/components/presets-view/components/add-preset.tsx",
+		"src/graph-presets/components/presets-view/presets-view.tsx",
+		"src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/group-container/components/group-container-menu.tsx"
+, "src/assets/svgs.tsx"	]
 }
