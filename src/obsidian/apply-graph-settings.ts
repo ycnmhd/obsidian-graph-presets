@@ -1,10 +1,11 @@
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
 import { GraphDataEngine } from "src/types/graph-data-engine";
 import { GraphSettings } from "src/types/graph-settings";
+import { graphSettingsKeys } from "src/graph-presets/helpers/graph-settings-keys";
 import { obsidian } from "./obsidian";
 
 export const applyGraphSettings = async (
-	settings: GraphSettings,
+	settings: Partial<GraphSettings>,
 	group?: graphSettingsGroup
 ) => {
 	let view = app.workspace.getLeavesOfType("graph")[0];
@@ -19,31 +20,34 @@ export const applyGraphSettings = async (
 
 	if (!group || group === "filters") {
 		const filterOptionListeners = engine.filterOptions.optionListeners;
-		filterOptionListeners.hideUnresolved(settings.hideUnresolved);
-		filterOptionListeners.search(settings.search);
-		filterOptionListeners.showAttachments(settings.showAttachments);
-		filterOptionListeners.showOrphans(settings.showOrphans);
+		for (const option of graphSettingsKeys.filterOptions) {
+			if (option in settings)
+				filterOptionListeners[option](settings[option]);
+		}
 	}
 
 	if (!group || group === "groups") {
 		const colorGroupOptionListeners =
 			engine.colorGroupOptions.optionListeners;
-		colorGroupOptionListeners.colorGroups(settings.colorGroups);
+		for (const option of graphSettingsKeys.colorGroupOptions) {
+			if (option in settings)
+				colorGroupOptionListeners[option](settings[option]);
+		}
 	}
 
 	if (!group || group === "display") {
 		const displayOptionListeners = engine.displayOptions.optionListeners;
-		displayOptionListeners.lineSizeMultiplier(settings.lineSizeMultiplier);
-		displayOptionListeners.nodeSizeMultiplier(settings.nodeSizeMultiplier);
-		displayOptionListeners.showArrow(settings.showArrow);
-		displayOptionListeners.textFadeMultiplier(settings.textFadeMultiplier);
+		for (const option of graphSettingsKeys.displayOptions) {
+			if (option in settings)
+				displayOptionListeners[option](settings[option]);
+		}
 	}
 
 	if (!group || group === "forces") {
 		const forceOptionListeners = engine.forceOptions.optionListeners;
-		forceOptionListeners.centerStrength(settings.centerStrength);
-		forceOptionListeners.repelStrength(settings.repelStrength);
-		forceOptionListeners.linkStrength(settings.linkStrength);
-		forceOptionListeners.linkDistance(settings.linkDistance);
+		for (const option of graphSettingsKeys.forceOptions) {
+			if (option in settings)
+				forceOptionListeners[option](settings[option]);
+		}
 	}
 };

@@ -1,4 +1,4 @@
-import { mapValueToRGB } from "./helpers/map-color-to-rgb";
+import { rgbToHex } from "./helpers/map-colors";
 import { ColorGroupOptions } from "src/types/graph-settings";
 
 type Props = {
@@ -15,11 +15,7 @@ export const ColorOption: React.FC<Props> = ({ color }) => {
 				value={color.query}
 				disabled
 			/>
-			<input
-				type="color"
-				value={mapValueToRGB(color.color.rgb)}
-				disabled
-			/>
+			<input type="color" value={rgbToHex(color.color.rgb)} disabled />
 		</div>
 	);
 };

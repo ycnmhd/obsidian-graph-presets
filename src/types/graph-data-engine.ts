@@ -7,6 +7,7 @@ export type GraphDataEngine = {
 			search: OptionListener;
 			showAttachments: OptionListener;
 			showOrphans: OptionListener;
+			showTags: OptionListener;
 		};
 	};
 	colorGroupOptions: {

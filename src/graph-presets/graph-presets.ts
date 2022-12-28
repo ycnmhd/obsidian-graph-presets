@@ -1,4 +1,4 @@
-import { addIcon, Plugin } from "obsidian";
+import { addIcon, MarkdownView, Plugin, TFile } from "obsidian";
 import { applyGraphPreset } from "./commands/apply-graph-preset";
 import { openGraphPresetsView } from "./commands/open-graph-presets-view";
 import {
@@ -7,6 +7,7 @@ import {
 	GraphPresetsItemViewType,
 } from "./components/presets-view/graph-presets-item-view";
 import { Store } from "./helpers/store";
+import { applyPreset } from "./monkey-patches/apply-preset/apply-preset";
 import {
 	DEFAULT_SETTINGS,
 	GraphPresetsSettings,
@@ -35,6 +36,9 @@ export class GraphPresets extends Plugin {
 			(leaf) => new GraphPresetsItemView(leaf)
 		);
 		app.workspace.onLayoutReady(this.initView);
+
+		// inspired from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/main.ts#L259
+		this.registerMonkeyPatches();
 	}
 
 	onunload() {}
@@ -75,4 +79,22 @@ export class GraphPresets extends Plugin {
 			active: true,
 		});
 	};
+
+	private registerMonkeyPatches() {
+		this.registerEvent(
+			app.workspace.on("editor-menu", (menu, _, view) => {
+				if (!view || !(view instanceof MarkdownView)) return;
+				const file = view.file;
+				if (!(file instanceof TFile)) return;
+				applyPreset(menu, file, view.leaf);
+			})
+		);
+		this.registerEvent(
+			app.workspace.on("file-menu", (menu, file, _, leaf) => {
+				if (!leaf || !(leaf.view instanceof MarkdownView)) return;
+				if (!(file instanceof TFile)) return;
+				applyPreset(menu, file, leaf);
+			})
+		);
+	}
 }
