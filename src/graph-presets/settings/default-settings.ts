@@ -24,6 +24,7 @@ export type GraphPresetsSettings = {
 	};
 	preferences: {
 		sortBy: SortMode;
+		presetsFolder: "documents/graph presets"
 	};
 };
 
@@ -31,5 +32,6 @@ export const DEFAULT_SETTINGS: GraphPresetsSettings = {
 	presets: {},
 	preferences: {
 		sortBy: "presetNameAsc",
+		presetsFolder: "documents/graph presets",
 	},
 };

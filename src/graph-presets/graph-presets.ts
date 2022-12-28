@@ -1,19 +1,17 @@
 import { addIcon, MarkdownView, Plugin, TFile } from "obsidian";
 import { applyGraphPreset } from "./commands/apply-graph-preset";
 import { openGraphPresetsView } from "./commands/open-graph-presets-view";
-import {
-	GraphPresetsItemView,
+import {	GraphPresetsItemView,
 	GraphPresetsItemViewIcon,
 	GraphPresetsItemViewType,
 } from "./components/presets-view/graph-presets-item-view";
 import { Store } from "./helpers/store";
-import { applyPreset } from "./monkey-patches/apply-preset/apply-preset";
+import { applyPresetFromMarkdown } from "./monkey-patches/apply-preset-from-markdown/apply-preset-from-markdown";
+import { savePresetToMarkdownPatch } from "./monkey-patches/save-preset-to-markdown-patch";
 import {
 	DEFAULT_SETTINGS,
 	GraphPresetsSettings,
 } from "./settings/default-settings";
-
-
 
 export class GraphPresets extends Plugin {
 	private static instance: GraphPresets;
@@ -82,19 +80,24 @@ export class GraphPresets extends Plugin {
 
 	private registerMonkeyPatches() {
 		this.registerEvent(
-			app.workspace.on("editor-menu", (menu, _, view) => {
+			app.workspace.on("editor-menu", (menu, source, view) => {
 				if (!view || !(view instanceof MarkdownView)) return;
 				const file = view.file;
 				if (!(file instanceof TFile)) return;
-				applyPreset(menu, file, view.leaf);
+				applyPresetFromMarkdown(menu, file, view.leaf);
 			})
 		);
 		this.registerEvent(
-			app.workspace.on("file-menu", (menu, file, _, leaf) => {
-				if (!leaf || !(leaf.view instanceof MarkdownView)) return;
-				if (!(file instanceof TFile)) return;
-				applyPreset(menu, file, leaf);
+			app.workspace.on("file-menu", async (menu, file, source, leaf) => {
+				if (source === "more-options") {
+					if (!leaf || !(leaf.view instanceof MarkdownView)) return;
+					if (!(file instanceof TFile)) return;
+					applyPresetFromMarkdown(menu, file, leaf);
+				} else if (source === "file-explorer-context-menu") {
+					await savePresetToMarkdownPatch(menu, file);
+				}
 			})
 		);
+		
 	}
 }

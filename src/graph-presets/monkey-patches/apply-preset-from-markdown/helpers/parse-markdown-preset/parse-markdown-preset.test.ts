@@ -4,11 +4,11 @@ import { describe, test, expect } from "vitest";
 
 type Sample = {
 	input: string;
-	output: Partial<GraphSettings>;
+	output: GraphSettings;
 };
-const samples: Sample[] = [
+export const mdToJsonSamples: Sample[] = [
 	{
-		input: '---\n\ngraph-presets-plugin: basic\n\n---\n\npath:: shape\nline:: ("big") |  "#e0b152"\npath:: "shapes" | "#99b7b8"\n\n---\n```yaml:graph-preset\ncollapse-filter: false\nshowTags: false\nshowAttachments: true\nhideUnresolved: false\nshowOrphans: true\ncollapse-color-groups: false\ncollapse-display: false\nshowArrow: true\ntextFadeMultiplier: -3\nnodeSizeMultiplier: 5\nlineSizeMultiplier: 5\ncollapse-forces: false\ncenterStrength: 0\nrepelStrength: 0\nlinkStrength: 0\nlinkDistance: 500\nscale: 8\nclose: true\n```\n\n',
+		input: '---\ngraph-presets-plugin: basic\n---\n\npath:: shape\nline:: ("big") | "#e0b152"\npath:: "shapes" | "#99b7b8"\n\n---\n```yaml:graph-preset\ncollapse-filter: false\nshowTags: false\nshowAttachments: true\nhideUnresolved: false\nshowOrphans: true\ncollapse-color-groups: false\ncollapse-display: false\nshowArrow: true\ntextFadeMultiplier: -3\nnodeSizeMultiplier: 5\nlineSizeMultiplier: 5\ncollapse-forces: false\ncenterStrength: 0\nrepelStrength: 0\nlinkStrength: 0\nlinkDistance: 500\nscale: 8\nclose: true\n```\n\n',
 		output: {
 			"collapse-filter": false,
 			search: "path: shape",
@@ -52,7 +52,7 @@ const samples: Sample[] = [
 
 describe("parse-markdown-preset", () => {
 	test("parse", () => {
-		for (const sample of samples) {
+		for (const sample of mdToJsonSamples) {
 			const output = parseMarkDownPreset(sample.input);
 			expect(output).toEqual(sample.output);
 		}

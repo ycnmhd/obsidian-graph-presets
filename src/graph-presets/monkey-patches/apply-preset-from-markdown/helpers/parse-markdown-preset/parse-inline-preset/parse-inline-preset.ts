@@ -1,14 +1,13 @@
 import { hexToRgb } from "src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/groups/helpers/map-colors";
 import { ColorGroup, GraphSettings } from "src/types/graph-settings";
+import {
+	SearchQueryVariant,
+	searchQueryVariantsSet,
+} from "src/types/search-query";
 
 const trimString = (str: string) =>
 	str.trim(); /* .replace(/^"|"$/g, "").trim() */
 
-const queries = (["path", "file", "tag", "line", "section"] as const)
-	.map((q) => [q, `-${q}`] as const)
-	.flat();
-type Query = typeof queries[number];
-const queriesSet = new Set(queries);
 export const parseInlinePreset = (file: string) => {
 	const settings: Partial<GraphSettings> = {
 		search: "",
@@ -17,7 +16,7 @@ export const parseInlinePreset = (file: string) => {
 	const lines = file.split("\n");
 	const queryLines = lines.filter((line) => {
 		const key = line.split("::")[0];
-		return queriesSet.has(key as Query);
+		return searchQueryVariantsSet.has(key as SearchQueryVariant);
 	});
 
 	const { filterQueries, colorQueries } = queryLines.reduce(
@@ -58,3 +57,5 @@ export const parseInlinePreset = (file: string) => {
 
 	return settings;
 };
+
+

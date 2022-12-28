@@ -7,12 +7,12 @@ import {
 } from "src/types/graph-settings";
 
 const filterOptionsRecord: Record<keyof FilterOptions, boolean> = {
-	hideUnresolved: false,
-	search: false,
-	showAttachments: false,
-	showOrphans: false,
 	"collapse-filter": false,
+	search: false,
 	showTags: false,
+	showAttachments: false,
+	hideUnresolved: false,
+	showOrphans: false,
 } as const;
 const filterOptions = Object.keys(
 	filterOptionsRecord
@@ -20,10 +20,10 @@ const filterOptions = Object.keys(
 
 const displayOptionsRecord: Record<keyof DisplayOptions, boolean> = {
 	"collapse-display": false,
-	lineSizeMultiplier: false,
-	nodeSizeMultiplier: false,
 	showArrow: false,
 	textFadeMultiplier: false,
+	nodeSizeMultiplier: false,
+	lineSizeMultiplier: false,
 } as const;
 const displayOptions = Object.keys(
 	displayOptionsRecord
