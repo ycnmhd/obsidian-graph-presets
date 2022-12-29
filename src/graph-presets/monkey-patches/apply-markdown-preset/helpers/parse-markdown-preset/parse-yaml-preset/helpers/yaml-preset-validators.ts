@@ -1,18 +1,19 @@
-import { FilterOptions, ColorGroupOptions, DisplayOptions, ForceOptions } from "src/types/graph-settings";
+import {
+	FilterOptions,
+	ColorGroupOptions,
+	DisplayOptions,
+	ForceOptions,
+	ColorGroup,
+} from "src/types/graph-settings";
 
-const preValidate = (value: string) => {
-	return value?.trim();
-};
-
-type ValueValidator<T> = (value: string) => {
+export type ValueValidator<T> = (value: T) => {
 	value: T | undefined;
 	valid: boolean;
-};
+}
 const isBoolean: ValueValidator<boolean> = (value) => {
-	value = preValidate(value);
-	if (value === "true" || value === "false")
+	if (typeof value === "boolean")
 		return {
-			value: value === "true",
+			value,
 			valid: true,
 		};
 	else
@@ -23,7 +24,7 @@ const isBoolean: ValueValidator<boolean> = (value) => {
 };
 
 const isString: ValueValidator<string> = (value) => {
-	value = preValidate(value);
+	value = value.trim();
 
 	if (typeof value === "string")
 		return {
@@ -38,7 +39,6 @@ const isString: ValueValidator<string> = (value) => {
 };
 const isInRange: (min: number, max: number) => ValueValidator<number> =
 	(min, max) => (value) => {
-		value = preValidate(value);
 		const num = Number(value);
 		if (!isNaN(num) && num >= min && num <= max) {
 			return {
@@ -50,6 +50,29 @@ const isInRange: (min: number, max: number) => ValueValidator<number> =
 				value: undefined,
 				valid: false,
 			};
+	};
+
+const isColorGroup: ValueValidator<ColorGroup> = (value) => {
+	let valid = true;
+	if (!isString(value.query)) valid = false;
+	if (!isInRange(0, 16777215)(value.color.rgb)) valid = false;
+	if (!isInRange(0, 1)(value.color.a)) valid = false;
+	return {
+		valid,
+		value: valid ? value : undefined,
+	};
+};
+
+const isArrayOf =
+	<T>(validator: ValueValidator<T>) =>
+	(value: T[]) => {
+		let valid = true;
+		if (!Array.isArray(value)) valid = false;
+		if (!value.every(validator)) valid = false;
+		return {
+			valid,
+			value: valid ? value : undefined,
+		};
 	};
 
 export const filterOptionsValidators = {
@@ -66,9 +89,10 @@ export const filterOptionsValidators = {
 
 export const colorGroupOptionsValidators = {
 	"collapse-color-groups": isBoolean,
+	colorGroups: isArrayOf(isColorGroup),
 } satisfies Record<
-	keyof Omit<ColorGroupOptions, "colorGroups">,
-	ValueValidator<number | boolean | string>
+	keyof ColorGroupOptions,
+	ValueValidator<number | boolean | string | ColorGroup[]>
 >;
 
 export const displayOptionsValidators = {

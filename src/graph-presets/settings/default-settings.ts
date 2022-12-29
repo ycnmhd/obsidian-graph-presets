@@ -24,7 +24,11 @@ export type GraphPresetsSettings = {
 	};
 	preferences: {
 		sortBy: SortMode;
-		presetsFolder: "documents/graph presets"
+		presetsFolder: "documents/graph presets";
+		markdownPresets: {
+			inlineSearchQuery: boolean;
+			inlineColorGroups: boolean;
+		};
 	};
 };
 
@@ -33,5 +37,9 @@ export const DEFAULT_SETTINGS: GraphPresetsSettings = {
 	preferences: {
 		sortBy: "presetNameAsc",
 		presetsFolder: "documents/graph presets",
+		markdownPresets: {
+			inlineSearchQuery: true,
+			inlineColorGroups: true,
+		},
 	},
 };

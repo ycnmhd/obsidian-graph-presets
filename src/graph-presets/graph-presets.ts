@@ -7,6 +7,7 @@ import {
 	GraphPresetsItemViewType,
 } from "./components/presets-view/graph-presets-item-view";
 import { fileIsPreset } from "./helpers/file-is-preset";
+import { mergeDeep } from "./helpers/merge-deep";
 import { Store } from "./helpers/store";
 import { applyMarkdownPresetPatch } from "./monkey-patches/apply-markdown-preset/apply-markdown-preset";
 import { createMarkdownPresetPatch } from "./monkey-patches/create-markdown-preset/create-markdown-preset-patch";
@@ -45,11 +46,7 @@ export class GraphPresets extends Plugin {
 	onunload() {}
 
 	async loadSettings() {
-		this.settings = Object.assign(
-			{},
-			DEFAULT_SETTINGS,
-			await this.loadData()
-		);
+		this.settings = mergeDeep(await this.loadData(), DEFAULT_SETTINGS);
 		this.store.set(this.settings);
 	}
 
