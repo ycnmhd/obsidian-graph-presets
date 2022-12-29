@@ -45,7 +45,6 @@ export const pickGroup = (
 			linkDistance: settings.linkDistance,
 			linkStrength: settings.linkStrength,
 			repelStrength: settings.repelStrength,
-			scale: settings.scale,
 			"collapse-forces": settings["collapse-forces"],
 		};
 		return group;

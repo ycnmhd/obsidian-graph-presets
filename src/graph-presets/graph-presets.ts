@@ -1,13 +1,16 @@
-import { addIcon, MarkdownView, Plugin, TFile } from "obsidian";
+import { addIcon, Plugin, TFile, TFolder } from "obsidian";
 import { applyGraphPreset } from "./commands/apply-graph-preset";
 import { openGraphPresetsView } from "./commands/open-graph-presets-view";
-import {	GraphPresetsItemView,
+import {
+	GraphPresetsItemView,
 	GraphPresetsItemViewIcon,
 	GraphPresetsItemViewType,
 } from "./components/presets-view/graph-presets-item-view";
+import { fileIsPreset } from "./helpers/file-is-preset";
 import { Store } from "./helpers/store";
-import { applyPresetFromMarkdown } from "./monkey-patches/apply-preset-from-markdown/apply-preset-from-markdown";
-import { savePresetToMarkdownPatch } from "./monkey-patches/save-preset-to-markdown-patch";
+import { applyMarkdownPresetPatch } from "./monkey-patches/apply-markdown-preset/apply-markdown-preset";
+import { createMarkdownPresetPatch } from "./monkey-patches/create-markdown-preset/create-markdown-preset-patch";
+import { updateMarkdownPresetPatch } from "./monkey-patches/update-markdown-preset/update-markdown-preset-patch";
 import {
 	DEFAULT_SETTINGS,
 	GraphPresetsSettings,
@@ -80,24 +83,20 @@ export class GraphPresets extends Plugin {
 
 	private registerMonkeyPatches() {
 		this.registerEvent(
-			app.workspace.on("editor-menu", (menu, source, view) => {
-				if (!view || !(view instanceof MarkdownView)) return;
-				const file = view.file;
-				if (!(file instanceof TFile)) return;
-				applyPresetFromMarkdown(menu, file, view.leaf);
-			})
-		);
-		this.registerEvent(
-			app.workspace.on("file-menu", async (menu, file, source, leaf) => {
+			app.workspace.on("file-menu", async (menu, file, source) => {
 				if (source === "more-options") {
-					if (!leaf || !(leaf.view instanceof MarkdownView)) return;
-					if (!(file instanceof TFile)) return;
-					applyPresetFromMarkdown(menu, file, leaf);
+					if (fileIsPreset(file)) {
+						applyMarkdownPresetPatch(menu, file as TFile);
+						updateMarkdownPresetPatch(menu, file);
+					}
 				} else if (source === "file-explorer-context-menu") {
-					await savePresetToMarkdownPatch(menu, file);
+					if (fileIsPreset(file)) {
+						applyMarkdownPresetPatch(menu, file as TFile);
+						updateMarkdownPresetPatch(menu, file);
+					} else if (file instanceof TFolder)
+						await createMarkdownPresetPatch(menu, file);
 				}
 			})
 		);
-		
 	}
 }

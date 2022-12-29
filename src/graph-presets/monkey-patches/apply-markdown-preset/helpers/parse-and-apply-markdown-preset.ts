@@ -1,12 +1,14 @@
-import { MarkdownView } from "obsidian";
+import { TFile } from "obsidian";
 import { actions } from "src/graph-presets/actions/actions";
+import { obsidian } from "src/obsidian/obsidian";
 import { parseMarkDownPreset } from "./parse-markdown-preset/parse-markdown-preset";
 
 type Props = {
-	view: MarkdownView;
+	file: TFile;
 };
-export const parseAndApplyMarkdownPreset = async ({ view }: Props) => {
-	const data = view.getViewData();
+
+export const parseAndApplyMarkdownPreset = async ({ file }: Props) => {
+	const data = await obsidian.fs.readFile({ file });
 	const preset = parseMarkDownPreset(data);
 	await actions.applyMarkdownPreset(preset);
 };
