@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
-import { GroupContainerMenu } from "./components/group-container-menu";
+import { GroupContainerMenu } from "../groups/group-container-menu";
 import { sharedPreviewStyles } from "./shared-props";
 
 type Props = {

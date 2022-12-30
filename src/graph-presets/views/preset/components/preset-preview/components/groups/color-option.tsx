@@ -1,5 +1,5 @@
-import { rgbToHex } from "./helpers/map-colors";
 import { ColorGroupOptions } from "src/types/graph-settings";
+import { rgbToHex } from "../../helpers/map-colors";
 
 type Props = {
 	color: ColorGroupOptions["colorGroups"][number];

@@ -8,10 +8,7 @@ type Props = {
 	meta: MarkdownPresetMeta;
 };
 
-export const DisplayOptionsPreview: React.FC<Props> = ({
-	options,
-	meta,
-}) => {
+export const DisplayOptionsPreview: React.FC<Props> = ({ options, meta }) => {
 	return (
 		<GroupContainer className="mod-display" meta={meta} group="display">
 			<div className="tree-item-self mod-collapsible">

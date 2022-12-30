@@ -8,16 +8,9 @@ type Props = {
 	meta: MarkdownPresetMeta;
 };
 
-export const ForcesOptionsPreview: React.FC<Props> = ({
-	options,
-	meta,
-}) => {
+export const ForcesOptionsPreview: React.FC<Props> = ({ options, meta }) => {
 	return (
-		<GroupContainer
-			className="mod-forces"
-			meta={meta}
-			group="forces"
-		>
+		<GroupContainer className="mod-forces" meta={meta} group="forces">
 			<div>
 				<div className="tree-item-self mod-collapsible">
 					<div className="tree-item-inner">

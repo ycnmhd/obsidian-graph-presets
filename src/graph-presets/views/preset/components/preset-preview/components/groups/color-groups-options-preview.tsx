@@ -4,10 +4,13 @@ import { ColorOption } from "./color-option";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 type Props = {
 	options: ColorGroupOptions;
-	meta: MarkdownPresetMeta
+	meta: MarkdownPresetMeta;
 };
 
-export const ColorGroupsOptionsPreview: React.FC<Props> = ({ options, meta }) => {
+export const ColorGroupsOptionsPreview: React.FC<Props> = ({
+	options,
+	meta,
+}) => {
 	return (
 		<GroupContainer
 			className=" mod-color-groups"

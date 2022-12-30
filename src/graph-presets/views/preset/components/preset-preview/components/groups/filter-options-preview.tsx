@@ -8,16 +8,9 @@ type Props = {
 	meta: MarkdownPresetMeta;
 };
 
-export const FilterOptionsPreview: React.FC<Props> = ({
-	options,
-	meta,
-}) => {
+export const FilterOptionsPreview: React.FC<Props> = ({ options, meta }) => {
 	return (
-		<GroupContainer
-			className="mod-filter"
-			meta={meta}
-			group="filters"
-		>
+		<GroupContainer className="mod-filter" meta={meta} group="filters">
 			<div className="tree-item-self mod-collapsible">
 				<div className="tree-item-inner">
 					<header className="graph-control-section-header">

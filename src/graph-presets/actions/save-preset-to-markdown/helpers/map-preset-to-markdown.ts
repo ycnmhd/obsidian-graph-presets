@@ -1,5 +1,5 @@
 import { yaml } from "src/graph-presets/helpers/yaml";
-import { rgbToHex } from "src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/groups/helpers/map-colors";
+import { rgbToHex } from "src/graph-presets/views/preset/components/preset-preview/helpers/map-colors";
 import { PRESET_FRONTMATTER } from "src/graph-presets/helpers/constants";
 import { graphSettingsKeys } from "src/graph-presets/helpers/graph-settings-keys";
 import { GraphSettings } from "src/types/graph-settings";
@@ -15,7 +15,8 @@ export const mapPresetToMarkdown = (
 	const lines = [];
 	lines.push(PRESET_FRONTMATTER);
 
-	let invalidSearchQuery = false, invalidColorGroup = false;
+	let invalidSearchQuery = false,
+		invalidColorGroup = false;
 	if (inlineSearchQuery) {
 		const searchTuples = parseSearchQuery(preset.search);
 		if (searchTuples) {
@@ -52,11 +53,19 @@ export const mapPresetToMarkdown = (
 	) as (keyof typeof graphSettingsKeys)[];
 	for (const group of groups) {
 		let options;
-		if (group === "colorGroupOptions" && inlineColorGroups && !invalidColorGroup) {
+		if (
+			group === "colorGroupOptions" &&
+			inlineColorGroups &&
+			!invalidColorGroup
+		) {
 			options = graphSettingsKeys[group].filter(
 				(option) => option !== "colorGroups"
 			);
-		} else if (group === "filterOptions" && inlineSearchQuery && !invalidSearchQuery) {
+		} else if (
+			group === "filterOptions" &&
+			inlineSearchQuery &&
+			!invalidSearchQuery
+		) {
 			options = graphSettingsKeys[group].filter(
 				(option) => option !== "search"
 			);

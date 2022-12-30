@@ -7,7 +7,7 @@ import { logger } from "../../helpers/logger";
 import { ViewManager } from "./view-manager";
 import { IView, StateManager } from "./state-manager";
 import { actions } from "../../actions/actions";
-import { PresetPreview } from "../../components/presets-view/components/presets-list/components/preset/components/preset-preview/preset-preview";
+import { PresetPreview } from "./components/preset-preview/preset-preview";
 import { GraphPresets } from "../../graph-presets";
 import { GraphSettings } from "src/types/graph-settings";
 
@@ -18,7 +18,6 @@ const isPresetNote = (data: string) => {
 export const PresetViewType = "markdown-preset-view";
 
 export class PresetView extends TextFileView implements IView {
-	
 	private manager: ViewManager<PresetView>;
 	private container: HTMLDivElement | null = null;
 	private rootContainer: Root | null = null;
@@ -45,10 +44,8 @@ export class PresetView extends TextFileView implements IView {
 		}
 	}
 
-
 	setViewData(data: string): void {
 		if (!isPresetNote(data)) {
-			
 			this.manager.setLeafType({
 				leaf: this.leaf,
 				type: "markdown",
@@ -124,14 +121,14 @@ export class PresetView extends TextFileView implements IView {
 				this.rootContainer.render(table);
 			} catch (e) {
 				logger.error(e);
-				setTimeout(()=>{
+				setTimeout(() => {
 					this.manager.setLeafType({
 						leaf: this.leaf,
 						type: "markdown",
 						setState: true,
 						focus: true,
 					});
-				},)
+				});
 			}
 		}
 	}
@@ -219,6 +216,6 @@ export class PresetView extends TextFileView implements IView {
 	clear(): void {}
 
 	getViewData(): string {
-		return this.data
+		return this.data;
 	}
 }
