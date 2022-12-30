@@ -34,7 +34,7 @@ export const Preset: React.FC<Props> = ({
 		if (showPreview) {
 			const load = async () => {
 				try {
-					const preset = await actions.getPreset(meta);
+					const preset = await actions.getPreset(meta)
 					// TODO: merge with current settings to fill in missing values (e.g. if markdown preset is partial)
 					setPreset({
 						data: preset as GraphSettings,
