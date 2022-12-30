@@ -3,7 +3,7 @@ import { parseSearchQuery, QueryStringTuple } from "./parse-search-query";
 
 type Sample = {
 	input: string;
-	output: QueryStringTuple[];
+	output: QueryStringTuple[] | null;
 };
 const samples: Sample[] = [
 	{
@@ -14,6 +14,21 @@ const samples: Sample[] = [
 			["-path", "documents"],
 			["-line", '"database-plugin: basic"'],
 		],
+	},
+	{
+		input: 'path: "foo/profiles/paths" line:"bar/paths/lines"',
+		output: [
+			["path", '"foo/profiles/paths"'],
+			["line", '"bar/paths/lines"'],
+		],
+	},
+	{
+		input: 'foo: "bar" -path: "foo/bar"',
+		output: null,
+	},
+	{
+		input: 'foo',
+		output: null,
 	},
 ];
 

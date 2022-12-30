@@ -5,11 +5,11 @@ import {
 	yamlPresetValidators,
 } from "./helpers/yaml-preset-validators";
 import { getYamlBlock } from "src/graph-presets/helpers/get-yaml-block";
-import { parseYaml } from "obsidian";
+import { yaml } from "src/graph-presets/helpers/yaml";
 
 type Key = keyof typeof yamlPresetValidators;
 export const parseYamlPreset = (file: string) => {
-	const config = parseYaml(getYamlBlock(file)) as Partial<GraphSettings>;
+	const config = yaml.parse(getYamlBlock(file)) as Partial<GraphSettings>;
 	const settings: Partial<GraphSettings> = {};
 	for (const [key, value] of Object.entries(config)) {
 		if (key in yamlPresetValidators) {

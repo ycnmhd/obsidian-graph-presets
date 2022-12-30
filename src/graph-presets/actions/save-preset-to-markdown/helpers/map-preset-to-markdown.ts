@@ -1,24 +1,29 @@
-import { stringifyYaml } from "obsidian";
+import { yaml } from "src/graph-presets/helpers/yaml";
 import { rgbToHex } from "src/graph-presets/components/presets-view/components/presets-list/components/preset/components/preset-preview/groups/helpers/map-colors";
-import { GraphPresets } from "src/graph-presets/graph-presets";
 import { PRESET_FRONTMATTER } from "src/graph-presets/helpers/constants";
 import { graphSettingsKeys } from "src/graph-presets/helpers/graph-settings-keys";
 import { GraphSettings } from "src/types/graph-settings";
 import { parseSearchQuery } from "../../../actions/save-preset-to-markdown/helpers/parse-search-query";
+import { PluginSettings } from "src/graph-presets/settings/default-settings";
 
-export const mapPresetToMarkdown = (preset: GraphSettings): string => {
-	const plugin = GraphPresets.getInstance();
-	const inlineColorGroups =
-		plugin.settings.preferences.markdownPresets.inlineColorGroups;
-	const inlineSearchQuery =
-		plugin.settings.preferences.markdownPresets.inlineSearchQuery;
+export const mapPresetToMarkdown = (
+	preset: GraphSettings,
+	markdownPresets: PluginSettings["preferences"]["markdownPresets"]
+): string => {
+	const inlineColorGroups = markdownPresets.inlineColorGroups;
+	const inlineSearchQuery = markdownPresets.inlineSearchQuery;
 	const lines = [];
 	lines.push(PRESET_FRONTMATTER);
 
+	let invalidSearchQuery = false, invalidColorGroup = false;
 	if (inlineSearchQuery) {
 		const searchTuples = parseSearchQuery(preset.search);
-		for (const [key, value] of searchTuples) {
-			lines.push(`${key}:: ${value}`);
+		if (searchTuples) {
+			for (const [key, value] of searchTuples) {
+				lines.push(`${key}:: ${value}`);
+			}
+		} else {
+			invalidSearchQuery = true;
 		}
 	}
 
@@ -26,6 +31,10 @@ export const mapPresetToMarkdown = (preset: GraphSettings): string => {
 		const colorGroups = preset.colorGroups;
 		for (const colorGroup of colorGroups) {
 			const searchTuples = parseSearchQuery(colorGroup.query);
+			if (!searchTuples) {
+				invalidColorGroup = true;
+				break;
+			}
 			for (const [key, value] of searchTuples) {
 				const color = rgbToHex(colorGroup.color.rgb);
 				lines.push(`${key}:: ${value} | "${color}"`);
@@ -43,11 +52,11 @@ export const mapPresetToMarkdown = (preset: GraphSettings): string => {
 	) as (keyof typeof graphSettingsKeys)[];
 	for (const group of groups) {
 		let options;
-		if (group === "colorGroupOptions" && inlineColorGroups) {
+		if (group === "colorGroupOptions" && inlineColorGroups && !invalidColorGroup) {
 			options = graphSettingsKeys[group].filter(
 				(option) => option !== "colorGroups"
 			);
-		} else if (group === "filterOptions" && inlineSearchQuery) {
+		} else if (group === "filterOptions" && inlineSearchQuery && !invalidSearchQuery) {
 			options = graphSettingsKeys[group].filter(
 				(option) => option !== "search"
 			);
@@ -60,7 +69,7 @@ export const mapPresetToMarkdown = (preset: GraphSettings): string => {
 			}
 		}
 	}
-	lines.push(stringifyYaml(Object.fromEntries(entries)));
+	lines.push(yaml.stringify(Object.fromEntries(entries)).replace(/\n$/, ""));
 
 	lines.push("```");
 	lines.push("");

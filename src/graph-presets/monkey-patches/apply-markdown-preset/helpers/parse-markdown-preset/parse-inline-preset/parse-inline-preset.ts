@@ -36,14 +36,14 @@ export const parseInlinePreset = (file: string) => {
 
 	const searchQuery: string[] = [];
 	for (const query of filterQueries) {
-		const [key, value] = query.split("::");
+		const [key, value] = query.split(/::(.+)/);
 		searchQuery.push(`${key}: ${trimString(value)}`);
 	}
 	settings.search = searchQuery.join(" ");
 
 	const colorGroups: ColorGroup[] = [];
 	for (const query of colorQueries) {
-		const [key, value] = query.split("::");
+		const [key, value] = query.split(/::(.+)/);
 		const [colorQuery, color] = value.split("|");
 		colorGroups.push({
 			query: `${key}: ${trimString(colorQuery)}`,
@@ -57,5 +57,3 @@ export const parseInlinePreset = (file: string) => {
 
 	return settings;
 };
-
-

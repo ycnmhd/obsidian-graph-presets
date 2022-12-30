@@ -23,7 +23,10 @@ export const savePresetToMarkdown = async ({
 	let newFile: TFile | undefined = undefined;
 	const preset = await obsidian.getGraphSettings();
 	if (mode === "create") {
-		const markdownPreset = mapPresetToMarkdown(preset);
+		const markdownPreset = mapPresetToMarkdown(
+			preset,
+			plugin.settings.preferences.markdownPresets
+		);
 		const folderName = file instanceof TFile ? file.parent.path : file.path;
 		const folderPath = normalizePath(
 			folderName ? folderName : plugin.settings.preferences.presetsFolder
@@ -48,7 +51,10 @@ export const savePresetToMarkdown = async ({
 				...pickedGroup,
 			} as GraphSettings;
 		} else presetToSave = preset as GraphSettings;
-		const markdownPreset = mapPresetToMarkdown(presetToSave);
+		const markdownPreset = mapPresetToMarkdown(
+			presetToSave,
+			plugin.settings.preferences.markdownPresets
+		);
 		newFile = await obsidian.fs.updateFile({
 			file: file as TFile,
 			data: markdownPreset,
