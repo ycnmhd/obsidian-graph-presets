@@ -1,16 +1,16 @@
 import { MenuItem } from "obsidian";
 import { actions } from "src/graph-presets/actions/actions";
-
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 
 type Props = {
 	item: MenuItem;
-	presetName: string;
+	meta: MarkdownPresetMeta;
 };
 
-export const DeletePreset = ({ item, presetName }: Props) => {
+export const DeletePreset = ({ item, meta }: Props) => {
 	item.setTitle("Delete");
 	item.setIcon("trash");
 	item.onClick(async () => {
-		await actions.deletePreset(presetName);
+		await actions.deletePreset(meta);
 	});
 };

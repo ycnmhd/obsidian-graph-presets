@@ -4,7 +4,7 @@ import { GraphPresets } from "src/graph-presets/graph-presets";
 import { PRESET_FRONTMATTER } from "src/graph-presets/helpers/constants";
 import { graphSettingsKeys } from "src/graph-presets/helpers/graph-settings-keys";
 import { GraphSettings } from "src/types/graph-settings";
-import { parseSearchQuery } from "./helpers/parse-search-query";
+import { parseSearchQuery } from "../../../actions/save-preset-to-markdown/helpers/parse-search-query";
 
 export const mapPresetToMarkdown = (preset: GraphSettings): string => {
 	const plugin = GraphPresets.getInstance();

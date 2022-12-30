@@ -1,16 +1,19 @@
 import { svgs } from "src/assets/svgs";
 import { actions } from "src/graph-presets/actions/actions";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 
 type Props = {
-	presetName: string;
+	meta: MarkdownPresetMeta;
 	getInputValue: () => string;
 	deleteUnsavedPreset?: () => void;
+	cancelRenaming: () => void;
 };
 
 export const SavePreset: React.FC<Props> = ({
-	presetName,
+	meta,
 	getInputValue,
 	deleteUnsavedPreset,
+	cancelRenaming,
 }) => {
 	return (
 		<button
@@ -18,9 +21,14 @@ export const SavePreset: React.FC<Props> = ({
 			onClick={() => {
 				const value = getInputValue();
 				if (!value) return;
-				if (presetName) actions.renamePreset(presetName, value);
-				else actions.createPreset(value);
-				if (deleteUnsavedPreset) deleteUnsavedPreset();
+				if (meta.name === value) {
+					cancelRenaming();
+				} else {
+					if (meta.name)
+						actions.renamePreset({ created: meta.created }, value);
+					else actions.createPreset(value);
+					if (deleteUnsavedPreset) deleteUnsavedPreset();
+				}
 			}}
 			aria-label="Save preset"
 		>

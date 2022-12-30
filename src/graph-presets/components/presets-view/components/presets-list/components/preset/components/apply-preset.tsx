@@ -1,19 +1,17 @@
 import { svgs } from "src/assets/svgs";
 import { actions } from "src/graph-presets/actions/actions";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 
 type Props = {
-	presetName: string;
+	meta: MarkdownPresetMeta;
 };
 
-
-export const ApplyPreset: React.FC<Props> = ({
-	presetName,
-}) => {
+export const ApplyPreset: React.FC<Props> = ({ meta }) => {
 	return (
 		<button
 			className="mod-cta"
 			onClick={() => {
-				actions.applyPreset(presetName);
+				actions.applyPreset(meta);
 			}}
 			aria-label="Apply preset"
 		>

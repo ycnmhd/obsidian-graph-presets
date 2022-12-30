@@ -1,11 +1,11 @@
-import { GraphPresets } from "src/graph-presets/graph-presets";
-import { Preset as TPreset } from "src/graph-presets/settings/default-settings";
+import {  MarkdownPresetMeta } from "src/graph-presets/graph-presets";
+import { PresetsViewState } from "../../hooks/unsaved-presets";
 import { navBarHeight } from "../nav-header/nav-header";
 import { Preset } from "./components/preset/preset";
 
 type Props = {
-	presets: GraphPresets["settings"]["presets"];
-	unsavedPresets: TPreset[];
+	presets: MarkdownPresetMeta[];
+	unsavedPresets: PresetsViewState["unsavedPresets"];
 	deleteUnsavedPreset: (ts: number) => void;
 };
 
@@ -15,19 +15,29 @@ export const PresetsList: React.FC<Props> = ({
 	deleteUnsavedPreset,
 }) => {
 	return (
-		<div style={{ height: `calc(100% - ${navBarHeight}px)` , padding: "5px", overflowY: "scroll"}}>
+		<div
+			style={{
+				height: `calc(100% - ${navBarHeight}px)`,
+				padding: "5px",
+				overflowY: "scroll",
+			}}
+			
+		>
 			{unsavedPresets.map((preset) => (
 				<Preset
-					presetName={""}
-					key={preset.meta.created}
+					meta={preset}
+					key={preset.created}
 					deleteUnsavedPreset={() =>
-						deleteUnsavedPreset(preset.meta.created)
+						deleteUnsavedPreset(preset.created)
 					}
 				/>
 			))}
-			{Object.keys(presets).map((presetName) => (
-				<Preset presetName={presetName} key={presetName} />
-				))}
+			{presets.map((preset) => (
+				<Preset
+					meta={preset}
+					key={preset.created}
+				/>
+			))}
 		</div>
 	);
 };

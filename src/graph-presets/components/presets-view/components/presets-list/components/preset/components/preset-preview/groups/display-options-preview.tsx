@@ -1,22 +1,19 @@
 import { DisplayOptions } from "src/types/graph-settings";
 import { settingItemProps } from "../group-container/shared-props";
 import { GroupContainer } from "../group-container/group-container";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 
 type Props = {
 	options: DisplayOptions;
-	presetName: string;
+	meta: MarkdownPresetMeta;
 };
 
 export const DisplayOptionsPreview: React.FC<Props> = ({
 	options,
-	presetName,
+	meta,
 }) => {
 	return (
-		<GroupContainer
-			className="mod-display"
-			presetName={presetName}
-			group="display"
-		>
+		<GroupContainer className="mod-display" meta={meta} group="display">
 			<div className="tree-item-self mod-collapsible">
 				<div className="tree-item-inner">
 					<header className="graph-control-section-header">
@@ -34,7 +31,6 @@ export const DisplayOptionsPreview: React.FC<Props> = ({
 						<div className="setting-item-description"></div>
 					</div>
 					<div className="setting-item-control">
-						
 						<div
 							className={`checkbox-container mod-small ${
 								options.showArrow ? "is-enabled" : ""

@@ -1,9 +1,5 @@
-import { GraphSettings } from "src/types/graph-settings";
-export type Preset = {
-	settings: GraphSettings;
+export type PersistedPresetMeta = {
 	meta: {
-		created: number;
-		updated: number;
 		applied: number;
 	};
 };
@@ -18,9 +14,11 @@ export type SortMode =
 	| "dateAppliedAsc"
 	| "dateAppliedDesc";
 
-export type GraphPresetsSettings = {
-	presets: {
-		[key: string]: Preset;
+export type PluginSettings = {
+	data: {
+		presetsMeta: {
+			[key: string]: PersistedPresetMeta;
+		};
 	};
 	preferences: {
 		sortBy: SortMode;
@@ -32,8 +30,10 @@ export type GraphPresetsSettings = {
 	};
 };
 
-export const DEFAULT_SETTINGS: GraphPresetsSettings = {
-	presets: {},
+export const DEFAULT_SETTINGS: PluginSettings = {
+	data: {
+		presetsMeta: {},
+	},
 	preferences: {
 		sortBy: "presetNameAsc",
 		presetsFolder: "documents/graph presets",

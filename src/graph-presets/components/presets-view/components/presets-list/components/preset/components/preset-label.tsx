@@ -1,18 +1,19 @@
 import { useMemo } from "react";
-import { GraphPresets } from "src/graph-presets/graph-presets";
+import { actions } from "src/graph-presets/actions/actions";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 const rtf1 = new Intl.RelativeTimeFormat("en", { style: "long" });
 type Props = {
-	presetName: string;
+	meta: MarkdownPresetMeta;
 };
 
-export const PresetLabel: React.FC<Props> = ({ presetName }) => {
-	const presets = GraphPresets.getInstance().settings.presets;
+export const PresetLabel: React.FC<Props> = ({ meta }) => {
+	// const presets = GraphPresets.getInstance().settings.presets;
 	const relativeTime = useMemo(() => {
-		const difference = Date.now() - presets[presetName].meta.updated;
+		const difference = Date.now() - meta.updated;
 		const days = Math.floor(difference / (1000 * 60 * 60 * 24));
 		const hours = Math.floor(difference / (1000 * 60 * 60));
 		const minutes = Math.floor(difference / (1000 * 60));
-		
+
 		let relativeTime;
 		if (days > 0) {
 			relativeTime = rtf1.format(-days, "day");
@@ -24,10 +25,12 @@ export const PresetLabel: React.FC<Props> = ({ presetName }) => {
 			relativeTime = "just now";
 		}
 		return "Updated " + relativeTime;
-	}, [presets[presetName].meta.updated]);
+	}, [meta.updated]);
 	return (
 		<>
-			<div className="setting-item-name"> {presetName} </div>
+			<div role="button" onClick={() => actions.openFile(meta)} style={{cursor:"pointer"}}>
+				{meta.name}
+			</div>
 			<div className="setting-item-description">
 				<div>{relativeTime} </div>
 			</div>

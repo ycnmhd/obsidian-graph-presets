@@ -1,19 +1,19 @@
 import { Menu, TAbstractFile } from "obsidian";
-import { GraphPresetsItemViewIcon } from "src/graph-presets/components/presets-view/graph-presets-item-view";
-import { savePresetToMarkdown } from "../create-markdown-preset/save-preset-to-markdown";
+import { GraphPresetsItemViewIcon } from "../components/presets-view/graph-presets-item-view";
+import { savePresetToMarkdown } from "../actions/save-preset-to-markdown/save-preset-to-markdown";
 
-export const updateMarkdownPresetPatch = async (
+export const createMarkdownPresetPatch = async (
 	menu: Menu,
 	file: TAbstractFile
 ) => {
 	menu.addItem((item) => {
-		item.setTitle("Update Graph Preset")
+		item.setTitle("New Graph Preset")
 			.setIcon(GraphPresetsItemViewIcon.name)
 			.setSection("pane")
 			.onClick(async () => {
 				await savePresetToMarkdown({
 					file,
-					mode: "update",
+					mode: "create",
 				});
 			});
 	});

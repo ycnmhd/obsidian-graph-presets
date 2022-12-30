@@ -1,17 +1,25 @@
-import { GraphPresets } from "src/graph-presets/graph-presets";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
+import { GraphSettings } from "src/types/graph-settings";
 import { ColorGroupsOptionsPreview } from "./groups/color-groups-options-preview";
 import { DisplayOptionsPreview } from "./groups/display-options-preview";
 import { FilterOptionsPreview } from "./groups/filter-options-preview";
 import { ForcesOptionsPreview } from "./groups/forces-options-preview";
 
 type Props = {
-	presetName: string;
+	meta: MarkdownPresetMeta;
+	preset: {
+		data?: GraphSettings;
+		error?: Error;
+	};
 };
 
-export const PresetPreview: React.FC<Props> = ({ presetName }) => {
-	const plugin = GraphPresets.getInstance();
-	const presets = plugin.settings.presets;
-	const preset = presets[presetName];
+export const PresetPreview: React.FC<Props> = ({
+	meta,
+	preset: { data, error },
+}) => {
+	if (error) return <div style={{padding: 10, backgroundColor:"#ff000010"}}>Error parsing preset</div>;
+	if (!data) return null;
+
 	return (
 		<div
 			className="graph-controls"
@@ -27,22 +35,10 @@ export const PresetPreview: React.FC<Props> = ({ presetName }) => {
 				justifyContent: "center",
 			}}
 		>
-			<FilterOptionsPreview
-				options={preset.settings}
-				presetName={presetName}
-			/>
-			<ColorGroupsOptionsPreview
-				options={preset.settings}
-				presetName={presetName}
-			/>
-			<DisplayOptionsPreview
-				options={preset.settings}
-				presetName={presetName}
-			/>
-			<ForcesOptionsPreview
-				options={preset.settings}
-				presetName={presetName}
-			/>
+			<FilterOptionsPreview options={data} meta={meta} />
+			<ColorGroupsOptionsPreview options={data} meta={meta} />
+			<DisplayOptionsPreview options={data} meta={meta} />
+			<ForcesOptionsPreview options={data} meta={meta} />
 		</div>
 	);
 };

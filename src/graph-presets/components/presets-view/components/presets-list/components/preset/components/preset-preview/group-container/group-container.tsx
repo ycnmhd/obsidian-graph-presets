@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { GroupContainerMenu } from "./components/group-container-menu";
 import { sharedPreviewStyles } from "./shared-props";
 
 type Props = {
-	presetName: string;
+	meta: MarkdownPresetMeta;
 	group: graphSettingsGroup;
 	className?: string;
 	children?: React.ReactNode;
@@ -12,7 +13,7 @@ type Props = {
 
 export const GroupContainer: React.FC<Props> = ({
 	group,
-	presetName,
+	meta,
 	children,
 	className = "",
 }) => {
@@ -27,7 +28,7 @@ export const GroupContainer: React.FC<Props> = ({
 		>
 			{children}
 			{showButtons && (
-				<GroupContainerMenu group={group} presetName={presetName} />
+				<GroupContainerMenu group={group} meta={meta} />
 			)}
 		</div>
 	);

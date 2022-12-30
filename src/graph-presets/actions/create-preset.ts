@@ -1,26 +1,23 @@
+import { TFolder } from "obsidian";
 import { obsidian } from "src/obsidian/obsidian";
 import { GraphPresets } from "../graph-presets";
+import { savePresetToMarkdown } from "./save-preset-to-markdown/save-preset-to-markdown";
 
 export const createPreset = async (presetName: string) => {
-	const graphSettings = await obsidian.getGraphSettings();
 	const plugin = GraphPresets.getInstance();
-	let suffix = 2;
-	if (plugin.settings.presets[presetName]) {
-		while (plugin.settings.presets[`${presetName} (${suffix})`]) {
-			suffix++;
-		}
-		presetName = `${presetName} (${suffix})`;
+
+	let file = app.vault.getAbstractFileByPath(
+		plugin.store.getSnapshot().settings.preferences.presetsFolder
+	) as TFolder;
+	if (!file) {
+		file = await obsidian.fs.createFolder(
+			plugin.store.getSnapshot().settings.preferences.presetsFolder
+		) as TFolder;
 	}
-	plugin.settings.presets = {
-		...plugin.settings.presets,
-		[presetName]: {
-			settings: graphSettings,
-			meta: {
-				created: Date.now(),
-				updated: Date.now(),
-				applied: 0,
-			},
-		},
-	};
-	await plugin.saveSettings();
+	await savePresetToMarkdown({
+		file,
+		mode: "create",
+		filename: presetName,
+	});
+	plugin.loadMarkdownPresetsMeta();
 };

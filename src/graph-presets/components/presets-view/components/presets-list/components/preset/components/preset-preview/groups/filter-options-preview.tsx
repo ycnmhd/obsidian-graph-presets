@@ -1,20 +1,21 @@
 import { FilterOptions } from "src/types/graph-settings";
 import { settingItemProps } from "../group-container/shared-props";
 import { GroupContainer } from "../group-container/group-container";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 
 type Props = {
 	options: FilterOptions;
-	presetName: string;
+	meta: MarkdownPresetMeta;
 };
 
 export const FilterOptionsPreview: React.FC<Props> = ({
 	options,
-	presetName,
+	meta,
 }) => {
 	return (
 		<GroupContainer
 			className="mod-filter"
-			presetName={presetName}
+			meta={meta}
 			group="filters"
 		>
 			<div className="tree-item-self mod-collapsible">

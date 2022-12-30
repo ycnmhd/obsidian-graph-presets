@@ -1,20 +1,21 @@
 import { ForceOptions } from "src/types/graph-settings";
 import { settingItemProps } from "../group-container/shared-props";
 import { GroupContainer } from "../group-container/group-container";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 
 type Props = {
 	options: ForceOptions;
-	presetName: string;
+	meta: MarkdownPresetMeta;
 };
 
 export const ForcesOptionsPreview: React.FC<Props> = ({
 	options,
-	presetName,
+	meta,
 }) => {
 	return (
 		<GroupContainer
 			className="mod-forces"
-			presetName={presetName}
+			meta={meta}
 			group="forces"
 		>
 			<div>

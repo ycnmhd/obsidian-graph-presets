@@ -1,19 +1,17 @@
 import { GroupContainer } from "../group-container/group-container";
 import { ColorGroupOptions } from "src/types/graph-settings";
 import { ColorOption } from "./color-option";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 type Props = {
 	options: ColorGroupOptions;
-	presetName: string;
+	meta: MarkdownPresetMeta
 };
 
-export const ColorGroupsOptionsPreview: React.FC<Props> = ({
-	options,
-	presetName,
-}) => {
+export const ColorGroupsOptionsPreview: React.FC<Props> = ({ options, meta }) => {
 	return (
 		<GroupContainer
 			className=" mod-color-groups"
-			presetName={presetName}
+			meta={meta}
 			group="groups"
 		>
 			<div className="tree-item-self mod-collapsible">

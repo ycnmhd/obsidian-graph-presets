@@ -2,19 +2,20 @@ import { MouseEvent } from "react";
 import { svgs } from "src/assets/svgs";
 import { actions } from "src/graph-presets/actions/actions";
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 
 type Props = {
-	presetName: string;
+	meta: MarkdownPresetMeta;
 	group: graphSettingsGroup;
 };
-export const GroupContainerMenu: React.FC<Props> = ({ group, presetName }) => {
+export const GroupContainerMenu: React.FC<Props> = ({ group, meta }) => {
 	const apply = (e: MouseEvent) => {
 		e.stopPropagation();
-		actions.applyPreset(presetName, group);
+		actions.applyPreset(meta, group);
 	};
 	const update = (e: MouseEvent) => {
 		e.stopPropagation();
-		actions.updatePreset(presetName, group);
+		actions.updatePreset(meta, group);
 	};
 
 	return (

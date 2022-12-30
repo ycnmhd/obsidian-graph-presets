@@ -1,8 +1,8 @@
 import { useReducer } from "react";
-import { Preset } from "src/graph-presets/settings/default-settings";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 
-type PresetsViewState = {
-	unsavedPresets: Preset[];
+export type PresetsViewState = {
+	unsavedPresets: Omit<MarkdownPresetMeta, "file">[];
 };
 
 type ActionName = "createPreset" | "deletePreset";
@@ -19,15 +19,14 @@ const reducer = (state: PresetsViewState, action: Action): PresetsViewState => {
 			return {
 				...state,
 				unsavedPresets: [
-                    {
-                        meta: {
-                            created: ts,
-							updated: ts,
-                            applied: 0,
-						},
-						settings: null as any,
+					{
+						created: ts,
+						updated: ts,
+						applied: 0,
+						name: "",
+						path: "",
 					},
-                    ...state.unsavedPresets,
+					...state.unsavedPresets,
 				],
 			};
 		}
@@ -38,7 +37,7 @@ const reducer = (state: PresetsViewState, action: Action): PresetsViewState => {
 			return {
 				...state,
 				unsavedPresets: state.unsavedPresets.filter(
-					(preset) => preset.meta.created !== action.payload
+					(preset) => preset.created !== action.payload
 				),
 			};
 		}
@@ -54,8 +53,8 @@ export const useUnsavedPresets = () => {
 		dispatch({ type: "createPreset" });
 	};
 
-	const deletePreset = (ts: number) => {
-		dispatch({ type: "deletePreset", payload: ts });
+	const deletePreset = (createdTs: number) => {
+		dispatch({ type: "deletePreset", payload: createdTs });
 	};
 
 	return {
