@@ -110,8 +110,8 @@ export class PresetView extends TextFileView implements IView {
 					plugin.store.getSnapshot().state.meta[this.file.stat.ctime];
 
 				const table = (
-					<div>
-						{" "}
+					<div className="flex justify-center ">
+						
 						<PresetPreview
 							meta={meta}
 							preset={{ data: preset as GraphSettings }}

@@ -27,17 +27,10 @@ export const PresetPreview: React.FC<Props> = ({
 
 	return (
 		<div
-			className="graph-controls"
+			className="graph-controls flex flex-col border-none w-[230px] static "
 			style={{
-				display: "flex",
-				flexDirection: "row",
-				flexWrap: "wrap",
-				width: "100%",
-				position: "static",
-				boxShadow: "none",
-				background: "none",
-				border: "none",
 				justifyContent: "center",
+				boxShadow:"none"
 			}}
 		>
 			<FilterOptionsPreview options={data} meta={meta} />

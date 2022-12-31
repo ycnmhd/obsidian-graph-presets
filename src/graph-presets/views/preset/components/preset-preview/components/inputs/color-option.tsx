@@ -1,5 +1,6 @@
 import { ColorGroupOptions } from "src/types/graph-settings";
 import { rgbToHex } from "../../helpers/map-colors";
+import { TextInput } from "./text-input";
 
 type Props = {
 	color: ColorGroupOptions["colorGroups"][number];
@@ -7,15 +8,12 @@ type Props = {
 
 export const ColorOption: React.FC<Props> = ({ color }) => {
 	return (
-		<div className="graph-color-group">
+		<TextInput value={color.query} placeholder="Enter query...">
 			<input
-				type="text"
-				spellCheck="false"
-				placeholder="Enter query..."
-				value={color.query}
-				disabled
+				type="color"
+				value={rgbToHex(color.color.rgb)}
+				className="absolute right-1"
 			/>
-			<input type="color" value={rgbToHex(color.color.rgb)} disabled />
-		</div>
+		</TextInput>
 	);
 };

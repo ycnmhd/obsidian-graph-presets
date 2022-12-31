@@ -1,35 +1,31 @@
+import classnames from "classnames";
 import { useState } from "react";
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
-import { GroupContainerMenu } from "../groups/group-container-menu";
-import { sharedPreviewStyles } from "./shared-props";
+import { GroupHeader } from "./group-header";
 
 type Props = {
 	meta: MarkdownPresetMeta;
 	group: graphSettingsGroup;
-	className?: string;
 	children?: React.ReactNode;
 };
 
-export const GroupContainer: React.FC<Props> = ({
-	group,
-	meta,
-	children,
-	className = "",
-}) => {
-	const [showButtons, setShowButtons] = useState(false);
+export const GroupContainer: React.FC<Props> = ({ group, meta, children }) => {
+	const [collapsed, setCollapsed] = useState(false);
+
 	return (
 		<div
-			style={{ ...sharedPreviewStyles, position: "relative" }}
-			className={"tree-item graph-control-section " + className}
-			onMouseEnter={() => setShowButtons(true)}
-			onMouseLeave={() => setShowButtons(false)}
-			onClick={() => setShowButtons(false)}
-		>
-			{children}
-			{showButtons && (
-				<GroupContainerMenu group={group} meta={meta} />
+			className={classnames(
+				"tree-item graph-control-section ",
+				collapsed ? "is-collapsed" : ""
 			)}
+		>
+			<GroupHeader
+				meta={meta}
+				group={group}
+				setCollapsed={setCollapsed}
+			/>
+			{!collapsed && <div className="tree-item-children">{children}</div>}
 		</div>
 	);
 };

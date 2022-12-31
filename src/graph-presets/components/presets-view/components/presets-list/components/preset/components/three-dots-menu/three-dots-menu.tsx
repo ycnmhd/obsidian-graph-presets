@@ -28,7 +28,7 @@ export const ThreeDotsMenu: React.FC<Props> = ({
 			}}
 			aria-label="More options"
 		>
-			{svgs["ellipsis-vertical"]}
+			{svgs["ellipsis-vertical"]()}
 		</button>
 	);
 };

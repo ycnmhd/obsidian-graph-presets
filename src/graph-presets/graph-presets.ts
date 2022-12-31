@@ -52,6 +52,7 @@ export class GraphPresets extends Plugin {
 		GraphPresets.instance = this;
 
 		await this.loadSettings();
+		console.log(this.settings);
 		await this.loadMarkdownPresetsMeta();
 		this.viewManager.onload();
 		this.addCommand(openGraphPresetsView);
@@ -76,7 +77,10 @@ export class GraphPresets extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = mergeDeep(await this.loadData(), DEFAULT_SETTINGS);
+		this.settings = mergeDeep(
+			(await this.loadData()) || {},
+			DEFAULT_SETTINGS
+		);
 		this.store.set({ settings: this.settings });
 	}
 
