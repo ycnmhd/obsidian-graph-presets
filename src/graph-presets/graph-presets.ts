@@ -32,6 +32,7 @@ export type PluginState = {
 	meta: Record<number, MarkdownPresetMeta>;
 	filesByCtime: Record<string, TFile>;
 	filesByPath: Record<string, TFile>;
+	filter: string;
 };
 
 export class GraphPresets extends Plugin {
@@ -190,12 +191,13 @@ export class GraphPresets extends Plugin {
 				return [f.path, f];
 			})
 		);
-		this.store.set({
+		this.store.set(store =>({
 			state: {
 				meta,
 				filesByCtime,
 				filesByPath,
+				filter: store.state?.filter || "",
 			},
-		});
+		}));
 	}
 }

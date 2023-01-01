@@ -2,6 +2,7 @@ import { useMemo, useSyncExternalStore } from "react";
 import { GraphPresets, MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { NavHeader } from "./components/nav-header/nav-header";
 import { PresetsList } from "./components/presets-list/presets-list";
+import { SearchInput } from "./components/search-input/search-input";
 import { useUnsavedPresets } from "./hooks/unsaved-presets";
 
 export const PresetsView: React.FC = () => {
@@ -14,7 +15,12 @@ export const PresetsView: React.FC = () => {
 	const { unsavedPresets, createPreset, deletePreset } = useUnsavedPresets();
 
 	const presets = useMemo(() => {
-		const unsortedEntries = Object.values(store.state.meta);
+		const fullList = Object.values(store.state.meta);
+		const filteredList = fullList.filter((preset) =>
+			(preset.path)
+				.toLowerCase()
+				.includes(store.state.filter.toLowerCase()));
+		const unsortedEntries = filteredList;
 		let sortedEntries: MarkdownPresetMeta[];
 		switch (store.settings.preferences.sortBy) {
 			case "presetNameAsc":
@@ -68,6 +74,7 @@ export const PresetsView: React.FC = () => {
 				createPreset={createPreset}
 				sortBy={store.settings.preferences.sortBy}
 			/>
+			<SearchInput currentValue={store.state.filter}/>
 			<PresetsList
 				presets={presets}
 				unsavedPresets={unsavedPresets}

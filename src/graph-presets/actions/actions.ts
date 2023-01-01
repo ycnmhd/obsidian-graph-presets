@@ -7,7 +7,7 @@ import { updatePreset } from "./update-preset";
 import { applyMarkdownPreset } from "./apply-markdown-preset";
 import { getPreset } from "./get-preset";
 import { openFile } from "./open-file";
-
+import { GraphPresets } from "../graph-presets";
 
 export const actions = {
 	applyPreset,
@@ -19,4 +19,13 @@ export const actions = {
 	applyMarkdownPreset,
 	getPreset,
 	openFile,
+	setFilter: (filter: string) => {
+		const plugin = GraphPresets.getInstance();
+		plugin.store.set((store) => ({
+			state: {
+				...store.state,
+				filter,
+			},
+		}));
+	},
 };
