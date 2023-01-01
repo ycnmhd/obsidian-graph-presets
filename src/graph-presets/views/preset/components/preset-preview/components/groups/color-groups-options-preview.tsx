@@ -17,7 +17,7 @@ export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 			group="groups"
 		>
 			{options.colorGroups.map((color) => (
-				<ColorOption color={color} key={color.color.rgb} />
+				<ColorOption color={color} key={color.color.rgb+color.query} />
 			))}
 		</GroupContainer>
 	);

@@ -6,10 +6,7 @@ import { createRoot, Root } from "react-dom/client";
 import { logger } from "../../helpers/logger";
 import { ViewManager } from "./view-manager";
 import { IView, StateManager } from "./state-manager";
-import { actions } from "../../actions/actions";
 import { PresetPreview } from "./components/preset-preview/preset-preview";
-import { GraphPresets } from "../../graph-presets";
-import { GraphSettings } from "src/types/graph-settings";
 
 const isPresetNote = (data: string) => {
 	return /---\sgraph-presets-plugin: basic\s---/.test(data);
@@ -102,23 +99,12 @@ export class PresetView extends TextFileView implements IView {
 	async render(): Promise<void> {
 		if (this.rootContainer) {
 			try {
-				const preset = await actions.getPreset({
-					created: this.file.stat.ctime,
-				});
-				const plugin = GraphPresets.getInstance();
-				const meta =
-					plugin.store.getSnapshot().state.meta[this.file.stat.ctime];
-
-				const table = (
+				const view = (
 					<div className="flex justify-center ">
-						
-						<PresetPreview
-							meta={meta}
-							preset={{ data: preset as GraphSettings }}
-						/>
+						<PresetPreview ctime={this.file.stat.ctime} />
 					</div>
 				);
-				this.rootContainer.render(table);
+				this.rootContainer.render(view);
 			} catch (e) {
 				logger.error(e);
 				setTimeout(() => {

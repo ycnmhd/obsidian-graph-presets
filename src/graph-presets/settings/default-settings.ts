@@ -38,8 +38,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 		sortBy: "presetNameAsc",
 		presetsFolder: "documents/graph presets",
 		markdownPresets: {
-			inlineSearchQuery: true,
-			inlineColorGroups: true,
+			inlineSearchQuery: false,
+			inlineColorGroups: false,
 		},
 	},
 };
