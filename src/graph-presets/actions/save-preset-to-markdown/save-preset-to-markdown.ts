@@ -14,15 +14,17 @@ export const savePresetToMarkdown = async ({
 	mode,
 	filename,
 	group,
+	preset: presetToSave,
 }: {
 	file: TAbstractFile;
 	mode: "create" | "update";
 	filename?: string;
 	group?: graphSettingsGroup;
+	preset?: GraphSettings;
 }) => {
 	const plugin = GraphPresets.getInstance();
 	let newFile: TFile | undefined = undefined;
-	const preset = await obsidian.getGraphSettings();
+	const preset = presetToSave|| await obsidian.getGraphSettings();
 	if (mode === "create") {
 		const markdownPreset = mapPresetToMarkdown(
 			preset,
@@ -37,8 +39,7 @@ export const savePresetToMarkdown = async ({
 			filename: filename || "preset",
 			content: markdownPreset,
 		});
-		await fileIsPresetAsync(newFile)
-		await actions.openFile({ created: newFile.stat.ctime,file: newFile });
+		
 	} else if (mode === "update") {
 		let presetToSave: GraphSettings;
 		if (group) {
@@ -61,4 +62,5 @@ export const savePresetToMarkdown = async ({
 			data: markdownPreset,
 		});
 	}
+	return newFile;
 };

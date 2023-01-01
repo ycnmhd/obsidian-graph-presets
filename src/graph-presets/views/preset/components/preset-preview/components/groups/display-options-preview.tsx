@@ -18,7 +18,7 @@ export const DisplayOptionsPreview: React.FC<Props> = ({ options, meta }) => {
 				value={options.textFadeMultiplier}
 				min={-3}
 				max={3}
-				step={0.1}
+				// step={0.1}
 			/>
 			<Slider
 				name="Node size"

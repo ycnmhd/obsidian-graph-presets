@@ -1,6 +1,6 @@
-import { Menu, TAbstractFile } from "obsidian";
+import { Menu, TAbstractFile, TFile } from "obsidian";
 import { GraphPresetsItemViewIcon } from "src/graph-presets/components/presets-view/graph-presets-item-view";
-import { savePresetToMarkdown } from "../actions/save-preset-to-markdown/save-preset-to-markdown";
+import { actions } from "../actions/actions";
 
 export const updateMarkdownPresetPatch = async (
 	menu: Menu,
@@ -11,10 +11,10 @@ export const updateMarkdownPresetPatch = async (
 			.setIcon(GraphPresetsItemViewIcon.name)
 			.setSection("pane")
 			.onClick(async () => {
-				await savePresetToMarkdown({
-					file,
-					mode: "update",
-				});
+				if(file instanceof TFile)
+				await actions.updatePreset({
+					created: file.stat.ctime,
+				})
 			});
 	});
 	//@ts-ignore

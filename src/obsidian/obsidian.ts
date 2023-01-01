@@ -6,7 +6,7 @@ import { uniqueFileName } from "./fs/unique-file-name";
 import { createFile } from "./fs/create-file";
 import { updateFile } from "./fs/update-file";
 import { readFile } from "./fs/read-file";
-import { TFile } from "obsidian";
+import { TAbstractFile, TFile } from "obsidian";
 import { PresetViewType } from "src/graph-presets/views/preset/preset-view";
 
 export const obsidian = {
@@ -23,7 +23,7 @@ export const obsidian = {
 		createFile,
 		updateFile,
 		readFile,
-		deleteFile: async (file: TFile) => {
+		deleteFile: async (file: TAbstractFile) => {
 			await app.vault.trash(file, false);
 		},
 		renameFile: async (file: TFile, newName: string) => {

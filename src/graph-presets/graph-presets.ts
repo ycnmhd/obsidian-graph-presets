@@ -18,6 +18,7 @@ import { ViewManager } from "./views/preset/view-manager";
 import { FRONTMATTER_KEY } from "./helpers/constants";
 import { around } from "monkey-around";
 import { renderLeafAsPreset } from "./monkey-patches/render-leaf-as-preset";
+import { migrateSettings } from "./settings/settings-migration";
 export type MarkdownPresetMeta = {
 	applied: number;
 	created: number;
@@ -51,7 +52,6 @@ export class GraphPresets extends Plugin {
 
 	async onload() {
 		GraphPresets.instance = this;
-
 		await this.loadSettings();
 		await this.loadMarkdownPresetsMeta();
 		this.viewManager.onload();
@@ -70,6 +70,8 @@ export class GraphPresets extends Plugin {
 		app.workspace.onLayoutReady(this.initView);
 		// inspired from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/main.ts#L259
 		this.registerMonkeyPatches();
+		await migrateSettings()
+		
 	}
 
 	onunload(): void {

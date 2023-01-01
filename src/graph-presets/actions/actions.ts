@@ -18,5 +18,5 @@ export const actions = {
 	setSortBy,
 	applyMarkdownPreset,
 	getPreset,
-	openFile
+	openFile,
 };

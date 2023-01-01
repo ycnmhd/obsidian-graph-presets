@@ -15,6 +15,7 @@ export type SortMode =
 	| "dateAppliedDesc";
 
 export type PluginSettings = {
+	version: string | undefined;
 	data: {
 		presetsMeta: {
 			[key: string]: PersistedPresetMeta;
@@ -22,7 +23,7 @@ export type PluginSettings = {
 	};
 	preferences: {
 		sortBy: SortMode;
-		presetsFolder: "documents/graph presets";
+		presetsFolder: string;
 		markdownPresets: {
 			inlineSearchQuery: boolean;
 			inlineColorGroups: boolean;
@@ -30,13 +31,17 @@ export type PluginSettings = {
 	};
 };
 
+export const CURRENT_VERSION = "0.5.0";
+
 export const DEFAULT_SETTINGS: PluginSettings = {
+	version: undefined,
+
 	data: {
 		presetsMeta: {},
 	},
 	preferences: {
 		sortBy: "presetNameAsc",
-		presetsFolder: "documents/graph presets",
+		presetsFolder: "graph presets",
 		markdownPresets: {
 			inlineSearchQuery: false,
 			inlineColorGroups: false,
