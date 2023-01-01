@@ -2,6 +2,7 @@ import { Notice } from "obsidian";
 import { GraphSettings } from "src/types/graph-settings";
 import { actions } from "../actions/actions";
 import { GraphPresets } from "../graph-presets";
+import { logger } from "../helpers/logger";
 import { t } from "../lang/text";
 import { CURRENT_VERSION } from "./default-settings";
 
@@ -46,6 +47,8 @@ const migrations = {
 				
 				new Notice(t.c.PRESETS_MIGRATED)
 			} catch (e) {
+
+				logger.error(e);
 				new Notice(t.c.ERROR_MIGRATING_PRESETS+": " + e.message);
 			}
 		}

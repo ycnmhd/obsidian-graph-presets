@@ -77,7 +77,9 @@ export class GraphPresets extends Plugin {
 		app.workspace.onLayoutReady(this.initView);
 		// inspired from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/main.ts#L259
 		this.registerMonkeyPatches();
+		app.workspace.onLayoutReady(async () => {
 		await migrateSettings();
+		});
 	}
 
 	onunload(): void {
