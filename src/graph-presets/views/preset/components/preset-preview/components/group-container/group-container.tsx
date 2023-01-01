@@ -2,7 +2,10 @@ import classnames from "classnames";
 import { useState } from "react";
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
+import { t } from "src/graph-presets/lang/text";
 import { GroupHeader } from "./group-header";
+
+
 
 type Props = {
 	meta: MarkdownPresetMeta;

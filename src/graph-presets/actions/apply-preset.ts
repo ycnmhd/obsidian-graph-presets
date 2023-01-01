@@ -1,6 +1,7 @@
 import { Notice } from "obsidian";
 import { obsidian } from "src/obsidian/obsidian";
 import { GraphPresets } from "../graph-presets";
+import { t } from "../lang/text";
 import { actions } from "./actions";
 import { GetPresetDTO } from "./get-preset";
 
@@ -25,5 +26,5 @@ export const applyPreset = async (
 	}
 	await plugin.saveSettings();
 	plugin.loadMarkdownPresetsMeta();
-	new Notice(`Preset applied`);
+	new Notice(t.c.PRESET_APPLIED);
 };

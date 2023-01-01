@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { actions } from "src/graph-presets/actions/actions";
+import { t } from "src/graph-presets/lang/text";
 
 export const searchInputHeight = 38;
 type Props = {
@@ -28,7 +29,7 @@ export const SearchInput: React.FC<Props> = ({ currentValue = "" }) => {
 				enterKeyHint="search"
 				type="search"
 				spellCheck="false"
-				placeholder="Filter presets by name or path"
+				placeholder={t.c.FILTER_PRESETS}
 				value={value}
 				onChange={(e) => setValue(e.target.value)}
 			/>

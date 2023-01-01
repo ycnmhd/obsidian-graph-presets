@@ -1,5 +1,4 @@
 import { TAbstractFile, TFile, normalizePath } from "obsidian";
-import { fileIsPresetAsync } from "src/graph-presets/helpers/file-is-preset";
 import GraphPresets from "src/main";
 import { obsidian } from "src/obsidian/obsidian";
 import { GraphSettings } from "src/types/graph-settings";

@@ -7,6 +7,8 @@ import { logger } from "../../helpers/logger";
 import { ViewManager } from "./view-manager";
 import { IView, StateManager } from "./state-manager";
 import { PresetPreview } from "./components/preset-preview/preset-preview";
+import { t } from "src/graph-presets/lang/text";
+import { GetPresetDTO } from "src/graph-presets/actions/get-preset";
 
 const isPresetNote = (data: string) => {
 	return /---\sgraph-presets-plugin: basic\s---/.test(data);
@@ -76,6 +78,13 @@ export class PresetView extends TextFileView implements IView {
 		return this.manager.getStateManager(this.file)?.getAView() === this;
 	}
 
+	getPresetMeta(): GetPresetDTO {
+		return {
+			created: this.file.stat.ctime,
+			file: this.file,
+		};
+	}
+
 	getWindow() {
 		return this.containerEl.win as Window & typeof globalThis;
 	}
@@ -123,7 +132,7 @@ export class PresetView extends TextFileView implements IView {
 		// Open as markdown action
 		this.addAction(
 			"document",
-			`${"menu_pane_open_as_md_action"}`,
+			t.c.OPEN_AS_MARKDOWN,
 			this.markdownAction.bind(this)
 		);
 	}

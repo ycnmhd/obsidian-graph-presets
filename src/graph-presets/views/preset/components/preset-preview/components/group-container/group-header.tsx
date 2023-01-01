@@ -3,6 +3,14 @@ import { svgs } from "src/assets/svgs";
 import { actions } from "src/graph-presets/actions/actions";
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
+import { t } from "src/graph-presets/lang/text";
+
+const labels: Record<graphSettingsGroup, string> = {
+	filters: t.c.FILTERS_GROUP,
+	groups: t.c.GROUPS_GROUP,
+	display: t.c.DISPLAY_GROUP,
+	forces: t.c.FORCES_GROUP,
+};
 
 type Props = {
 	group: graphSettingsGroup;
@@ -24,7 +32,7 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 				onClick={() => setCollapsed((collapsed) => !collapsed)}
 			>
 				<header className="graph-control-section-header">
-					{group}
+					{labels[group]}
 				</header>
 			</div>
 			<div
@@ -33,14 +41,14 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 				onClick={(event) => {
 					const menu = new Menu();
 					menu.addItem((item) => {
-						item.setTitle("Apply");
+						item.setTitle(t.c.APPLY_GROUP);
 						item.setIcon("document");
 						item.onClick(async () => {
 							actions.applyPreset(meta, group);
 						});
 					});
 					menu.addItem((item) => {
-						item.setTitle("Update");
+						item.setTitle(t.c.UPDATE_GROUP);
 						item.setIcon("edit");
 						item.onClick(async () => {
 							await actions.updatePreset(meta, group);
@@ -49,7 +57,7 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 
 					menu.showAtMouseEvent(event as any as MouseEvent);
 				}}
-				aria-label="More options"
+				aria-label={t.c.MORE_OPTIONS}
 			>
 				{svgs["ellipsis-vertical"]({ width: 16 })}
 			</div>

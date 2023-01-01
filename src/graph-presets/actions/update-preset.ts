@@ -1,5 +1,6 @@
 import { Notice } from "obsidian";
 import { GraphPresets } from "../graph-presets";
+import { t } from "../lang/text";
 import { graphSettingsGroup } from "./apply-preset";
 import { GetPresetDTO } from "./get-preset";
 import { savePresetToMarkdown } from "./save-preset-to-markdown/save-preset-to-markdown";
@@ -18,5 +19,5 @@ export const updatePreset = async (
 		group,
 	});
 	plugin.loadMarkdownPresetsMeta();
-	new Notice("Preset updated",);
+	new Notice(t.c.PRESET_UPDATED);
 };

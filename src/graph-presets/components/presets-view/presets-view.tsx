@@ -33,33 +33,33 @@ export const PresetsView: React.FC = () => {
 					b.name.localeCompare(a.name)
 				);
 				break;
-			case "dateCreatedDesc":
+			case "dateCreatedAsc":
 				sortedEntries = unsortedEntries.sort(
 					(a, b) => a.created - b.created
 				);
 				break;
-			case "dateCreatedAsc":
+			case "dateCreatedDesc":
 				sortedEntries = unsortedEntries.sort(
 					(a, b) => b.created - a.created
 				);
 				break;
-			case "dateModifiedDesc":
+			case "dateModifiedAsc":
 				sortedEntries = unsortedEntries.sort(
 					(a, b) => a.updated - b.updated
 				);
 				break;
-			case "dateModifiedAsc":
+			case "dateModifiedDesc":
 				sortedEntries = unsortedEntries.sort(
 					(a, b) => b.updated - a.updated
 				);
 
 				break;
-			case "dateAppliedDesc":
+			case "dateAppliedAsc":
 				sortedEntries = unsortedEntries.sort(
 					(a, b) => a.applied - b.applied
 				);
 				break;
-			case "dateAppliedAsc":
+			case "dateAppliedDesc":
 				sortedEntries = unsortedEntries.sort(
 					(a, b) => b.applied - a.applied
 				);

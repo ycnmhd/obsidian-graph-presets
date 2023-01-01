@@ -20,6 +20,7 @@ import { around } from "monkey-around";
 import { renderLeafAsPreset } from "./monkey-patches/render-leaf-as-preset";
 import { migrateSettings } from "./settings/settings-migration";
 import { SettingsView } from "./views/settings/settings-view";
+import { activePresetCommands } from "./commands/active-graph-preset";
 export type MarkdownPresetMeta = {
 	applied: number;
 	created: number;
@@ -58,6 +59,9 @@ export class GraphPresets extends Plugin {
 		await this.loadMarkdownPresetsMeta();
 		this.viewManager.onload();
 		this.addCommand(openGraphPresetsView);
+		activePresetCommands.forEach((command) => {
+			this.addCommand(command);
+		});
 		this.loadPresetCommands();
 		addIcon(GraphPresetsItemViewIcon.name, GraphPresetsItemViewIcon.svg);
 
@@ -121,14 +125,15 @@ export class GraphPresets extends Plugin {
 			app.workspace.on("file-menu", async (menu, file, source, leaf) => {
 				if (source === "more-options") {
 					if (fileIsPreset(file)) {
-						applyMarkdownPresetPatch(menu, file as TFile);
+						if (leaf?.view.getViewType() !== PresetViewType)
+							renderLeafAsPreset(menu, leaf as WorkspaceLeaf);
 						updateMarkdownPresetPatch(menu, file);
-						renderLeafAsPreset(menu, leaf as WorkspaceLeaf);
+						applyMarkdownPresetPatch(menu, file as TFile);
 					}
 				} else if (source === "file-explorer-context-menu") {
 					if (fileIsPreset(file)) {
-						applyMarkdownPresetPatch(menu, file as TFile);
 						updateMarkdownPresetPatch(menu, file);
+						applyMarkdownPresetPatch(menu, file as TFile);
 					} else if (file instanceof TFolder)
 						await createMarkdownPresetPatch(menu, file);
 				}
@@ -191,7 +196,7 @@ export class GraphPresets extends Plugin {
 				return [f.path, f];
 			})
 		);
-		this.store.set(store =>({
+		this.store.set((store) => ({
 			state: {
 				meta,
 				filesByCtime,

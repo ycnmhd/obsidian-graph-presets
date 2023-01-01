@@ -1,5 +1,6 @@
 import { App, Notice, PluginSettingTab, Setting } from "obsidian";
 import { FolderSuggest } from "src/graph-presets/helpers/suggestions/folder-suggestions";
+import { t } from "src/graph-presets/lang/text";
 import GraphPresets from "src/main";
 
 export class SettingsView extends PluginSettingTab {
@@ -15,12 +16,12 @@ export class SettingsView extends PluginSettingTab {
 		containerEl.createEl("h2", { text: "Graph Presets" });
 
 		new Setting(containerEl)
-			.setName("Default location")
-			.setDesc("Presets will be created inside this folder")
+			.setName(t.c.PRESETS_FOLDER)
+			.setDesc(t.c.PRESETS_FOLDER_DESCRIPTION)
 			.addSearch((cb) => {
 				
 				new FolderSuggest(app, cb.inputEl);
-				cb.setPlaceholder("Example: path/to/folder")
+				cb.setPlaceholder(t.c.PRESETS_FOLDER_PLACEHOLDER)
 					.setValue(this.plugin.settings.preferences.presetsFolder)
 					.onChange((e) => {
 						if (e) {
@@ -30,8 +31,8 @@ export class SettingsView extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
-			.setName("Enable preset commands")
-			.setDesc("Enable preset commands in the command palette")
+			.setName(t.c.ENABLE_PRESET_COMMANDS)
+			.setDesc(t.c.ENABLE_PRESET_COMMANDS_DESCRIPTION)
 			.addToggle((cb) => {
 				cb.setValue(
 					this.plugin.settings.preferences.enablePresetCommands
@@ -39,7 +40,7 @@ export class SettingsView extends PluginSettingTab {
 					this.plugin.settings.preferences.enablePresetCommands = e;
 
 					new Notice(
-						"You need to reload Obsidian for this change to take effect"
+						t.c.RESTART_TO_APPLY_CHANGES,
 					);
 				});
 			});

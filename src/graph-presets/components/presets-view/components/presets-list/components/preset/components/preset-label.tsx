@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { actions } from "src/graph-presets/actions/actions";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
-const rtf1 = new Intl.RelativeTimeFormat("en", { style: "long" });
+import { rtf1, t } from "src/graph-presets/lang/text";
+
 type Props = {
 	meta: MarkdownPresetMeta;
 };
@@ -16,15 +17,15 @@ export const PresetLabel: React.FC<Props> = ({ meta }) => {
 
 		let relativeTime;
 		if (days > 0) {
-			relativeTime = rtf1.format(-days, "day");
+			relativeTime = rtf1.c.format(-days, "day");
 		} else if (hours > 0) {
-			relativeTime = rtf1.format(-hours, "hour");
+			relativeTime = rtf1.c.format(-hours, "hour");
 		} else if (minutes > 0) {
-			relativeTime = rtf1.format(-minutes, "minute");
+			relativeTime = rtf1.c.format(-minutes, "minute");
 		} else {
-			relativeTime = "just now";
+			relativeTime = t.c.JUST_NOW
 		}
-		return "Updated " + relativeTime;
+		return t.c.UPDATED + relativeTime;
 	}, [meta.updated]);
 	return (
 		<>

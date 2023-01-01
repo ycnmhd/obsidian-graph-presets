@@ -1,6 +1,7 @@
 // copied from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/utils/FileUtils.ts#L129
 
 import { normalizePath, Notice, TFile, TFolder } from "obsidian";
+import { t } from "src/graph-presets/lang/text";
 
 export async function createFolder(folderPath: string) {
 	const vault = app.vault;
@@ -12,7 +13,7 @@ export async function createFolder(folderPath: string) {
 	}
 	if (folder && folder instanceof TFile) {
 		new Notice(
-			`The folder cannot be created because it already exists as a file: ${folderPath}.`
+			t.c.FOLDER_ALREADY_EXISTS_AS_FILE
 		);
 	} else {
 		await vault.createFolder(folderPath);
