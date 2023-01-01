@@ -1,6 +1,7 @@
 import { Menu } from "obsidian";
 import { svgs } from "src/assets/svgs";
 import { actions } from "src/graph-presets/actions/actions";
+import { t } from "src/graph-presets/lang/text";
 import { SortMode } from "src/graph-presets/settings/default-settings";
 
 type Props = {
@@ -9,20 +10,20 @@ type Props = {
 
 const modes: { mode: SortMode; label: string }[][] = [
 	[
-		{ mode: "presetNameAsc", label: "Preset name (A to Z)" },
-		{ mode: "presetNameDesc", label: "Preset name (Z to A)" },
+		{ mode: "presetNameAsc", label: t.c.SORT_BY_PRESET_NAME_ASC },
+		{ mode: "presetNameDesc", label: t.c.SORT_BY_PRESET_NAME_DESC },
 	],
 	[
-		{ mode: "dateCreatedAsc", label: "Date created (new to old)" },
-		{ mode: "dateCreatedDesc", label: "Date created (old to new)" },
+		{ mode: "dateCreatedDesc", label: t.c.SORT_BY_DATE_CREATED_DESC },
+		{ mode: "dateCreatedAsc", label:  t.c.SORT_BY_DATE_CREATED_ASC },
 	],
 	[
-		{ mode: "dateModifiedAsc", label: "Date modified (new to old)" },
-		{ mode: "dateModifiedDesc", label: "Date modified (old to new)" },
+		{ mode: "dateModifiedDesc", label: t.c.SORT_BY_DATE_MODIFIED_DESC },
+		{ mode: "dateModifiedAsc", label: t.c.SORT_BY_DATE_MODIFIED_ASC },
 	],
     [
-        { mode: "dateAppliedAsc", label: "Date applied (new to old)" },
-        { mode: "dateAppliedDesc", label: "Date applied (old to new)" },
+		{ mode: "dateAppliedDesc", label: t.c.SORT_BY_DATE_APPLIED_DESC },
+        { mode: "dateAppliedAsc", label: t.c.SORT_BY_DATE_APPLIED_ASC },
     ]
 ];
 
@@ -30,7 +31,7 @@ export const SortPresets: React.FC<Props> = ({ sortBy }) => {
 	return (
 		<div
 			className="clickable-icon nav-action-button"
-			aria-label="Sort presets"
+			aria-label={t.c.SORT_BY}
 			onClick={(event) => {
 				const menu = new Menu();
 				modes.forEach((modes) => {

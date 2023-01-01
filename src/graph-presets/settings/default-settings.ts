@@ -1,9 +1,5 @@
-import { GraphSettings } from "src/types/graph-settings";
-export type Preset = {
-	settings: GraphSettings;
+export type PersistedPresetMeta = {
 	meta: {
-		created: number;
-		updated: number;
 		applied: number;
 	};
 };
@@ -18,18 +14,39 @@ export type SortMode =
 	| "dateAppliedAsc"
 	| "dateAppliedDesc";
 
-export type GraphPresetsSettings = {
-	presets: {
-		[key: string]: Preset;
+export type PluginSettings = {
+	version: string | undefined;
+	data: {
+		presetsMeta: {
+			[key: string]: PersistedPresetMeta;
+		};
 	};
 	preferences: {
 		sortBy: SortMode;
+		presetsFolder: string;
+		markdownPresets: {
+			inlineSearchQuery: boolean;
+			inlineColorGroups: boolean;
+		};
+		enablePresetCommands: boolean;
 	};
 };
 
-export const DEFAULT_SETTINGS: GraphPresetsSettings = {
-	presets: {},
+export const CURRENT_VERSION = "0.5.0";
+
+export const DEFAULT_SETTINGS: PluginSettings = {
+	version: undefined,
+
+	data: {
+		presetsMeta: {},
+	},
 	preferences: {
 		sortBy: "presetNameAsc",
+		presetsFolder: "graph presets",
+		markdownPresets: {
+			inlineSearchQuery: false,
+			inlineColorGroups: false,
+		},
+		enablePresetCommands: true,
 	},
 };

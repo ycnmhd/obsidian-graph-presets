@@ -1,13 +1,14 @@
-const width = 18;
+const defaultWidth = 18;
 export const svgs = {
-	"ellipsis-vertical": (
+	"ellipsis-vertical": ({
+		width = defaultWidth,
+	}: { width?: number } = {}) => (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
 			width={width}
 		>
 			<path
@@ -25,7 +26,7 @@ export const svgs = {
 			strokeWidth={1.5}
 			stroke="currentColor"
 			className="w-6 h-6"
-			width={width}
+			width={defaultWidth}
 		>
 			<path
 				strokeLinecap="round"
@@ -41,8 +42,7 @@ export const svgs = {
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={width}
+			width={defaultWidth}
 		>
 			<path
 				strokeLinecap="round"
@@ -65,8 +65,7 @@ export const svgs = {
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={width}
+			width={defaultWidth}
 		>
 			<path
 				strokeLinecap="round"
@@ -82,8 +81,7 @@ export const svgs = {
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={width}
+			width={defaultWidth}
 		>
 			<path
 				strokeLinecap="round"
@@ -99,8 +97,7 @@ export const svgs = {
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={width}
+			width={defaultWidth}
 		>
 			<path
 				strokeLinecap="round"
@@ -116,8 +113,7 @@ export const svgs = {
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={width}
+			width={defaultWidth}
 		>
 			<path
 				strokeLinecap="round"
@@ -133,8 +129,7 @@ export const svgs = {
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={width}
+			width={defaultWidth}
 		>
 			<path
 				strokeLinecap="round"
@@ -150,8 +145,7 @@ export const svgs = {
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={width}
+			width={defaultWidth}
 		>
 			<path
 				strokeLinecap="round"
@@ -167,14 +161,29 @@ export const svgs = {
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={width}
+			width={defaultWidth}
 		>
 			<path
 				strokeLinecap="round"
 				strokeLinejoin="round"
 				d="M3.75 6.75h16.5M3.75 12h16.5M12 17.25h8.25"
 			/>
+		</svg>
+	),
+	"obsidian-chevron": (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			className="svg-icon right-triangle"
+		>
+			<path d="M3 8L12 17L21 8"></path>
 		</svg>
 	),
 };

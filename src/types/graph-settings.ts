@@ -36,13 +36,16 @@ export interface ForceOptions {
 	repelStrength: number;
 	linkStrength: number;
 	linkDistance: number;
+}
+
+export interface RootGraphOptions {
 	scale: number;
+	close: boolean;
 }
 
 export interface GraphSettings
 	extends FilterOptions,
 		ColorGroupOptions,
 		DisplayOptions,
-		ForceOptions {
-	close: boolean;
-}
+		ForceOptions,
+		RootGraphOptions {}

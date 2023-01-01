@@ -1,8 +1,8 @@
 import { useMemo, useSyncExternalStore } from "react";
-import { GraphPresets } from "src/graph-presets/graph-presets";
-import { Preset } from "src/graph-presets/settings/default-settings";
+import { GraphPresets, MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { NavHeader } from "./components/nav-header/nav-header";
 import { PresetsList } from "./components/presets-list/presets-list";
+import { SearchInput } from "./components/search-input/search-input";
 import { useUnsavedPresets } from "./hooks/unsaved-presets";
 
 export const PresetsView: React.FC = () => {
@@ -15,64 +15,66 @@ export const PresetsView: React.FC = () => {
 	const { unsavedPresets, createPreset, deletePreset } = useUnsavedPresets();
 
 	const presets = useMemo(() => {
-		const unsortedEntries = [...Object.entries(store.presets)] as [
-			string,
-			Preset
-		][];
-
-		let sortedEntries: [string, Preset][];
-		switch (store.preferences.sortBy) {
+		const fullList = Object.values(store.state.meta);
+		const filteredList = fullList.filter((preset) =>
+			(preset.path)
+				.toLowerCase()
+				.includes(store.state.filter.toLowerCase()));
+		const unsortedEntries = filteredList;
+		let sortedEntries: MarkdownPresetMeta[];
+		switch (store.settings.preferences.sortBy) {
 			case "presetNameAsc":
 				sortedEntries = unsortedEntries.sort((a, b) =>
-					a[0].localeCompare(b[0])
+					a.name.localeCompare(b.name)
 				);
 				break;
 			case "presetNameDesc":
 				sortedEntries = unsortedEntries.sort((a, b) =>
-					b[0].localeCompare(a[0])
-				);
-				break;
-			case "dateCreatedDesc":
-				sortedEntries = unsortedEntries.sort(
-					(a, b) => a[1].meta.created - b[1].meta.created
+					b.name.localeCompare(a.name)
 				);
 				break;
 			case "dateCreatedAsc":
 				sortedEntries = unsortedEntries.sort(
-					(a, b) => b[1].meta.created - a[1].meta.created
+					(a, b) => a.created - b.created
 				);
 				break;
-			case "dateModifiedDesc":
+			case "dateCreatedDesc":
 				sortedEntries = unsortedEntries.sort(
-					(a, b) => a[1].meta.updated - b[1].meta.updated
+					(a, b) => b.created - a.created
 				);
 				break;
 			case "dateModifiedAsc":
 				sortedEntries = unsortedEntries.sort(
-					(a, b) => b[1].meta.updated - a[1].meta.updated
+					(a, b) => a.updated - b.updated
+				);
+				break;
+			case "dateModifiedDesc":
+				sortedEntries = unsortedEntries.sort(
+					(a, b) => b.updated - a.updated
 				);
 
 				break;
-			case "dateAppliedDesc":
-				sortedEntries = unsortedEntries.sort(
-					(a, b) => a[1].meta.applied - b[1].meta.applied
-				);
-				break;
 			case "dateAppliedAsc":
 				sortedEntries = unsortedEntries.sort(
-					(a, b) => b[1].meta.applied - a[1].meta.applied
+					(a, b) => a.applied - b.applied
+				);
+				break;
+			case "dateAppliedDesc":
+				sortedEntries = unsortedEntries.sort(
+					(a, b) => b.applied - a.applied
 				);
 				break;
 		}
-		return Object.fromEntries(sortedEntries);
-	}, [store]);
+		return sortedEntries;
+	}, [store.settings, store.state]);
 
 	return (
 		<>
 			<NavHeader
 				createPreset={createPreset}
-				sortBy={store.preferences.sortBy}
+				sortBy={store.settings.preferences.sortBy}
 			/>
+			<SearchInput currentValue={store.state.filter}/>
 			<PresetsList
 				presets={presets}
 				unsavedPresets={unsavedPresets}

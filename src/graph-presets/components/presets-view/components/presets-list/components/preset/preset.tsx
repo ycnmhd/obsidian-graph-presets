@@ -2,27 +2,24 @@ import { ThreeDotsMenu } from "./components/three-dots-menu/three-dots-menu";
 import { ApplyPreset } from "./components/apply-preset";
 import { CancelRenaming } from "./components/cancel-renaming";
 import { SavePreset } from "./components/save-preset";
-import { TogglePreview } from "./components/toggle-preview";
 import { PresetLabel } from "./components/preset-label";
-import { PresetPreview } from "./components/preset-preview/preset-preview";
 import { useRef, useState } from "react";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 
 type Props = {
-	presetName: string;
+	meta: MarkdownPresetMeta;
 
-	showPreviewProp?: boolean;
 	deleteUnsavedPreset?: () => void;
 };
 
 export const Preset: React.FC<Props> = ({
-	presetName,
+	meta,
 
-	showPreviewProp = false,
 	deleteUnsavedPreset,
 }) => {
-	const [showPreview, setShowPreview] = useState(showPreviewProp);
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [renaming, setRenaming] = useState(false);
+
 	const cancelRenaming = () => {
 		setRenaming(false);
 		if (deleteUnsavedPreset) deleteUnsavedPreset();
@@ -31,25 +28,23 @@ export const Preset: React.FC<Props> = ({
 		setRenaming((renaming) => !renaming);
 	};
 
-	const togglePreview = () => {
-		setShowPreview((preview) => !preview);
-	};
-
 	let controls;
-	if (renaming || presetName === "") {
+	if (renaming || meta.name === "") {
 		controls = (
 			<>
 				<input
 					type="text"
 					placeholder="Preset name"
-					defaultValue={presetName}
+					defaultValue={meta.name}
 					ref={inputRef}
 					autoFocus={true}
+					className="max-w-[55%]"
 				/>
 				<SavePreset
 					getInputValue={() => inputRef.current?.value || ""}
-					presetName={presetName}
+					meta={meta}
 					deleteUnsavedPreset={deleteUnsavedPreset}
+					cancelRenaming={cancelRenaming}
 				/>
 				<CancelRenaming cancelRenaming={cancelRenaming} />
 			</>
@@ -57,13 +52,10 @@ export const Preset: React.FC<Props> = ({
 	} else {
 		controls = (
 			<>
-				<ApplyPreset presetName={presetName} />
-				<TogglePreview
-					togglePreview={togglePreview}
-					showPreview={showPreview}
-				/>
+				<ApplyPreset meta={meta} />
+
 				<ThreeDotsMenu
-					presetName={presetName}
+					meta={meta}
 					toggleRenamePreset={toggleRenamePreset}
 				/>
 			</>
@@ -74,13 +66,12 @@ export const Preset: React.FC<Props> = ({
 		<>
 			<div className="setting-item">
 				<div className="setting-item-info">
-					{!renaming && presetName !== "" && (
-						<PresetLabel presetName={presetName} />
+					{!renaming && meta.name !== "" && (
+						<PresetLabel meta={meta} />
 					)}
 				</div>
-				<div className="setting-item-control">{controls}</div>
+				<div className="setting-item-control max-w-[90%]">{controls}</div>
 			</div>
-			{showPreview && <PresetPreview presetName={presetName} />}
 		</>
 	);
 };

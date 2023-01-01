@@ -7,8 +7,13 @@ export class Store<T> {
 		return () => this.subscribers.delete(subscriber);
 	};
 	getSnapshot = () => this.value;
-	set = (value: T) => {
-		this.value = { ...value };
-		this.subscribers.forEach((subscriber) => subscriber());
+	set = (value: Partial<T>|((value: T) => Partial<T>)) => {
+		if (typeof value === "function") {
+			value = value(this.value);
+		}
+		this.value = { ...this.value, ...value };
+		this.subscribers.forEach((subscriber) => {		
+			return subscriber();
+		});
 	};
 }

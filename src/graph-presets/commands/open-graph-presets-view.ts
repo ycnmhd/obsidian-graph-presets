@@ -1,10 +1,11 @@
 import { Command } from "obsidian";
 import { GraphPresetsItemViewType } from "../components/presets-view/graph-presets-item-view";
+import { t } from "../lang/text";
 
 
 export const openGraphPresetsView: Command = {
 	id: "open-graph-presets-view",
-	name: "Open",
+	name: t.c.OPEN,
 	callback: async () => {
 		const existingLeaf = app.workspace.getLeavesOfType(
 			GraphPresetsItemViewType
