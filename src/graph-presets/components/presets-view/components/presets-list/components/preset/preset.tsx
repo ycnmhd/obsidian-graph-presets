@@ -38,6 +38,7 @@ export const Preset: React.FC<Props> = ({
 					defaultValue={meta.name}
 					ref={inputRef}
 					autoFocus={true}
+					className="max-w-[55%]"
 				/>
 				<SavePreset
 					getInputValue={() => inputRef.current?.value || ""}
@@ -69,7 +70,7 @@ export const Preset: React.FC<Props> = ({
 						<PresetLabel meta={meta} />
 					)}
 				</div>
-				<div className="setting-item-control">{controls}</div>
+				<div className="setting-item-control max-w-[90%]">{controls}</div>
 			</div>
 		</>
 	);

@@ -1,4 +1,4 @@
-import { Menu, TAbstractFile } from "obsidian";
+import { Menu, TAbstractFile, TFolder } from "obsidian";
 import { GraphPresetsItemViewIcon } from "../components/presets-view/graph-presets-item-view";
 import { actions } from "../actions/actions";
 
@@ -11,7 +11,12 @@ export const createMarkdownPresetPatch = async (
 			.setIcon(GraphPresetsItemViewIcon.name)
 			.setSection("pane")
 			.onClick(async () => {
-				await actions.createPreset();
+				await actions.createPreset(
+					undefined,
+					undefined,
+					file instanceof TFolder ? file.path : file.parent.path,
+					true
+				);
 			});
 	});
 	//@ts-ignore

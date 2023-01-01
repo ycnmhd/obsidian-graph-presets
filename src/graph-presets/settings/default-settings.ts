@@ -28,6 +28,7 @@ export type PluginSettings = {
 			inlineSearchQuery: boolean;
 			inlineColorGroups: boolean;
 		};
+		enablePresetCommands: boolean;
 	};
 };
 
@@ -46,5 +47,6 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 			inlineSearchQuery: false,
 			inlineColorGroups: false,
 		},
+		enablePresetCommands: true,
 	},
 };

@@ -227,6 +227,7 @@ export class ViewManager<View extends IView> {
 			setViewState(next: any) {
 				return function (state: ViewState, ...rest: any[]) {
 					if (
+						app.workspace.layoutReady &&
 						state.type === "markdown" &&
 						app.workspace?.getLeaf &&
 						app.workspace?.getLeaf().view.getViewType() ===

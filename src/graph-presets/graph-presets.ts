@@ -19,6 +19,7 @@ import { FRONTMATTER_KEY } from "./helpers/constants";
 import { around } from "monkey-around";
 import { renderLeafAsPreset } from "./monkey-patches/render-leaf-as-preset";
 import { migrateSettings } from "./settings/settings-migration";
+import { SettingsView } from "./views/settings/settings-view";
 export type MarkdownPresetMeta = {
 	applied: number;
 	created: number;
@@ -67,11 +68,11 @@ export class GraphPresets extends Plugin {
 			PresetViewType,
 			(leaf) => new PresetView(leaf, this.viewManager)
 		);
+		this.addSettingTab(new SettingsView(this.app, this));
 		app.workspace.onLayoutReady(this.initView);
 		// inspired from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/main.ts#L259
 		this.registerMonkeyPatches();
-		await migrateSettings()
-		
+		await migrateSettings();
 	}
 
 	onunload(): void {
@@ -92,9 +93,10 @@ export class GraphPresets extends Plugin {
 	}
 
 	loadPresetCommands() {
-		applyGraphPreset().forEach((command) => {
-			this.addCommand(command);
-		});
+		if (this.settings.preferences.enablePresetCommands)
+			applyGraphPreset().forEach((command) => {
+				this.addCommand(command);
+			});
 	}
 
 	private async initView(): Promise<void> {
