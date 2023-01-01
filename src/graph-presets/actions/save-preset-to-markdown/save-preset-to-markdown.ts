@@ -1,4 +1,5 @@
 import { TAbstractFile, TFile, normalizePath } from "obsidian";
+import { fileIsPresetAsync } from "src/graph-presets/helpers/file-is-preset";
 import GraphPresets from "src/main";
 import { obsidian } from "src/obsidian/obsidian";
 import { GraphSettings } from "src/types/graph-settings";
@@ -36,8 +37,8 @@ export const savePresetToMarkdown = async ({
 			filename: filename || "preset",
 			content: markdownPreset,
 		});
-		const leaf = app.workspace.getLeaf("split", "horizontal");
-		await leaf.openFile(newFile);
+		await fileIsPresetAsync(newFile)
+		await actions.openFile({ created: newFile.stat.ctime,file: newFile });
 	} else if (mode === "update") {
 		let presetToSave: GraphSettings;
 		if (group) {

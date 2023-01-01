@@ -16,7 +16,7 @@ export const Toggle: React.FC<Props> = ({ enabled, name }) => {
 						enabled ? "is-enabled" : ""
 					}`}
 				>
-					<input type="checkbox" tabIndex={0} disabled />
+					<input type="checkbox" tabIndex={0} disabled={true} />
 				</div>
 			</div>
 		</div>

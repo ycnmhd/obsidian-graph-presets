@@ -11,8 +11,9 @@ export const ColorOption: React.FC<Props> = ({ color }) => {
 		<TextInput value={color.query} placeholder="Enter query...">
 			<input
 				type="color"
-				value={rgbToHex(color.color.rgb)}
+				defaultValue={rgbToHex(color.color.rgb)}
 				className="absolute right-1"
+				disabled={true}
 			/>
 		</TextInput>
 	);

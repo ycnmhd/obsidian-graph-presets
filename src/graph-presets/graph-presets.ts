@@ -28,7 +28,8 @@ export type MarkdownPresetMeta = {
 
 export type PluginState = {
 	meta: Record<number, MarkdownPresetMeta>;
-	files: Record<string, TFile>;
+	filesByCtime: Record<string, TFile>;
+	filesByPath: Record<string, TFile>;
 };
 
 export class GraphPresets extends Plugin {
@@ -52,7 +53,6 @@ export class GraphPresets extends Plugin {
 		GraphPresets.instance = this;
 
 		await this.loadSettings();
-		console.log(this.settings);
 		await this.loadMarkdownPresetsMeta();
 		this.viewManager.onload();
 		this.addCommand(openGraphPresetsView);
@@ -176,16 +176,21 @@ export class GraphPresets extends Plugin {
 				];
 			})
 		);
-		const files = Object.fromEntries(
+		const filesByCtime = Object.fromEntries(
 			mdFiles.map((f) => {
 				return [f.stat.ctime, f];
 			})
 		);
-
+		const filesByPath = Object.fromEntries(
+			mdFiles.map((f) => {
+				return [f.path, f];
+			})
+		);
 		this.store.set({
 			state: {
 				meta,
-				files,
+				filesByCtime,
+				filesByPath,
 			},
 		});
 	}

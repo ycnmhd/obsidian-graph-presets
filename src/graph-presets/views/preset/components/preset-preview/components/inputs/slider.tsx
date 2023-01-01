@@ -19,8 +19,8 @@ export const Slider: React.FC<Props> = ({ name, value, min, max, step=1 }) => {
 					min={min}
 					max={max}
 					step={step}
-					value={value}
-					disabled
+					defaultValue={value}
+					disabled={true}
 				/>
 			</div>
 		</div>

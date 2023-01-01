@@ -3,6 +3,8 @@
 */
 import { TFile, ViewState, WorkspaceLeaf } from "obsidian";
 import { unmountComponentAtNode } from "react-dom";
+import { actions } from "src/graph-presets/actions/actions";
+import GraphPresets from "src/main";
 import { IView, StateManager } from "./state-manager";
 
 interface WindowRegistry<View extends IView> {
@@ -207,6 +209,17 @@ export class ViewManager<View extends IView> {
 		(app.workspace as any).unregisterHoverLinkSource(this.viewType);
 	}
 
+	private fileBeingOpened: Record<string, number> = {};
+	setFileBeingOpened(filePath: string) {
+		this.fileBeingOpened[filePath] = Date.now();
+	}
+	isFileBeingOpened(filePath: string) {
+		return this.fileBeingOpened[filePath];
+	}
+	unsetFileBeingOpened(filePath: string) {
+		delete this.fileBeingOpened[filePath];
+	}
+
 	patch = () => {
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const self = this;
@@ -215,32 +228,50 @@ export class ViewManager<View extends IView> {
 				return function (state: ViewState, ...rest: any[]) {
 					if (
 						state.type === "markdown" &&
-						state.state?.file &&
-						self.getLeafType(this) !== "markdown"
+						app.workspace?.getLeaf &&
+						app.workspace?.getLeaf().view.getViewType() ===
+							"graph" &&
+						!self.isFileBeingOpened(state.state.file)
 					) {
-						const cache = app.metadataCache.getCache(
-							state.state.file
-						);
-						this.set;
-
-						if (
-							cache?.frontmatter &&
-							cache.frontmatter[self.frontmatter]
-						) {
-							const newState = {
-								...state,
-								type: self.viewType,
-							};
-							self.setLeafType({
-								leaf: this,
-								type: self.viewType,
+						const plugin = GraphPresets.getInstance();
+						const ctime =
+							plugin.store.getSnapshot().state.filesByPath[
+								state.state.file
+							]?.stat?.ctime;
+						if (ctime) {
+							actions.openFile({
+								created: ctime,
 							});
-
-							return next.apply(this, [newState, ...rest]);
 						}
-					}
+					} else {
+						if (
+							state.type === "markdown" &&
+							state.state?.file &&
+							self.getLeafType(this) !== "markdown"
+						) {
+							const cache = app.metadataCache.getCache(
+								state.state.file
+							);
 
-					return next.apply(this, [state, ...rest]);
+							if (
+								cache?.frontmatter &&
+								cache.frontmatter[self.frontmatter]
+							) {
+								const newState = {
+									...state,
+									type: self.viewType,
+								};
+								self.setLeafType({
+									leaf: this,
+									type: self.viewType,
+								});
+
+								return next.apply(this, [newState, ...rest]);
+							}
+						}
+
+						return next.apply(this, [state, ...rest]);
+					}
 				};
 			},
 		};

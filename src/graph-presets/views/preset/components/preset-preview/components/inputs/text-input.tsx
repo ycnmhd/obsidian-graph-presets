@@ -22,7 +22,11 @@ export const TextInput: React.FC<Props> = ({
 	}, []);
 	useEffect(() => {
 		autoSize();
+		
 	}, [value, autoSize]);
+	useEffect(()=>{
+		app.workspace.on("resize", autoSize);
+	},[])
 
 	return (
 		<div className="setting-item mod-search-setting relative">
@@ -31,7 +35,7 @@ export const TextInput: React.FC<Props> = ({
 				<div className="setting-item-description"></div>
 			</div>
 			<div className="setting-item-control">
-				<div className=" flex items-center relative flex-grow m-0">
+				<div className=" flex items-center relative flex-grow m-0 min-w-120px">
 					<textarea
 						onKeyDown={autoSize}
 						ref={ref}
@@ -46,7 +50,7 @@ export const TextInput: React.FC<Props> = ({
 						defaultValue={value}
 						cols={1}
 						rows={1}
-						disabled
+						disabled={true}
 					/>
 				</div>
 			</div>

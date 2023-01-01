@@ -5,7 +5,8 @@ import { GetPresetDTO } from "./get-preset";
 export const renamePreset = async (dto: GetPresetDTO, newName: string) => {
 	const plugin = GraphPresets.getInstance();
 
-	const existingFile = plugin.store.getSnapshot().state.files[dto.created];
+	const existingFile =
+		plugin.store.getSnapshot().state.filesByCtime[dto.created];
 	if (!existingFile) throw new Error(`Preset does not exist`);
 	if (existingFile.basename !== newName) {
 		const uniqueNewName = await obsidian.fs.uniqueFileName({

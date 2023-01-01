@@ -28,7 +28,7 @@ export const PresetLabel: React.FC<Props> = ({ meta }) => {
 	}, [meta.updated]);
 	return (
 		<>
-			<div role="button" onClick={() => actions.openFile(meta)} style={{cursor:"pointer"}}>
+			<div role="button" onClick={(e) => actions.openFile(meta, e.ctrlKey)} style={{cursor:"pointer"}}>
 				{meta.name}
 			</div>
 			<div className="setting-item-description">

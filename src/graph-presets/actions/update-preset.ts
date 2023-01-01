@@ -1,3 +1,4 @@
+import { Notice } from "obsidian";
 import { GraphPresets } from "../graph-presets";
 import { graphSettingsGroup } from "./apply-preset";
 import { GetPresetDTO } from "./get-preset";
@@ -8,11 +9,14 @@ export const updatePreset = async (
 	group?: graphSettingsGroup
 ) => {
 	const plugin = GraphPresets.getInstance();
-	const file = await plugin.store.getSnapshot().state.files[dto.created];
+	const file = await plugin.store.getSnapshot().state.filesByCtime[
+		dto.created
+	];
 	await savePresetToMarkdown({
 		file,
 		mode: "update",
 		group,
 	});
 	plugin.loadMarkdownPresetsMeta();
+	new Notice("Preset updated",);
 };

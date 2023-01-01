@@ -7,6 +7,7 @@ import { createFile } from "./fs/create-file";
 import { updateFile } from "./fs/update-file";
 import { readFile } from "./fs/read-file";
 import { TFile } from "obsidian";
+import { PresetViewType } from "src/graph-presets/views/preset/preset-view";
 
 export const obsidian = {
 	setGraphSettings,
@@ -27,10 +28,33 @@ export const obsidian = {
 		},
 		renameFile: async (file: TFile, newName: string) => {
 			await app.vault.rename(file, newName);
-		}
-		,
-		openFile: async (file: TFile) => {
-			await app.workspace.openLinkText(file.path, "", false);
-		}
+		},
+		openFile: async ({
+			file,
+			position,
+		}: {
+			file: TFile;
+			position?: "right-replace-adjacent-leaf" | "right-new-leaf";
+		}) => {
+			if (position === "right-replace-adjacent-leaf") {
+				const leaf =
+					app.workspace.getLeavesOfType(PresetViewType)[0] ||
+					app.workspace.getLeavesOfType("markdown")[0] ||
+					app.workspace.getLeavesOfType("empty")[0];
+				if (leaf) {
+					await leaf.openFile(file);
+					await app.workspace.revealLeaf(leaf);
+					return;
+				} else {
+					position = "right-new-leaf";
+				}
+			}
+			if (position === "right-new-leaf") {
+				const leaf = app.workspace.getLeaf("split", "vertical");
+				await leaf.openFile(file);
+			} else {
+				await app.workspace.getLeaf().openFile(file);
+			}
+		},
 	},
 };
