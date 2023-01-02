@@ -5,7 +5,7 @@ import { GraphPresets } from "../graph-presets";
 import { fileIsPresetAsync } from "../helpers/file-is-preset";
 import { sanitizePath } from "../helpers/sanitize-path";
 import { actions } from "./actions";
-import { savePresetToMarkdown } from "./save-preset-to-markdown/save-preset-to-markdown";
+import { createMarkdownPreset } from "./save-preset-to-markdown/create-markdown-preset";
 
 export const createPreset = async (
 	presetName?: string,
@@ -26,9 +26,8 @@ export const createPreset = async (
 				plugin.store.getSnapshot().settings.preferences.presetsFolder
 		)) as TFolder;
 	}
-	const newFile = await savePresetToMarkdown({
+	const newFile = await createMarkdownPreset({
 		file,
-		mode: "create",
 		filename: presetName,
 		preset,
 	});

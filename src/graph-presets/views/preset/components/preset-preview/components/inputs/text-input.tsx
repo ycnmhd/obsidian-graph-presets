@@ -1,44 +1,54 @@
 import { useCallback, useEffect, useRef } from "react";
+import { useInputState } from "./hooks/input-state";
 
 type Props = {
 	value: string;
 	placeholder?: string;
 	children?: React.ReactNode;
+	onChange: (value: string) => void;
 };
 
 export const TextInput: React.FC<Props> = ({
 	value,
 	placeholder = "Search",
 	children,
+	onChange,
 }) => {
-	const ref = useRef<HTMLTextAreaElement>(null);
+	const { inputRef } = useInputState<HTMLTextAreaElement>({
+		onChangeDebounced: onChange,
+		value,
+	});
+	const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 	const autoSize = useCallback(() => {
 		// from https://codepen.io/vsync/pen/nrKwbm
-		const el = ref.current as HTMLTextAreaElement;
-		setTimeout(function () {
-			el.style.height = "auto";
-			el.style.height = el.scrollHeight + "px";
-		}, 0);
-	}, []);
+		timeoutRef.current = setTimeout(function () {
+			const el = inputRef.current as HTMLTextAreaElement;
+			if (el) {
+				el.style.height = "auto";
+				el.style.height = el.scrollHeight + "px";
+			}
+		}, 10);
+		return () => clearTimeout(timeoutRef.current);
+	}, [inputRef.current]);
+
 	useEffect(() => {
 		autoSize();
-		
 	}, [value, autoSize]);
-	useEffect(()=>{
+	useEffect(() => {
 		app.workspace.on("resize", autoSize);
-	},[])
+	}, []);
 
 	return (
-		<div className="setting-item mod-search-setting relative">
+		<div className="setting-item mod-search-setting relative group">
 			<div className="setting-item-info">
 				<div className="setting-item-name"></div>
 				<div className="setting-item-description"></div>
 			</div>
-			<div className="setting-item-control">
+			<div className={"setting-item-control "}>
 				<div className=" flex items-center relative flex-grow m-0 min-w-120px">
 					<textarea
 						onKeyDown={autoSize}
-						ref={ref}
+						ref={inputRef}
 						style={{
 							resize: "none",
 							overflow: "hidden",
@@ -47,13 +57,12 @@ export const TextInput: React.FC<Props> = ({
 						}}
 						spellCheck="false"
 						placeholder={placeholder}
-						defaultValue={value}
 						cols={1}
 						rows={1}
-						disabled={true}
 					/>
 				</div>
 			</div>
+
 			{children}
 
 			<svg

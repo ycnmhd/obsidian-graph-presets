@@ -3,20 +3,18 @@ import { GraphPresets } from "../graph-presets";
 import { t } from "../lang/text";
 import { graphSettingsGroup } from "./apply-preset";
 import { GetPresetDTO } from "./get-preset";
-import { savePresetToMarkdown } from "./save-preset-to-markdown/save-preset-to-markdown";
+import { updateMarkdownPreset } from "./save-preset-to-markdown/update-markdown-preset";
 
 export const updatePreset = async (
 	dto: GetPresetDTO,
 	group?: graphSettingsGroup
 ) => {
 	const plugin = GraphPresets.getInstance();
-	const file = await plugin.store.getSnapshot().state.filesByCtime[
-		dto.created
-	];
-	await savePresetToMarkdown({
-		file,
-		mode: "update",
-		group,
+
+	await updateMarkdownPreset({
+		dto,
+		mode: group ? "group-from-graph" : "full-from-graph",
+		group: group as any,
 	});
 	plugin.loadMarkdownPresetsMeta();
 	new Notice(t.c.PRESET_UPDATED);

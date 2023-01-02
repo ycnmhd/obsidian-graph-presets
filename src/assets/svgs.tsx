@@ -18,15 +18,41 @@ export const svgs = {
 			/>
 		</svg>
 	),
-	"x-circle": (
+	"x-mark": ({
+		className = "w-6 h-6",
+		width = defaultWidth,
+		onClick
+	}:{
+		className?: string;
+		width?: number;
+		onClick?: () => void;
+	}) => (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={defaultWidth}
+			className={className}
+			width={width}
+			onClick={onClick}
+		>
+			<path
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				d="M6 18L18 6M6 6l12 12"
+			/>
+		</svg>
+	),
+	"x-circle": ({ className = "w-6 h-6", width = defaultWidth }) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			strokeWidth={1.5}
+			stroke="currentColor"
+			className={className}
+			width={width}
 		>
 			<path
 				strokeLinecap="round"

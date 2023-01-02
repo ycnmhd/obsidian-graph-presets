@@ -25,7 +25,9 @@ export const activePresetCommands: Command[] = [
 			const leaf = app.workspace.activeLeaf;
 			if (leaf && leaf.view.getViewType() === PresetViewType) {
 				const view = leaf.view as PresetView;
-				actions.updatePreset(view.getPresetMeta());
+				actions.updatePreset({
+					created: view.getPresetMeta().created,
+				});
 			} else {
 				new Notice(t.c.NO_PRESET_SELECTED);
 			}

@@ -7,6 +7,7 @@ import { updatePreset } from "./update-preset";
 import { getPreset } from "./get-preset";
 import { openFile } from "./open-file";
 import { GraphPresets } from "../graph-presets";
+import { saveAttribute } from "./save-attribute";
 
 export const actions = {
 	applyPreset,
@@ -26,4 +27,5 @@ export const actions = {
 			},
 		}));
 	},
+	saveAttribute,
 };
