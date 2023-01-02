@@ -1,8 +1,6 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { actions } from "src/graph-presets/actions/actions";
-import {
-	GraphPresets,
-} from "src/graph-presets/graph-presets";
+import { GraphPresets } from "src/graph-presets/graph-presets";
 import { logger } from "src/graph-presets/helpers/logger";
 import { GraphSettings } from "src/types/graph-settings";
 import { ColorGroupsOptionsPreview } from "./components/groups/color-groups-options-preview";
@@ -45,16 +43,19 @@ export const PresetPreview: React.FC<Props> = ({ ctime }) => {
 	if (!preset) return null;
 	return (
 		<div
-			className="graph-controls flex flex-col border-none w-[230px] static "
+			className="graph-controls flex flex-col border-none w-[500px] static gap-5 rounded-none"
 			style={{
-				justifyContent: "center",
 				boxShadow: "none",
+				border: "none",
+				backgroundColor: "transparent",
 			}}
 		>
 			<FilterOptionsPreview options={preset} meta={meta} />
 			<ColorGroupsOptionsPreview options={preset} meta={meta} />
-			<DisplayOptionsPreview options={preset} meta={meta} />
-			<ForcesOptionsPreview options={preset} meta={meta} />
+			<div className="flex flex-wrap gap-5">
+				<DisplayOptionsPreview options={preset} meta={meta} />
+				<ForcesOptionsPreview options={preset} meta={meta} />
+			</div>
 		</div>
 	);
 };

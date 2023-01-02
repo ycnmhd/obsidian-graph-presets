@@ -31,7 +31,7 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 				className="tree-item-inner"
 				onClick={() => setCollapsed((collapsed) => !collapsed)}
 			>
-				<header className="graph-control-section-header">
+				<header className="graph-control-section-header text-lg">
 					{labels[group]}
 				</header>
 			</div>

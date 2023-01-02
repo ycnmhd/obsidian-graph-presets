@@ -108,8 +108,17 @@ export class PresetView extends TextFileView implements IView {
 	async render(): Promise<void> {
 		if (this.rootContainer) {
 			try {
+				if (this.contentEl) {
+					this.contentEl.style.setProperty(
+						"background-color",
+						"var(--background-modifier-cover)"
+					);
+				}
+				if (this.container) {
+					this.container.style.setProperty("height", "100%");
+				}
 				const view = (
-					<div className="flex justify-center ">
+					<div className="flex justify-center items-center h-full ">
 						<PresetPreview ctime={this.file.stat.ctime} />
 					</div>
 				);
