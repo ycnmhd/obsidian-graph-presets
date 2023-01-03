@@ -24,7 +24,7 @@ export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 			});
 		});
 	return (
-		<GroupContainer meta={meta} group="groups">
+		<GroupContainer meta={meta} group="groups" collapsed={options["collapse-color-groups"]}>
 			{state.groups.map((color, i) => (
 				<ColorOption
 					color={color}

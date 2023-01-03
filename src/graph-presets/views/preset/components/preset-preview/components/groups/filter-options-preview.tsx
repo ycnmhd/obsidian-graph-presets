@@ -21,7 +21,7 @@ export const FilterOptionsPreview: React.FC<Props> = ({ options, meta }) => {
 	const onShowOrphansChange = useOnChange(meta.created, "showOrphans");
 
 	return (
-		<GroupContainer meta={meta} group="filters">
+		<GroupContainer meta={meta} group="filters" collapsed={options["collapse-filter"]}>
 			<TextInput
 				value={options.search}
 				placeholder="Search files..."

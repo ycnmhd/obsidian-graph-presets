@@ -1,4 +1,4 @@
-import { useInputState } from "./hooks/input-state";
+import { useState } from "react";
 
 type Props = {
 	enabled: boolean;
@@ -7,11 +7,7 @@ type Props = {
 };
 
 export const Toggle: React.FC<Props> = ({ enabled, name, onChange }) => {
-	const { inputRef } = useInputState({
-		onChangeDebounced: (value) => onChange(value as boolean),
-		value: enabled,
-		delay: 0,
-	});
+	const [localEnabled, setLocalEnabled] = useState(enabled);
 
 	return (
 		<div className="setting-item mod-toggle border-none">
@@ -22,16 +18,14 @@ export const Toggle: React.FC<Props> = ({ enabled, name, onChange }) => {
 			<div className="setting-item-control">
 				<div
 					className={`checkbox-container mod-small ${
-						enabled ? "is-enabled" : ""
+						localEnabled ? "is-enabled" : ""
 					}`}
+					onClick={() => {
+						setLocalEnabled((prev) => !prev);
+						onChange(!enabled);
+					}}
 				>
-					<input
-						type="checkbox"
-						style={{ width: "100%" }}
-						tabIndex={0}
-						ref={inputRef}
-						defaultChecked={enabled}
-					/>
+					<input type="checkbox" tabIndex={0} />
 				</div>
 			</div>
 		</div>

@@ -17,7 +17,7 @@ export const DisplayOptionsPreview: React.FC<Props> = ({ options, meta }) => {
 	const onLineSizeChange = useOnChange(meta.created, "lineSizeMultiplier");
 
 	return (
-		<GroupContainer meta={meta} group="display">
+		<GroupContainer meta={meta} group="display" collapsed={options["collapse-display"]}>
 			<Toggle
 				enabled={options.showArrow}
 				name="Arrows"

@@ -15,7 +15,7 @@ export const ForcesOptionsPreview: React.FC<Props> = ({ options, meta }) => {
 	const updateLinkStrength = useOnChange(meta.created, "linkStrength");
 	const updateLinkDistance = useOnChange(meta.created, "linkDistance");
 	return (
-		<GroupContainer meta={meta} group="forces">
+		<GroupContainer meta={meta} group="forces" collapsed={options["collapse-forces"]}>
 			<Slider
 				name={"Center force"}
 				value={options.centerStrength}

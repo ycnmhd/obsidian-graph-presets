@@ -20,7 +20,7 @@ type Props = {
 
 export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 	return (
-		<div className="tree-item-self mod-collapsible ">
+		<div className="tree-item-self mod-collapsible items-center">
 			<div
 				className="tree-item-icon collapse-icon"
 				onClick={() => setCollapsed((collapsed) => !collapsed)}
@@ -36,7 +36,7 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 				</header>
 			</div>
 			<div
-				className="tree-item-icon"
+				className="tree-item-icon -mr-[12px]"
 				style={{ paddingInlineEnd: 0 }}
 				onClick={(event) => {
 					const menu = new Menu();
@@ -59,7 +59,7 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 				}}
 				aria-label={t.c.MORE_OPTIONS}
 			>
-				{svgs["ellipsis-vertical"]({ width: 16 })}
+				{svgs["ellipsis-vertical"]({ width: 20})}
 			</div>
 		</div>
 	);
