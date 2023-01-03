@@ -21,12 +21,15 @@ import { renderLeafAsPreset } from "./monkey-patches/render-leaf-as-preset";
 import { migrateSettings } from "./settings/settings-migration";
 import { SettingsView } from "./views/settings/settings-view";
 import { activePresetCommands } from "./commands/active-graph-preset";
+import { getStarredFiles } from "./helpers/get-starred-files";
 export type MarkdownPresetMeta = {
 	applied: number;
 	created: number;
 	updated: number;
 	name: string;
 	path: string;
+	starred: boolean;
+	active: boolean;
 };
 
 export type PluginState = {
@@ -35,7 +38,10 @@ export type PluginState = {
 	filesByPath: Record<string, TFile>;
 	filter: string;
 };
-
+export type GraphPresetsStore = {
+	settings: PluginSettings;
+	state: PluginState;
+};
 export class GraphPresets extends Plugin {
 	private static instance: GraphPresets;
 	public static getInstance(): GraphPresets {
@@ -46,10 +52,7 @@ export class GraphPresets extends Plugin {
 		PresetViewType,
 		FRONTMATTER_KEY
 	);
-	store: Store<{
-		settings: PluginSettings;
-		state: PluginState;
-	}> = new Store();
+	store: Store<GraphPresetsStore> = new Store();
 
 	settings: PluginSettings;
 
@@ -78,7 +81,7 @@ export class GraphPresets extends Plugin {
 		// inspired from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/main.ts#L259
 		this.registerMonkeyPatches();
 		app.workspace.onLayoutReady(async () => {
-		await migrateSettings();
+			await migrateSettings();
 		});
 	}
 
@@ -132,7 +135,10 @@ export class GraphPresets extends Plugin {
 						updateMarkdownPresetPatch(menu, file);
 						applyMarkdownPresetPatch(menu, file as TFile);
 					}
-				} else if (source === "file-explorer-context-menu") {
+				} else if (
+					source === "file-explorer-context-menu" ||
+					source === "graph-presets-context-menu"
+				) {
 					if (fileIsPreset(file)) {
 						updateMarkdownPresetPatch(menu, file);
 						applyMarkdownPresetPatch(menu, file as TFile);
@@ -162,9 +168,31 @@ export class GraphPresets extends Plugin {
 				})
 			);
 		});
+		this.registerEvent(
+			app.workspace.on('active-leaf-change', async (leaf) => {
+				const activeFile = app.workspace.getActiveFile();
+				if (activeFile && await fileIsPresetAsync(activeFile)) {
+					this.loadMarkdownPresetsMeta();
+				}
+			})
+		);
 
 		this.register(
 			around(WorkspaceLeaf.prototype, this.viewManager.patch())
+		);
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const self = this;
+		this.register(
+			around((app as any).internalPlugins.plugins.starred.instance, {
+				onItemsChanged(next) {
+					return function (e: any, ...args: any) {
+						setTimeout(() => {
+							self.loadMarkdownPresetsMeta();
+						}, 0);
+						next.apply(this, [e, ...args]);
+					};
+				},
+			})
 		);
 	}
 
@@ -173,6 +201,8 @@ export class GraphPresets extends Plugin {
 		const mdFiles = app.vault.getMarkdownFiles().filter((f) => {
 			return fileIsPreset(f);
 		});
+		const starredFiles = getStarredFiles();
+		const activePath = app.workspace.getActiveFile()?.path;
 		const meta = Object.fromEntries(
 			mdFiles.map((f) => {
 				return [
@@ -184,6 +214,8 @@ export class GraphPresets extends Plugin {
 						updated: f.stat.mtime,
 						name: f.basename,
 						path: f.path,
+						starred: starredFiles.has(f.path),
+						active: activePath === f.path,
 					} as MarkdownPresetMeta,
 				];
 			})

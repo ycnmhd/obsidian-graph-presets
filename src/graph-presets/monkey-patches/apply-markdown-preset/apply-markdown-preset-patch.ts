@@ -7,7 +7,7 @@ export const applyMarkdownPresetPatch = (menu: Menu, file: TFile) => {
 	menu.addItem((item) => {
 		item.setTitle(t.c.APPLY_PRESET)
 			.setIcon(GraphPresetsItemViewIcon.name)
-			.setSection("pane")
+			.setSection("action")
 			.onClick(async () => {
 				await actions.applyPreset({ created: file.stat.ctime });
 			});

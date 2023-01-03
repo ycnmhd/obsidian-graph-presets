@@ -18,15 +18,41 @@ export const svgs = {
 			/>
 		</svg>
 	),
-	"x-circle": (
+	"x-mark": ({
+		className = "w-6 h-6",
+		width = defaultWidth,
+		onClick,
+	}: {
+		className?: string;
+		width?: number;
+		onClick?: () => void;
+	}) => (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className="w-6 h-6"
-			width={defaultWidth}
+			className={className}
+			width={width}
+			onClick={onClick}
+		>
+			<path
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				d="M6 18L18 6M6 6l12 12"
+			/>
+		</svg>
+	),
+	"x-circle": ({ className = "w-6 h-6", width = defaultWidth }) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			viewBox="0 0 24 24"
+			strokeWidth={1.5}
+			stroke="currentColor"
+			className={className}
+			width={width}
 		>
 			<path
 				strokeLinecap="round"
@@ -184,6 +210,21 @@ export const svgs = {
 			className="svg-icon right-triangle"
 		>
 			<path d="M3 8L12 17L21 8"></path>
+		</svg>
+	),
+	"lucid-star": ({ width = defaultWidth, ...props }) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+			viewBox="0 0 24 24"
+			width={width}
+			{...props}
+		>
+			<path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"></path>
 		</svg>
 	),
 };

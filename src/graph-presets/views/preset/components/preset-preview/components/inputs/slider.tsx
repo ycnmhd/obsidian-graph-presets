@@ -1,38 +1,42 @@
-import { useEffect, useRef } from "react";
+import { useInputState } from "./hooks/input-state";
 
 type Props = {
 	name: string;
 	min: number;
 	max: number;
 	value: number;
-	
+	onChange: (value: number) => void;
 };
 export const Slider: React.FC<Props> = ({
 	name,
 	value,
 	min,
 	max,
-	
-}) => {	
-	const ref = useRef<HTMLInputElement>(null);
-	useEffect(() => {
-		if (ref.current) ref.current.value = value+"";
-	}, [value]);
+	onChange,
+}) => {
+	const { inputRef } = useInputState({
+		onChangeDebounced: (value: string) => onChange(parseFloat(value)),
+		value: value,
+	});
 	return (
 		<div className="setting-item mod-slider border-none">
 			<div className="setting-item-info">
 				<div className="setting-item-name">{name}</div>
 				<div className="setting-item-description"></div>
 			</div>
-			<div className="setting-item-control" aria-label={""+value}>
+			<div
+				className="setting-item-control"
+				aria-label={
+									parseFloat(value.toFixed(2)).toString()
+				}
+			>
 				<input
-					ref={ref}
+					ref={inputRef}
 					className="slider"
 					type="range"
 					min={min}
 					max={max}
 					step="any"
-					disabled={true}					
 				/>
 			</div>
 		</div>

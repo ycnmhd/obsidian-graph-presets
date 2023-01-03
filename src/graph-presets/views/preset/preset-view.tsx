@@ -9,6 +9,7 @@ import { IView, StateManager } from "./state-manager";
 import { PresetPreview } from "./components/preset-preview/preset-preview";
 import { t } from "src/graph-presets/lang/text";
 import { GetPresetDTO } from "src/graph-presets/actions/get-preset";
+import { actions } from "src/graph-presets/actions/actions";
 
 const isPresetNote = (data: string) => {
 	return /---\sgraph-presets-plugin: basic\s---/.test(data);
@@ -41,6 +42,10 @@ export class PresetView extends TextFileView implements IView {
 				})
 			);
 		}
+	}
+
+	getDisplayText(): string {
+		return this.file?.basename || t.c.PRESET;
 	}
 
 	setViewData(data: string): void {
@@ -108,14 +113,23 @@ export class PresetView extends TextFileView implements IView {
 	async render(): Promise<void> {
 		if (this.rootContainer) {
 			try {
+				if (this.contentEl) {
+					this.contentEl.style.setProperty(
+						"background-color",
+						"var(--background-modifier-cover)"
+					);
+				}
+				if (this.container) {
+					this.container.style.setProperty("height", "100%");
+				}
 				const view = (
-					<div className="flex justify-center ">
+					<div className="flex justify-center items-center h-full ">
 						<PresetPreview ctime={this.file.stat.ctime} />
 					</div>
 				);
 				this.rootContainer.render(view);
 			} catch (e) {
-				logger.error(e);
+				logger.error(e);				
 				setTimeout(() => {
 					this.manager.setLeafType({
 						leaf: this.leaf,
@@ -131,10 +145,22 @@ export class PresetView extends TextFileView implements IView {
 	private initActions(): void {
 		// Open as markdown action
 		this.addAction(
-			"document",
+			"file-text",
 			t.c.OPEN_AS_MARKDOWN,
 			this.markdownAction.bind(this)
 		);
+		this.addAction("edit", t.c.UPDATE, () => {
+			actions.updatePreset({
+				created: this.file.stat.ctime,
+				file: this.file,
+			});
+		});
+		this.addAction("file-check", t.c.APPLY, () => {
+			actions.applyPreset({
+				created: this.file.stat.ctime,
+				file: this.file,
+			});
+		});
 	}
 
 	postRenderActions(): void {}

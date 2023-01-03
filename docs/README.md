@@ -4,8 +4,6 @@ This is a plugin for Obsidian (https://obsidian.md).
 
 Save and load graph settings
 
-![Demo video](demo.gif)
-
 ## Installation
 
 This plugin is currently in beta and cannot be installed through the community plugin store.

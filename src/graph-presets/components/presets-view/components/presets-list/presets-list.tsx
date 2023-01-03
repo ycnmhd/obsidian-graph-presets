@@ -1,4 +1,5 @@
-import {  MarkdownPresetMeta } from "src/graph-presets/graph-presets";
+import { useRef } from "react";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { PresetsViewState } from "../../hooks/unsaved-presets";
 import { navBarHeight } from "../nav-header/nav-header";
 import { searchInputHeight } from "../search-input/search-input";
@@ -15,14 +16,19 @@ export const PresetsList: React.FC<Props> = ({
 	unsavedPresets,
 	deleteUnsavedPreset,
 }) => {
+	const presetsListRef = useRef<HTMLDivElement>(null);
 	return (
 		<div
 			style={{
-				height: `calc(100% - ${navBarHeight + searchInputHeight + 10}px)`,
-				padding: "5px",
+				height: `calc(100% - ${
+					navBarHeight + searchInputHeight + 10
+				}px)`,
+
 				overflowY: "scroll",
-				marginLeft: 16
+				marginLeft: 16,
 			}}
+			className=""
+			ref={presetsListRef}
 		>
 			{unsavedPresets.map((preset) => (
 				<Preset
