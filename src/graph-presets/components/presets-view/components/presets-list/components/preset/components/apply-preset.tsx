@@ -10,8 +10,10 @@ type Props = {
 export const ApplyPreset: React.FC<Props> = ({ meta }) => {
 	return (
 		<button
-			className=""
-			onClick={() => {
+			className="opacity-0 group-hover:opacity-100"
+			
+			onClick={(e) => {
+				e.stopPropagation();
 				actions.applyPreset(meta);
 			}}
 			aria-label={t.c.APPLY_PRESET}

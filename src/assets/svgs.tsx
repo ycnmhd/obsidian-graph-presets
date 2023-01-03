@@ -212,7 +212,7 @@ export const svgs = {
 			<path d="M3 8L12 17L21 8"></path>
 		</svg>
 	),
-	"lucid-star": ({ width = defaultWidth, className = "" }) => (
+	"lucid-star": ({ width = defaultWidth, ...props }) => (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
@@ -222,7 +222,7 @@ export const svgs = {
 			strokeWidth="2"
 			viewBox="0 0 24 24"
 			width={width}
-			className={className}
+			{...props}
 		>
 			<path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"></path>
 		</svg>

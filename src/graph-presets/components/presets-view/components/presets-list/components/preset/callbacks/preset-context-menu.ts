@@ -27,11 +27,7 @@ export const presetContextMenu =
 						filename: file.basename,
 						folderPath: file.parent.path,
 					});
-					console.log({
-						file,
-						name,
-						path: file.parent.path + "/" + name,
-					});
+				
 					app.vault.copy(file, name);
 				})
 				.setSection("action");

@@ -29,6 +29,7 @@ export type MarkdownPresetMeta = {
 	name: string;
 	path: string;
 	starred: boolean;
+	active: boolean;
 };
 
 export type PluginState = {
@@ -127,7 +128,6 @@ export class GraphPresets extends Plugin {
 	private registerMonkeyPatches() {
 		this.registerEvent(
 			app.workspace.on("file-menu", async (menu, file, source, leaf) => {
-				console.log("file-menu", { menu, file, source, leaf });
 				if (source === "more-options") {
 					if (fileIsPreset(file)) {
 						if (leaf?.view.getViewType() !== PresetViewType)
@@ -168,6 +168,14 @@ export class GraphPresets extends Plugin {
 				})
 			);
 		});
+		this.registerEvent(
+			app.workspace.on('active-leaf-change', async (leaf) => {
+				const activeFile = app.workspace.getActiveFile();
+				if (activeFile && await fileIsPresetAsync(activeFile)) {
+					this.loadMarkdownPresetsMeta();
+				}
+			})
+		);
 
 		this.register(
 			around(WorkspaceLeaf.prototype, this.viewManager.patch())
@@ -194,6 +202,7 @@ export class GraphPresets extends Plugin {
 			return fileIsPreset(f);
 		});
 		const starredFiles = getStarredFiles();
+		const activePath = app.workspace.getActiveFile()?.path;
 		const meta = Object.fromEntries(
 			mdFiles.map((f) => {
 				return [
@@ -206,6 +215,7 @@ export class GraphPresets extends Plugin {
 						name: f.basename,
 						path: f.path,
 						starred: starredFiles.has(f.path),
+						active: activePath === f.path,
 					} as MarkdownPresetMeta,
 				];
 			})

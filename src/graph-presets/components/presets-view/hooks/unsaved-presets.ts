@@ -26,6 +26,7 @@ const reducer = (state: PresetsViewState, action: Action): PresetsViewState => {
 						name: "",
 						path: "",
 						starred: false,
+						active: false,
 					},
 					...state.unsavedPresets,
 				],

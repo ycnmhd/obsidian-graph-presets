@@ -50,4 +50,7 @@ export const en = {
 	DELETE: "Delete",
 	MAKE_A_COPY: "Make a copy",
 	PRESET_NAME: "Preset name",
+	PRESET: "Preset",
+	UPDATE: "Update",
+	MARKDOWN_PARSING_ERROR:"Could not parse the preset"
 };

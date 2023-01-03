@@ -41,11 +41,5 @@ export class GraphPresetsItemView extends ItemView {
 	async onClose() {
 		ReactDOM.unmountComponentAtNode(this.containerEl);
 	}
-	private redraw() {
-		const rootEl = this.containerEl.createDiv();
-		PresetsView({ containerEl: rootEl as any });
-		const contentEl = this.containerEl.children[1];
-		contentEl.empty();
-		contentEl.appendChild(rootEl);
-	}
+	
 }
