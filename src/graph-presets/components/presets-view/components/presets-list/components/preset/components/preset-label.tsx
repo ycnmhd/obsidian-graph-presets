@@ -3,6 +3,7 @@ import { actions } from "src/graph-presets/actions/actions";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { rtf1, t } from "src/graph-presets/lang/text";
 
+import { svgs } from "src/assets/svgs";
 type Props = {
 	meta: MarkdownPresetMeta;
 };
@@ -57,8 +58,14 @@ export const PresetLabel: React.FC<Props> = ({ meta }) => {
 				onClick={(e) => actions.openFile(meta, e.ctrlKey)}
 				style={{ cursor: "pointer" }}
 				aria-label={nameLabel}
+				className="flex items-center gap-1"
 			>
-				{meta.name}
+				<span>{meta.name}</span>
+				{meta.starred &&
+					svgs["lucid-star"]({
+						width: 12,
+						className: "text-yellow-400 fill-yellow-400",
+					})}
 			</div>
 			<div className="setting-item-description" aria-label={dateLabel}>
 				<div>{relativeTime} </div>

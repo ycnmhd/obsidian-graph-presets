@@ -10,7 +10,7 @@ type Props = {
 export const ApplyPreset: React.FC<Props> = ({ meta }) => {
 	return (
 		<button
-			className="mod-cta"
+			className=""
 			onClick={() => {
 				actions.applyPreset(meta);
 			}}

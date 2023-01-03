@@ -21,8 +21,8 @@ export const svgs = {
 	"x-mark": ({
 		className = "w-6 h-6",
 		width = defaultWidth,
-		onClick
-	}:{
+		onClick,
+	}: {
 		className?: string;
 		width?: number;
 		onClick?: () => void;
@@ -210,6 +210,21 @@ export const svgs = {
 			className="svg-icon right-triangle"
 		>
 			<path d="M3 8L12 17L21 8"></path>
+		</svg>
+	),
+	"lucid-star": ({ width = defaultWidth, className = "" }) => (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+			viewBox="0 0 24 24"
+			width={width}
+			className={className}
+		>
+			<path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"></path>
 		</svg>
 	),
 };

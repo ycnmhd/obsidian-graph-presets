@@ -44,6 +44,10 @@ export const en = {
 	ERROR_MIGRATING_PRESETS: "Error migrating presets",
 	PRESETS_MIGRATED: "Presets migrated",
 	PRESET_APPLIED: "Preset applied",
-    PRESET_UPDATED: "Preset updated",
-    
+	PRESET_UPDATED: "Preset updated",
+	//
+	RENAME: "Rename",
+	DELETE: "Delete",
+	MAKE_A_COPY: "Make a copy",
+	PRESET_NAME: "Preset name",
 };

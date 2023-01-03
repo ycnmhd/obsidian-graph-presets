@@ -10,7 +10,7 @@ export const createMarkdownPresetPatch = async (
 	menu.addItem((item) => {
 		item.setTitle(t.c.NEW_PRESET)
 			.setIcon(GraphPresetsItemViewIcon.name)
-			.setSection("pane")
+			.setSection("action")
 			.onClick(async () => {
 				await actions.createPreset(
 					undefined,

@@ -1,8 +1,11 @@
-import { useMemo, useSyncExternalStore } from "react";
-import { GraphPresets, MarkdownPresetMeta } from "src/graph-presets/graph-presets";
+import { useSyncExternalStore } from "react";
+import {
+	GraphPresets,
+} from "src/graph-presets/graph-presets";
 import { NavHeader } from "./components/nav-header/nav-header";
 import { PresetsList } from "./components/presets-list/presets-list";
 import { SearchInput } from "./components/search-input/search-input";
+import { useSortPresets } from "./hooks/sort-presets";
 import { useUnsavedPresets } from "./hooks/unsaved-presets";
 
 export const PresetsView: React.FC = () => {
@@ -14,67 +17,14 @@ export const PresetsView: React.FC = () => {
 
 	const { unsavedPresets, createPreset, deletePreset } = useUnsavedPresets();
 
-	const presets = useMemo(() => {
-		const fullList = Object.values(store.state.meta);
-		const filteredList = fullList.filter((preset) =>
-			(preset.path)
-				.toLowerCase()
-				.includes(store.state.filter.toLowerCase()));
-		const unsortedEntries = filteredList;
-		let sortedEntries: MarkdownPresetMeta[];
-		switch (store.settings.preferences.sortBy) {
-			case "presetNameAsc":
-				sortedEntries = unsortedEntries.sort((a, b) =>
-					a.name.localeCompare(b.name)
-				);
-				break;
-			case "presetNameDesc":
-				sortedEntries = unsortedEntries.sort((a, b) =>
-					b.name.localeCompare(a.name)
-				);
-				break;
-			case "dateCreatedAsc":
-				sortedEntries = unsortedEntries.sort(
-					(a, b) => a.created - b.created
-				);
-				break;
-			case "dateCreatedDesc":
-				sortedEntries = unsortedEntries.sort(
-					(a, b) => b.created - a.created
-				);
-				break;
-			case "dateModifiedAsc":
-				sortedEntries = unsortedEntries.sort(
-					(a, b) => a.updated - b.updated
-				);
-				break;
-			case "dateModifiedDesc":
-				sortedEntries = unsortedEntries.sort(
-					(a, b) => b.updated - a.updated
-				);
-
-				break;
-			case "dateAppliedAsc":
-				sortedEntries = unsortedEntries.sort(
-					(a, b) => a.applied - b.applied
-				);
-				break;
-			case "dateAppliedDesc":
-				sortedEntries = unsortedEntries.sort(
-					(a, b) => b.applied - a.applied
-				);
-				break;
-		}
-		return sortedEntries;
-	}, [store.settings, store.state]);
-
+	const presets = useSortPresets(store);
 	return (
 		<>
 			<NavHeader
 				createPreset={createPreset}
 				sortBy={store.settings.preferences.sortBy}
 			/>
-			<SearchInput currentValue={store.state.filter}/>
+			<SearchInput currentValue={store.state.filter} />
 			<PresetsList
 				presets={presets}
 				unsavedPresets={unsavedPresets}

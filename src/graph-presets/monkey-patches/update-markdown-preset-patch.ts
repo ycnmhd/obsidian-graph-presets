@@ -9,14 +9,14 @@ export const updateMarkdownPresetPatch = async (
 ) => {
 	menu.addItem((item) => {
 		item.setTitle(t.c.UPDATE_PRESET)
-			.setIcon(GraphPresetsItemViewIcon.name)
-			.setSection("pane")
+		.setIcon(GraphPresetsItemViewIcon.name)
+		.setSection("action")
 			.onClick(async () => {
-				if(file instanceof TFile)
-				await actions.updatePreset({
-					created: file.stat.ctime,
-				})
-			});
+				if (file instanceof TFile)
+					await actions.updatePreset({
+						created: file.stat.ctime,
+					});
+			})
 	});
 	//@ts-ignore
 	menu.items.unshift(menu.items.pop());

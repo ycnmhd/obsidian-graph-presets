@@ -28,6 +28,7 @@ export const SavePreset: React.FC<Props> = ({
 						actions.renamePreset({ created: meta.created }, value);
 					else actions.createPreset(value);
 					if (deleteUnsavedPreset) deleteUnsavedPreset();
+					if(cancelRenaming) cancelRenaming();
 				}
 			}}
 			aria-label="Save preset"
