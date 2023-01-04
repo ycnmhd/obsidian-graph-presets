@@ -2,13 +2,14 @@ import { svgs } from "src/assets/svgs";
 import { ColorGroupOptions } from "src/types/graph-settings";
 import { rgbToHex } from "../../helpers/map-colors";
 import { useInputState } from "./hooks/input-state";
-import { TextInput } from "./text-input";
+import { SortableTextInput } from "./text-input/sortable-text-input";
 
 type Props = {
 	color: ColorGroupOptions["colorGroups"][number];
 	onColorChange: (color: string) => void;
 	onQueryChange: (query: string) => void;
 	removeGroup: (query: string) => void;
+	id: string | number;
 };
 
 export const ColorOption: React.FC<Props> = ({
@@ -16,6 +17,7 @@ export const ColorOption: React.FC<Props> = ({
 	onColorChange,
 	onQueryChange,
 	removeGroup,
+	id,
 }) => {
 	const { inputRef } = useInputState({
 		onChangeDebounced: onColorChange,
@@ -23,11 +25,11 @@ export const ColorOption: React.FC<Props> = ({
 	});
 
 	return (
-		<TextInput
+		<SortableTextInput
 			value={color.query}
 			placeholder="Enter query..."
 			onChange={onQueryChange}
-			// only show the button on group hover
+			id={id}
 		>
 			{svgs["x-mark"]({
 				onClick: () => removeGroup(color.query),
@@ -36,6 +38,6 @@ export const ColorOption: React.FC<Props> = ({
 			})}
 
 			<input ref={inputRef} type="color" className="absolute right-1" />
-		</TextInput>
+		</SortableTextInput>
 	);
 };

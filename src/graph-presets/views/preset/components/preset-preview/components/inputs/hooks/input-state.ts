@@ -36,7 +36,7 @@ export const useInputState = <
 			return () => {
 				if (inputRef.current)
 					inputRef.current.removeEventListener("change", callback);
-				clearTimeout(timeoutRef.current);
+				if (timeoutRef.current) clearTimeout(timeoutRef.current);
 			};
 		}
 	}, [props.onChangeDebounced, props.value]);

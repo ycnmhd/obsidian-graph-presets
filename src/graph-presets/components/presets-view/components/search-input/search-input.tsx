@@ -17,7 +17,9 @@ export const SearchInput: React.FC<Props> = ({ currentValue = "" }) => {
 			timeoutRef.current = setTimeout(() => {
 				actions.setFilter(value);
 			}, 200);
-			return () => clearTimeout(timeoutRef.current);
+			return () => {
+				if (timeoutRef.current) clearTimeout(timeoutRef.current);
+			};
 		}
 	}, [value, currentValue]);
 	return (
