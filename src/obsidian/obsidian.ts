@@ -1,6 +1,4 @@
-import { getGraphSettings } from "./get-graph-settings";
-import { applyGraphSettings } from "./apply-graph-settings";
-import { setGraphSettings } from "./set-graph-settings";
+import { getGraphSettings } from "src/obsidian/graph/get-graph-settings/get-graph-settings";
 import { createFolder } from "./fs/create-folder";
 import { uniqueFileName } from "./fs/unique-file-name";
 import { createFile } from "./fs/create-file";
@@ -8,15 +6,26 @@ import { updateFile } from "./fs/update-file";
 import { readFile } from "./fs/read-file";
 import { TAbstractFile, TFile } from "obsidian";
 import { PresetViewType } from "src/graph-presets/views/preset/preset-view";
+import { setGraphSettings } from "src/obsidian/graph/set-graph-settings/set-graph-settings";
 
 export const obsidian = {
-	setGraphSettings,
-	getGraphSettings,
-	openGraphView: async () => {
-		(app as any).commands.commands["graph:open"].callback();
-		await new Promise((resolve) => setTimeout(resolve, 2000));
+	graph: {
+		getSettings: getGraphSettings,
+		open: async () => {
+			app.workspace
+				.getLeaf("split", "vertical")
+				.setViewState({ type: "graph" });
+			await new Promise((resolve) => {
+				const interval = setInterval(() => {
+					if (app.workspace.getLeavesOfType("graph").length) {
+						clearInterval(interval);
+						resolve(null);
+					}
+				}, 100);
+			});
+		},
+		setSettings: setGraphSettings,
 	},
-	applyGraphSettings,
 	fs: {
 		createFolder,
 		uniqueFileName,

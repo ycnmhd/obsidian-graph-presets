@@ -52,5 +52,9 @@ export const en = {
 	PRESET_NAME: "Preset name",
 	PRESET: "Preset",
 	UPDATE: "Update",
-	MARKDOWN_PARSING_ERROR:"Could not parse the preset"
+	MARKDOWN_PARSING_ERROR: "Could not parse the preset",
+	SELECT_GRAPH: "Select graph",
+	LOCAL_GRAPH: "Local graph",
+	GLOBAL_GRAPH: "Global graph",
+	SELECT:"Select",
 };

@@ -13,6 +13,10 @@ const filterOptionsRecord: Record<keyof FilterOptions, boolean> = {
 	showAttachments: false,
 	hideUnresolved: false,
 	showOrphans: false,
+	localBacklinks: false,
+	localForelinks: false,
+	localInterlinks: false,
+	localJumps: false,
 } as const;
 const filterOptions = Object.keys(
 	filterOptionsRecord

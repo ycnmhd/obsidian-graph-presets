@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
 	enabled: boolean;
@@ -8,6 +8,11 @@ type Props = {
 
 export const Toggle: React.FC<Props> = ({ enabled, name, onChange }) => {
 	const [localEnabled, setLocalEnabled] = useState(enabled);
+	useEffect(() => {
+		if (localEnabled !== enabled) {
+			setLocalEnabled(enabled);
+		}
+	}, [enabled]);
 
 	return (
 		<div className="setting-item mod-toggle border-none">

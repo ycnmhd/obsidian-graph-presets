@@ -1,37 +1,33 @@
-type OptionListener<T = any> = (value: T) => void;
+/* eslint-disable no-mixed-spaces-and-tabs */
+import {
+	ColorGroupOptions,
+	DisplayOptions,
+	FilterOptions,
+	ForceOptions,
+} from "./graph-settings";
+
+type OptionListener<T = number | boolean | string> = (value: T) => T;
+
 export type GraphDataEngine = {
 	filterOptions: {
 		optionListeners: {
-			"collapse-filter": OptionListener;
-			hideUnresolved: OptionListener;
-			search: OptionListener;
-			showAttachments: OptionListener;
-			showOrphans: OptionListener;
-			showTags: OptionListener;
+			[key in keyof FilterOptions]: OptionListener;
 		};
 	};
+
 	colorGroupOptions: {
 		optionListeners: {
-			"collapse-color-groups": OptionListener;
-			colorGroups: OptionListener;
+			[key in keyof ColorGroupOptions]: OptionListener;
 		};
 	};
 	displayOptions: {
 		optionListeners: {
-			"collapse-display": OptionListener;
-			lineSizeMultiplier: OptionListener;
-			nodeSizeMultiplier: OptionListener;
-			showArrow: OptionListener;
-			textFadeMultiplier: OptionListener;
+			[key in keyof DisplayOptions]: OptionListener;
 		};
 	};
 	forceOptions: {
 		optionListeners: {
-			"collapse-forces": OptionListener;
-			centerStrength: OptionListener;
-			linkDistance: OptionListener;
-			linkStrength: OptionListener;
-			repelStrength: OptionListener;
+			[key in keyof ForceOptions]: OptionListener;
 		};
 	};
 };

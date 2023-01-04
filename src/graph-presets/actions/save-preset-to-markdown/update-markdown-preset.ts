@@ -8,6 +8,7 @@ import { graphSettingsGroup } from "../apply-preset";
 import { GetPresetDTO } from "../get-preset";
 import { pickGroup } from "../helpers/pick-group";
 import { mapPresetToMarkdown } from "./helpers/map-preset-to-markdown";
+import { mergeWithExistingPreset } from "./helpers/merge-with-existing-preset";
 
 type Props = { dto: GetPresetDTO } & (
 	| {
@@ -26,10 +27,10 @@ type Props = { dto: GetPresetDTO } & (
 export const updateMarkdownPreset = async ({ dto, mode, ...props }: Props) => {
 	let presetToSave: GraphSettings | undefined;
 	if (mode === "full-from-graph") {
-		presetToSave = await obsidian.getGraphSettings();
+		presetToSave = await obsidian.graph.getSettings();
 	} else if (mode === "group-from-graph" && "group" in props) {
 		const group = props.group;
-		const currentPreset = await obsidian.getGraphSettings();
+		const currentPreset = await obsidian.graph.getSettings();
 		const pickedGroup = pickGroup(group, currentPreset);
 		const existingPreset = await actions.getPreset(dto);
 		presetToSave = {
@@ -51,7 +52,7 @@ export const updateMarkdownPreset = async ({ dto, mode, ...props }: Props) => {
 			dto.created
 		];
 		const markdownPreset = mapPresetToMarkdown(
-			presetToSave,
+			await mergeWithExistingPreset(presetToSave, dto),
 			plugin.settings.preferences.markdownPresets
 		);
 		const newFile = await obsidian.fs.updateFile({
