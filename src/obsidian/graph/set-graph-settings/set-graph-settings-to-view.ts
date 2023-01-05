@@ -1,8 +1,9 @@
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
 import { GraphDataEngine } from "src/types/graph-data-engine";
 import { GraphSettings } from "src/types/graph-settings";
-import { graphSettingsKeys } from "src/graph-presets/helpers/graph-settings-keys";
 import { WorkspaceLeaf } from "obsidian";
+import { pickGroup } from "src/graph-presets/actions/helpers/pick-group";
+import { engineGroupMap } from "src/graph-presets/helpers/graph-settings-keys";
 
 export const setGraphSettingsToView = async (
 	leaf: WorkspaceLeaf,
@@ -18,47 +19,16 @@ export const setGraphSettingsToView = async (
 		throw new Error("leaf is not a graph or localgraph");
 	}
 
-	if (!group || group === "filters") {
-		const optionListeners = engine.filterOptions.optionListeners;
-		for (const option of graphSettingsKeys.filterOptions) {
-			const optionListener = optionListeners[option] as (
-				value: any
-			) => void;
-			if (option in settings && typeof optionListener === "function") {
-				optionListener(settings[option]);
-			}
-		}
+	if (!group) {
+		engine.setOptions(settings as GraphSettings);
+		const renderer = (leaf.view as any).renderer;
+		renderer.zoomTo(settings.scale);
+		const controlsEl = (leaf.view as any).controlsEl;
+		controlsEl.toggleClass("is-close", settings.close);
+	} else {
+		const settingsGroup = pickGroup(group, settings as GraphSettings);
+		const engineGroup = engine[engineGroupMap[group]];
+		engineGroup.setOptions(settingsGroup);
 	}
-
-	if (!group || group === "groups") {
-		const optionListeners = engine.colorGroupOptions.optionListeners;
-		for (const option of graphSettingsKeys.colorGroupOptions) {
-			const optionListener = optionListeners[option] as (
-				value: any
-			) => void;
-			if (option in settings && typeof optionListener === "function") {
-				optionListener(settings[option]);
-			}
-		}
-	}
-
-	if (!group || group === "display") {
-		const optionListeners = engine.displayOptions.optionListeners;
-		for (const option of graphSettingsKeys.displayOptions) {
-			const optionListener = optionListeners[option];
-			if (option in settings && typeof optionListener === "function") {
-				optionListener(settings[option] as any);
-			}
-		}
-	}
-
-	if (!group || group === "forces") {
-		const optionListeners = engine.forceOptions.optionListeners;
-		for (const option of graphSettingsKeys.forceOptions) {
-			const optionListener = optionListeners[option];
-			if (option in settings && typeof optionListener === "function") {
-				optionListener(settings[option] as any);
-			}
-		}
-	}
+	engine.render();
 };

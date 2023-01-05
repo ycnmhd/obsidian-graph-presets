@@ -15,7 +15,7 @@ export const createMarkdownPreset = async ({
 }) => {
 	const plugin = GraphPresets.getInstance();
 	let newFile: TFile | undefined = undefined;
-	const preset = presetToSave || (await obsidian.graph.getSettings());
+	const preset = presetToSave || (await obsidian.graph.getSettings() as GraphSettings);
 	const markdownPreset = mapPresetToMarkdown(
 		preset,
 		plugin.settings.preferences.markdownPresets

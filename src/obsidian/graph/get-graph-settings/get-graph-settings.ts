@@ -5,12 +5,12 @@ import { getSavedGraphSettings } from "src/obsidian/graph/get-graph-settings/get
 import { getGraphLeaf } from "../get-graph-leaf/get-graph-leaf";
 
 export const getGraphSettings = async (group?: graphSettingsGroup) => {
-	let settings: GraphSettings;
+	let settings: GraphSettings| Partial<GraphSettings>;
 	const leaf = await getGraphLeaf();
 	if (leaf) {
 		settings = getGraphSettingsFromView({ leaf, group });
 	} else {
-		settings = await getSavedGraphSettings();
+		settings = await getSavedGraphSettings(group);
 	}
 	return settings;
 };

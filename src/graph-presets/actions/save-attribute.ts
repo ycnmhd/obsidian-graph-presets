@@ -29,7 +29,7 @@ const addUnsavedValue = <k extends keyof GraphSettings>({
 	state.unsavedValues[dto.created][name] = value;
 	state.timeout=setTimeout(() => {
 		saveAllUnsavedValues();
-	}, 100);
+	}, 10);
 };
 
 const saveAllUnsavedValues = async () => {
