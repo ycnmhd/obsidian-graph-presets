@@ -32,9 +32,11 @@ export const ColorOption: React.FC<Props> = ({
 			id={id}
 		>
 			{svgs["x-mark"]({
+				"data-non-draggable":true,
+				
 				onClick: () => removeGroup(color.query),
 				className:
-					"absolute -right-3  rounded-full w-3 h-3 opacity-0 group-hover:opacity-100",
+					"absolute -right-4  rounded-full w-3 h-3 opacity-0 group-hover:opacity-100",
 			})}
 
 			<input ref={inputRef} type="color" className="absolute right-1" />

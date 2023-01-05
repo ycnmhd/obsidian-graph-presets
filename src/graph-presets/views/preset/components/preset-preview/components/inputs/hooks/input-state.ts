@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 export type InputStateProps = {
 	value: string | number | boolean;
 	onChangeDebounced: (value: string | boolean) => void;
-
+	mapValue?: <T>(value: T) => T;
 	delay?: number;
 };
 export const useInputState = <
@@ -29,7 +29,11 @@ export const useInputState = <
 						onChangeDebounced(
 							(element as HTMLInputElement).checked
 						);
-					else onChangeDebounced(element.value);
+					else {
+						if (props.mapValue)
+							onChangeDebounced(props.mapValue(element.value));
+						else onChangeDebounced(element.value);
+					}
 				}, delay);
 			};
 			inputRef.current.addEventListener("change", callback);
@@ -39,7 +43,7 @@ export const useInputState = <
 				if (timeoutRef.current) clearTimeout(timeoutRef.current);
 			};
 		}
-	}, [props.onChangeDebounced, props.value]);
+	}, [props.onChangeDebounced, props.value, props.mapValue]);
 
 	return {
 		inputRef,

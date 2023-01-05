@@ -1,15 +1,31 @@
+import { cloneElement } from "react";
+
 const defaultWidth = 18;
+type SVGProps = {
+	width?: number;
+	className?: string;
+	onClick?: React.EventHandler<any>;
+	fill?: string;
+	color?: string;
+	"data-non-draggable"?: boolean;
+	"aria-label"?: string;
+};
+const defaultProps: SVGProps = {
+	width: defaultWidth,
+};
+const w =
+	(svg: JSX.Element) =>
+	(props: SVGProps = defaultProps) =>
+		cloneElement(svg, props);
+
 export const svgs = {
-	"ellipsis-vertical": ({
-		width = defaultWidth,
-	}: { width?: number } = {}) => (
+	"ellipsis-vertical": w(
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			width={width}
 		>
 			<path
 				strokeLinecap="round"
@@ -18,24 +34,13 @@ export const svgs = {
 			/>
 		</svg>
 	),
-	"x-mark": ({
-		className = "w-6 h-6",
-		width = defaultWidth,
-		onClick,
-	}: {
-		className?: string;
-		width?: number;
-		onClick?: () => void;
-	}) => (
+	"x-mark": w(
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className={className}
-			width={width}
-			onClick={onClick}
 		>
 			<path
 				strokeLinecap="round"
@@ -44,15 +49,13 @@ export const svgs = {
 			/>
 		</svg>
 	),
-	"x-circle": ({ className = "w-6 h-6", width = defaultWidth }) => (
+	"x-circle": w(
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
 			viewBox="0 0 24 24"
 			strokeWidth={1.5}
 			stroke="currentColor"
-			className={className}
-			width={width}
 		>
 			<path
 				strokeLinecap="round"
@@ -132,7 +135,7 @@ export const svgs = {
 			/>
 		</svg>
 	),
-	"document-check": (
+	"document-check": w(
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
@@ -162,6 +165,23 @@ export const svgs = {
 				strokeLinejoin="round"
 				d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m3.75 9v6m3-3H9m1.5-12H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
 			/>
+		</svg>
+	),
+	"file-edit": w(
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+			viewBox="0 0 24 24"
+		>
+			<path d="M4 13.5V4a2 2 0 012-2h8.5L20 7.5V20a2 2 0 01-2 2h-5.5"></path>
+			<path d="M14 2L14 8 20 8"></path>
+			<path d="M10.42 12.61a2.1 2.1 0 112.97 2.97L7.95 21 4 22l.99-3.95 5.43-5.44z"></path>
 		</svg>
 	),
 	pencil: (
@@ -212,7 +232,7 @@ export const svgs = {
 			<path d="M3 8L12 17L21 8"></path>
 		</svg>
 	),
-	"lucid-star": ({ width = defaultWidth, ...props }) => (
+	"lucid-star": w(
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			fill="none"
@@ -221,10 +241,24 @@ export const svgs = {
 			strokeLinejoin="round"
 			strokeWidth="2"
 			viewBox="0 0 24 24"
-			width={width}
-			{...props}
 		>
 			<path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"></path>
+		</svg>
+	),
+	edit: w(
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			fill="none"
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			strokeWidth="2"
+			viewBox="0 0 24 24"
+		>
+			<path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+			<path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
 		</svg>
 	),
 };

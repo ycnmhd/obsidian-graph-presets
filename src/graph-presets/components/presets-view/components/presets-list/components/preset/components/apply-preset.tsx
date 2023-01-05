@@ -9,16 +9,16 @@ type Props = {
 
 export const ApplyPreset: React.FC<Props> = ({ meta }) => {
 	return (
-		<button
-			className="opacity-0 group-hover:opacity-100"
-			
-			onClick={(e) => {
-				e.stopPropagation();
-				actions.applyPreset(meta);
-			}}
-			aria-label={t.c.APPLY_PRESET}
-		>
-			{svgs["document-check"]}
-		</button>
+		<>
+			{svgs["document-check"]({
+				"aria-label": t.c.APPLY_PRESET,
+				width: 16,
+				className: "opacity-0 group-hover:opacity-100",
+				onClick: (e) => {
+					e.stopPropagation();
+					actions.applyPreset(meta);
+				},
+			})}
+		</>
 	);
 };

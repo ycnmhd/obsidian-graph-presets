@@ -25,7 +25,7 @@ export const PresetsList: React.FC<Props> = ({
 				}px)`,
 
 				overflowY: "scroll",
-				marginLeft: 16,
+				padding: "0 16px"
 			}}
 			className=""
 			ref={presetsListRef}

@@ -19,6 +19,9 @@ export const TextInputBody: React.FC<TextInputProps> = ({
 	const { inputRef } = useInputState<HTMLTextAreaElement>({
 		onChangeDebounced: onChange,
 		value,
+		mapValue: (value) => {
+			return (value as string).replace(/\n/g, " ") as any;
+		},
 	});
 	const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 	const autoSize = useCallback(() => {
@@ -57,6 +60,7 @@ export const TextInputBody: React.FC<TextInputProps> = ({
 							overflow: "hidden",
 							padding: "10px 25px",
 							width: "100%",
+							minHeight:37
 						}}
 						spellCheck="false"
 						placeholder={placeholder}

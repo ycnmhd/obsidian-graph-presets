@@ -28,6 +28,7 @@ export class GraphPresetsItemView extends ItemView {
 	}
 
 	async onOpen(): Promise<void> {
+		this.contentEl.style.setProperty("padding", "0");
 		const root = createRoot(this.containerEl.children[1]);
 		root.render(
 			<StrictMode>

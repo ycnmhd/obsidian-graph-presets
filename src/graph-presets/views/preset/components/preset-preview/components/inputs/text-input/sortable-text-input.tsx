@@ -14,6 +14,15 @@ const sortableWrapper =
 		if (target.localName === "textarea") {
 			return;
 		}
+		let svg;
+		if (target.localName === "path") {
+			svg = target.closest("svg");
+		} else if (target.localName === "svg") {
+			svg = target;
+		}
+		if (svg && svg.dataset.nonDraggable) {
+			return;
+		}
 		handler(e as SortableEvent);
 	};
 
@@ -39,7 +48,7 @@ export const SortableTextInput: React.FC<Props> = ({ id, ...props }) => {
 			onPointerDown={onPointerDown}
 			{...attributes}
 		>
-			<TextInputBody {...props} sortable={true}/>
+			<TextInputBody {...props} sortable={true} />
 		</div>
 	);
 };
