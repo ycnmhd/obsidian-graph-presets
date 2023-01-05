@@ -2,6 +2,7 @@ import { svgs } from "src/assets/svgs";
 import { ColorGroupOptions } from "src/types/graph-settings";
 import { rgbToHex } from "../../helpers/map-colors";
 import { useInputState } from "./hooks/input-state";
+import { UnsavedChangesIndicator } from "./shared/unsaved-changes-indicator";
 import { SortableTextInput } from "./text-input/sortable-text-input";
 
 type Props = {
@@ -19,7 +20,7 @@ export const ColorOption: React.FC<Props> = ({
 	removeGroup,
 	id,
 }) => {
-	const { inputRef } = useInputState({
+	const { inputRef, unsavedChanges } = useInputState({
 		onChangeDebounced: onColorChange,
 		value: rgbToHex(color.color.rgb),
 	});
@@ -31,9 +32,10 @@ export const ColorOption: React.FC<Props> = ({
 			onChange={onQueryChange}
 			id={id}
 		>
+			<UnsavedChangesIndicator show={unsavedChanges} />
 			{svgs["x-mark"]({
-				"data-non-draggable":true,
-				
+				"data-non-draggable": true,
+
 				onClick: () => removeGroup(color.query),
 				className:
 					"absolute -right-4  rounded-full w-3 h-3 opacity-0 group-hover:opacity-100",

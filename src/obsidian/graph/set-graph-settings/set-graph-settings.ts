@@ -15,6 +15,11 @@ export const setGraphSettings = async (
 		await obsidian.graph.open();
 		leaf = app.workspace.getLeavesOfType("graph")[0];
 	}
+	settings.search = settings.search?.replace(/\n/g, " ");
+	settings.colorGroups = settings.colorGroups?.map((c) => ({
+		...c,
+		query: c.query.replace(/\n/g, " "),
+	}));
 	app.workspace.revealLeaf(leaf);
 	await setGraphSettingsToView(leaf, settings, group);
 };

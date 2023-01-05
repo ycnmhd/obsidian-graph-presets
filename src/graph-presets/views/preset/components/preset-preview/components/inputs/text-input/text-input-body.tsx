@@ -1,5 +1,6 @@
 import { useRef, useCallback, useEffect } from "react";
 import { useInputState } from "../hooks/input-state";
+import { UnsavedChangesIndicator } from "../shared/unsaved-changes-indicator";
 
 export type TextInputProps = {
 	value: string;
@@ -16,12 +17,9 @@ export const TextInputBody: React.FC<TextInputProps> = ({
 	onChange,
 	sortable,
 }) => {
-	const { inputRef } = useInputState<HTMLTextAreaElement>({
+	const { inputRef, unsavedChanges } = useInputState<HTMLTextAreaElement>({
 		onChangeDebounced: onChange,
 		value,
-		mapValue: (value) => {
-			return (value as string).replace(/\n/g, " ") as any;
-		},
 	});
 	const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 	const autoSize = useCallback(() => {
@@ -69,7 +67,7 @@ export const TextInputBody: React.FC<TextInputProps> = ({
 					/>
 				</div>
 			</div>
-
+			<UnsavedChangesIndicator show={unsavedChanges} />
 			{children}
 
 			<svg
