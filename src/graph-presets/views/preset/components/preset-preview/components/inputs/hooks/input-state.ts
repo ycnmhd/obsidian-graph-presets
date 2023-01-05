@@ -18,7 +18,7 @@ export const useInputState = <
 >({
 	onChangeDebounced,
 	value,
-	delaySeconds = 3,
+	delaySeconds = 1.5,
 }: InputStateProps) => {
 	const [unsavedChanges, setUnsavedChanges] = useState(false);
 	const inputRef = useRef<T>(null);

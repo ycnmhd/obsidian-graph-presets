@@ -56,5 +56,6 @@ export const en = {
 	SELECT_GRAPH: "Select graph",
 	LOCAL_GRAPH: "Local graph",
 	GLOBAL_GRAPH: "Global graph",
-	SELECT:"Select",
+	SELECT: "Select",
+	AUTO_APPLY: "Auto-apply",
 };

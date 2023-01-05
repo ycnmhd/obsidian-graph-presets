@@ -21,10 +21,14 @@ export const setGraphSettingsToView = async (
 
 	if (!group) {
 		engine.setOptions(settings as GraphSettings);
-		const renderer = (leaf.view as any).renderer;
-		renderer.zoomTo(settings.scale);
-		const controlsEl = (leaf.view as any).controlsEl;
-		controlsEl.toggleClass("is-close", settings.close);
+		if ("scale" in settings) {
+			const renderer = (leaf.view as any).renderer;
+			renderer.zoomTo(settings.scale);
+		}
+		if ("close" in settings) {
+			const controlsEl = (leaf.view as any).controlsEl;
+			controlsEl.toggleClass("is-close", settings.close);
+		}
 	} else {
 		const settingsGroup = pickGroup(group, settings as GraphSettings);
 		const engineGroup = engine[engineGroupMap[group]];

@@ -19,6 +19,7 @@ export const applyPreset = async (
 		presetsMeta[dto.created] = {
 			meta: {
 				applied: Date.now(),
+				disableAutoApply: false,
 			},
 		};
 	} else {

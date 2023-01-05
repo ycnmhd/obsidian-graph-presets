@@ -25,7 +25,7 @@ export const PresetsList: React.FC<Props> = ({
 				}px)`,
 
 				overflowY: "scroll",
-				padding: "0 16px"
+				scrollbarGutter: "stable both-edges",
 			}}
 			className=""
 			ref={presetsListRef}

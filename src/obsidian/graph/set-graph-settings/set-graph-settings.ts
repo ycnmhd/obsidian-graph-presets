@@ -7,11 +7,15 @@ import { setGraphSettingsToView } from "./set-graph-settings-to-view";
 
 export const setGraphSettings = async (
 	settings: Partial<GraphSettings>,
-	group?: graphSettingsGroup
+	group?: graphSettingsGroup,
+	openGraph = true
 ) => {
 	let leaf: WorkspaceLeaf | null = null;
 	leaf = await getGraphLeaf();
 	if (!leaf) {
+		if (!openGraph) {
+			return;
+		}
 		await obsidian.graph.open();
 		leaf = app.workspace.getLeavesOfType("graph")[0];
 	}

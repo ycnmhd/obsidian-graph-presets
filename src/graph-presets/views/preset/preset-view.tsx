@@ -10,6 +10,7 @@ import { PresetPreview } from "./components/preset-preview/preset-preview";
 import { t } from "src/graph-presets/lang/text";
 import { GetPresetDTO } from "src/graph-presets/actions/get-preset";
 import { actions } from "src/graph-presets/actions/actions";
+import { GraphPresets } from "src/graph-presets/graph-presets";
 
 const isPresetNote = (data: string) => {
 	return /---\sgraph-presets-plugin: basic\s---/.test(data);
@@ -21,7 +22,9 @@ export class PresetView extends TextFileView implements IView {
 	private manager: ViewManager<PresetView>;
 	private container: HTMLDivElement | null = null;
 	private rootContainer: Root | null = null;
-	private actionButtons: Record<string, HTMLElement> = {};
+	private actionButtons: {
+		disableAutoApply: HTMLElement | null;
+	} = { disableAutoApply: null };
 
 	constructor(
 		leaf: WorkspaceLeaf,
@@ -129,7 +132,7 @@ export class PresetView extends TextFileView implements IView {
 				);
 				this.rootContainer.render(view);
 			} catch (e) {
-				logger.error(e);				
+				logger.error(e);
 				setTimeout(() => {
 					this.manager.setLeafType({
 						leaf: this.leaf,
@@ -142,8 +145,33 @@ export class PresetView extends TextFileView implements IView {
 		}
 	}
 
+	renderActionButtons = () => {
+		const plugin = GraphPresets.getInstance();
+		const disableAutoApply =
+			plugin.store.getSnapshot().state.meta[this.file.stat.ctime]
+				.disableAutoApply;
+		if (this.actionButtons.disableAutoApply) {
+			if (disableAutoApply) {
+				this.actionButtons.disableAutoApply.classList.add("opacity-20");
+			} else {
+				this.actionButtons.disableAutoApply.classList.remove(
+					"opacity-20"
+				);
+			}
+		}
+	};
 	private initActions(): void {
-		// Open as markdown action
+		this.actionButtons.disableAutoApply = this.addAction(
+			"file-symlink",
+			t.c.AUTO_APPLY,
+			() => {
+				actions.toggleAutoApply({
+					created: this.file.stat.ctime,
+					file: this.file,
+				});
+				this.renderActionButtons();
+			}
+		);
 		this.addAction(
 			"file-text",
 			t.c.OPEN_AS_MARKDOWN,
@@ -161,6 +189,13 @@ export class PresetView extends TextFileView implements IView {
 				file: this.file,
 			});
 		});
+
+		const interval = setInterval(() => {
+			if (this.file) {
+				clearInterval(interval);
+				this.renderActionButtons();
+			}
+		}, 500);
 	}
 
 	postRenderActions(): void {}
@@ -216,9 +251,8 @@ export class PresetView extends TextFileView implements IView {
 
 	detachViewComponents(): void {
 		Object.values(this.actionButtons).forEach((button) => {
-			button.detach();
+			if (button) button.detach();
 		});
-		this.actionButtons = {};
 
 		if (this.manager.statusBarItem) {
 			this.manager.statusBarItem.detach();
