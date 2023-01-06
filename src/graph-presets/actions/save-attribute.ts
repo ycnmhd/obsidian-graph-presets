@@ -46,7 +46,11 @@ const saveAllUnsavedValues = async () => {
 				props: preset,
 			});
 			if (!p?.meta?.disableAutoApply) {
-				obsidian.graph.setSettings(preset, undefined, false);
+				obsidian.graph.setSettings({
+					settings: preset,
+					openGraph: false,
+					dto: { created: +created },
+				});
 			}
 
 			delete state.unsavedValues[+created];

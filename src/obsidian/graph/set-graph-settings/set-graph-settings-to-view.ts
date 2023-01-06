@@ -5,11 +5,17 @@ import { WorkspaceLeaf } from "obsidian";
 import { pickGroup } from "src/graph-presets/actions/helpers/pick-group";
 import { engineGroupMap } from "src/graph-presets/helpers/graph-settings-keys";
 
-export const setGraphSettingsToView = async (
-	leaf: WorkspaceLeaf,
-	settings: Partial<GraphSettings>,
-	group?: graphSettingsGroup
-) => {
+type Props = {
+	leaf: WorkspaceLeaf;
+	settings: Partial<GraphSettings>;
+	group?: graphSettingsGroup;
+};
+
+export const setGraphSettingsToView = async ({
+	leaf,
+	settings,
+	group,
+}: Props) => {
 	let engine: GraphDataEngine;
 	if (leaf.view.getViewType() === "graph") {
 		engine = (leaf.view as any).dataEngine as GraphDataEngine;

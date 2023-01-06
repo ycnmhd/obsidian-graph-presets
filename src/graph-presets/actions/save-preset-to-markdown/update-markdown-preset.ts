@@ -26,12 +26,17 @@ type Props = { dto: GetPresetDTO } & (
 export const updateMarkdownPreset = async ({ dto, mode, ...props }: Props) => {
 	let presetToSave: GraphSettings | undefined;
 	if (mode === "full-from-graph") {
-		presetToSave = (await obsidian.graph.getSettings()) as GraphSettings;
+		presetToSave = (await obsidian.graph.getSettings({
+			dto,
+		})) as GraphSettings;
 	} else if (mode === "group-from-graph" && "group" in props) {
 		const existingPreset = await actions.getPreset(dto);
 		presetToSave = {
 			...existingPreset,
-			...(await obsidian.graph.getSettings(props.group)),
+			...(await obsidian.graph.getSettings({
+				group: props.group,
+				dto,
+			})),
 		} as GraphSettings;
 	} else if (mode === "partial-from-props" && "props" in props) {
 		const existingPreset = await actions.getPreset(dto);

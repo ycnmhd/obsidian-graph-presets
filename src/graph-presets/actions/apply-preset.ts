@@ -14,7 +14,7 @@ export const applyPreset = async (
 	const plugin = GraphPresets.getInstance();
 	const presetsMeta = plugin.settings.data.presetsMeta;
 	const preset = await actions.getPreset(dto);
-	await obsidian.graph.setSettings(preset, group);
+	await obsidian.graph.setSettings({ settings: preset, group, dto });
 	if (!presetsMeta[dto.created]) {
 		presetsMeta[dto.created] = {
 			meta: {
