@@ -33,7 +33,7 @@ export const setGraphSettingsToView = async ({
 		}
 		if ("close" in settings) {
 			const controlsEl = (leaf.view as any).controlsEl;
-			controlsEl.toggleClass("is-close", settings.close);
+			if (controlsEl) controlsEl.toggleClass("is-close", settings.close);
 		}
 	} else {
 		const settingsGroup = pickGroup(group, settings as GraphSettings);

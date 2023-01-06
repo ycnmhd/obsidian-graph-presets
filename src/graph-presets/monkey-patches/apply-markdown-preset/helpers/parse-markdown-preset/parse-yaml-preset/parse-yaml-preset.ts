@@ -6,7 +6,6 @@ import {
 } from "./helpers/yaml-preset-validators";
 import { getYamlBlock } from "src/graph-presets/helpers/get-yaml-block";
 import { yaml } from "src/graph-presets/helpers/yaml";
-import { Notice } from "obsidian";
 
 type Key = keyof typeof yamlPresetValidators;
 export const parseYamlPreset = (file: string) => {
@@ -23,7 +22,6 @@ export const parseYamlPreset = (file: string) => {
 			}
 		} else {
 			logger.log("Invalid key", key);
-			new Notice(`Invalid key: ${key}`)
 		}
 	}
 
