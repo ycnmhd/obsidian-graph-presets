@@ -82,6 +82,10 @@ export const filterOptionsValidators = {
 	showAttachments: isBoolean,
 	hideUnresolved: isBoolean,
 	showOrphans: isBoolean,
+	localBacklinks: isBoolean,
+	localForelinks: isBoolean,
+	localInterlinks: isBoolean,
+	localJumps: isInRange(1, 5),
 } satisfies Record<
 	keyof FilterOptions,
 	ValueValidator<number | boolean | string>

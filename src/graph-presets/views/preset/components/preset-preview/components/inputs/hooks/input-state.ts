@@ -1,47 +1,68 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const invokeOnChange = (onChange: any) => (event: Event) => {
+	const element = event.target as HTMLInputElement;
+	if (element.type === "checkbox") onChange(element.checked);
+	else {
+		onChange(element.value);
+	}
+};
 
 export type InputStateProps = {
 	value: string | number | boolean;
 	onChangeDebounced: (value: string | boolean) => void;
-
-	delay?: number;
+	delaySeconds?: number;
 };
 export const useInputState = <
 	T extends HTMLInputElement | HTMLTextAreaElement = HTMLInputElement
->(
-	props: InputStateProps
-) => {
+>({
+	onChangeDebounced,
+	value,
+	delaySeconds = 1.5,
+}: InputStateProps) => {
+	const [unsavedChanges, setUnsavedChanges] = useState(false);
 	const inputRef = useRef<T>(null);
 	const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
 	useEffect(() => {
-		if (inputRef.current) inputRef.current.value = String(props.value);
-	}, [props.value]);
-	useEffect(() => {
-		const { onChangeDebounced, delay = 100 } = props;
 		if (inputRef.current) {
-			const callback = (event: Event) => {
-				const element = event.target as T;
+			const wasDisabled = inputRef.current.disabled;
+			inputRef.current.value = String(value);
+			inputRef.current.disabled = false;
+			if (wasDisabled) {
+				inputRef.current.focus();
+			}
+		}
+		setUnsavedChanges(false);
+	}, [value]);
 
+	useEffect(() => {
+		if (inputRef.current) {
+			const onChange = invokeOnChange(onChangeDebounced);
+			const onInput = (event: Event) => {
+				setUnsavedChanges(true);
 				if (timeoutRef.current) clearTimeout(timeoutRef.current);
+				const element = event.target as T;
 				timeoutRef.current = setTimeout(() => {
-					if (element.type === "checkbox")
-						onChangeDebounced(
-							(element as HTMLInputElement).checked
-						);
-					else onChangeDebounced(element.value);
-				}, delay);
+					element.disabled = true;
+					onChange(event);
+				}, delaySeconds * 1000);
 			};
-			inputRef.current.addEventListener("change", callback);
+			inputRef.current.addEventListener("input", onInput);
+			inputRef.current.addEventListener("change", onChange);
+
 			return () => {
-				if (inputRef.current)
-					inputRef.current.removeEventListener("change", callback);
-				clearTimeout(timeoutRef.current);
+				if (inputRef.current) {
+					inputRef.current.removeEventListener("change", onChange);
+					inputRef.current.removeEventListener("input", onInput);
+				}
+				if (timeoutRef.current) clearTimeout(timeoutRef.current);
 			};
 		}
-	}, [props.onChangeDebounced, props.value]);
+	}, [onChangeDebounced, value]);
 
 	return {
 		inputRef,
+		unsavedChanges,
 	};
 };

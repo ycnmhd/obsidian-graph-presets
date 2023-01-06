@@ -1,4 +1,3 @@
-import { Menu } from "obsidian";
 import { svgs } from "src/assets/svgs";
 import { actions } from "src/graph-presets/actions/actions";
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
@@ -36,30 +35,38 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 				</header>
 			</div>
 			<div
-				className="tree-item-icon -mr-[12px]"
-				style={{ paddingInlineEnd: 0 }}
-				onClick={(event) => {
-					const menu = new Menu();
-					menu.addItem((item) => {
-						item.setTitle(t.c.APPLY_GROUP);
-						item.setIcon("document");
-						item.onClick(async () => {
-							actions.applyPreset(meta, group);
-						});
-					});
-					menu.addItem((item) => {
-						item.setTitle(t.c.UPDATE_GROUP);
-						item.setIcon("edit");
-						item.onClick(async () => {
-							await actions.updatePreset(meta, group);
-						});
-					});
-
-					menu.showAtMouseEvent(event as any as MouseEvent);
+				className="opacity-0 group-hover:opacity-100"
+				style={{
+					display: "flex",
+					alignItems: "center",
+					gap: 5,
+					marginRight: -8,
 				}}
-				aria-label={t.c.MORE_OPTIONS}
 			>
-				{svgs["ellipsis-vertical"]({ width: 20})}
+				<div
+					className="tree-item-icon "
+					style={{ paddingInlineEnd: 0 }}
+					aria-label={t.c.APPLY_GROUP}
+				>
+					{svgs["document-check"]({
+						width: 16,
+						onClick: () => {
+							actions.applyPreset(meta, group);
+						},
+					})}
+				</div>
+				<div
+					className="tree-item-icon "
+					style={{ paddingInlineEnd: 0 }}
+					aria-label={t.c.UPDATE_GROUP}
+				>
+					{svgs["edit"]({
+						width: 14,
+						onClick: () => {
+							actions.updatePreset(meta, group);
+						},
+					})}
+				</div>
 			</div>
 		</div>
 	);

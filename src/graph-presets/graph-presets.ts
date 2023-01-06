@@ -12,7 +12,11 @@ import { Store } from "./helpers/store";
 import { applyMarkdownPresetPatch } from "./monkey-patches/apply-markdown-preset/apply-markdown-preset-patch";
 import { createMarkdownPresetPatch } from "./monkey-patches/create-markdown-preset-patch";
 import { updateMarkdownPresetPatch } from "./monkey-patches/update-markdown-preset-patch";
-import { DEFAULT_SETTINGS, PluginSettings } from "./settings/default-settings";
+import {
+	DEFAULT_SETTINGS,
+	PersistedPresetMeta,
+	PluginSettings,
+} from "./settings/default-settings";
 import { PresetView, PresetViewType } from "./views/preset/preset-view";
 import { ViewManager } from "./views/preset/view-manager";
 import { FRONTMATTER_KEY } from "./helpers/constants";
@@ -22,8 +26,8 @@ import { migrateSettings } from "./settings/settings-migration";
 import { SettingsView } from "./views/settings/settings-view";
 import { activePresetCommands } from "./commands/active-graph-preset";
 import { getStarredFiles } from "./helpers/get-starred-files";
-export type MarkdownPresetMeta = {
-	applied: number;
+
+export type MarkdownPresetMeta = PersistedPresetMeta & {
 	created: number;
 	updated: number;
 	name: string;
@@ -169,9 +173,9 @@ export class GraphPresets extends Plugin {
 			);
 		});
 		this.registerEvent(
-			app.workspace.on('active-leaf-change', async (leaf) => {
+			app.workspace.on("active-leaf-change", async (leaf) => {
 				const activeFile = app.workspace.getActiveFile();
-				if (activeFile && await fileIsPresetAsync(activeFile)) {
+				if (activeFile && (await fileIsPresetAsync(activeFile))) {
 					this.loadMarkdownPresetsMeta();
 				}
 			})
@@ -205,11 +209,12 @@ export class GraphPresets extends Plugin {
 		const activePath = app.workspace.getActiveFile()?.path;
 		const meta = Object.fromEntries(
 			mdFiles.map((f) => {
+				const meta = persistedMeta[f.stat.ctime]?.meta;
 				return [
 					f.stat.ctime,
 					{
-						applied:
-							persistedMeta[f.stat.ctime]?.meta?.applied || 0,
+						applied: meta?.applied || 0,
+						disableAutoApply: Boolean(meta?.disableAutoApply),
 						created: f.stat.ctime,
 						updated: f.stat.mtime,
 						name: f.basename,

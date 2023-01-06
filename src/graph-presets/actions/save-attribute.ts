@@ -1,4 +1,6 @@
+import { obsidian } from "src/obsidian/obsidian";
 import { GraphSettings } from "src/types/graph-settings";
+import { GraphPresets } from "../graph-presets";
 import { GetPresetDTO } from "./get-preset";
 import { updateMarkdownPreset } from "./save-preset-to-markdown/update-markdown-preset";
 
@@ -27,19 +29,30 @@ const addUnsavedValue = <k extends keyof GraphSettings>({
 	if (!state.unsavedValues[dto.created])
 		state.unsavedValues[dto.created] = {};
 	state.unsavedValues[dto.created][name] = value;
-	state.timeout=setTimeout(() => {
+	state.timeout = setTimeout(() => {
 		saveAllUnsavedValues();
-	}, 100);
+	}, 10);
 };
 
 const saveAllUnsavedValues = async () => {
+	const plugin = GraphPresets.getInstance();
+	const presetsMeta = plugin.store.getSnapshot().settings.data.presetsMeta;
 	const promises = Object.entries(state.unsavedValues).map(
 		async ([created, preset]) => {
+			const p = presetsMeta[+created];
 			await updateMarkdownPreset({
 				dto: { created: +created },
 				mode: "partial-from-props",
 				props: preset,
 			});
+			if (!p?.meta?.disableAutoApply) {
+				obsidian.graph.setSettings({
+					settings: preset,
+					openGraph: false,
+					dto: { created: +created },
+				});
+			}
+
 			delete state.unsavedValues[+created];
 		}
 	);

@@ -35,7 +35,7 @@ export const Input: React.FC<Props> = ({
 			defaultValue={meta.name}
 			ref={inputRef}
 			autoFocus={true}
-			className="max-full"
+			className="w-[100%] mx-[4px]"
 			onKeyDown={(e) => {
 				if (e.key === "Enter") save();
 				else if (e.key === "Escape") cancelRenaming();

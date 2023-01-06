@@ -1,4 +1,5 @@
 import { useInputState } from "./hooks/input-state";
+import { UnsavedChangesIndicator } from "./shared/unsaved-changes-indicator";
 
 type Props = {
 	name: string;
@@ -14,21 +15,23 @@ export const Slider: React.FC<Props> = ({
 	max,
 	onChange,
 }) => {
-	const { inputRef } = useInputState({
+	const { inputRef, unsavedChanges } = useInputState({
 		onChangeDebounced: (value: string) => onChange(parseFloat(value)),
 		value: value,
 	});
 	return (
-		<div className="setting-item mod-slider border-none">
-			<div className="setting-item-info">
+		<div className="setting-item mod-slider border-none ">
+			<div className="setting-item-info relative">
+				<UnsavedChangesIndicator
+					show={unsavedChanges}
+					className="top-[28px]"
+				/>
 				<div className="setting-item-name">{name}</div>
 				<div className="setting-item-description"></div>
 			</div>
 			<div
 				className="setting-item-control"
-				aria-label={
-									parseFloat(value.toFixed(2)).toString()
-				}
+				aria-label={parseFloat(value.toFixed(2)).toString()}
 			>
 				<input
 					ref={inputRef}

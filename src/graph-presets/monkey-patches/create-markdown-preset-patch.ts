@@ -10,7 +10,6 @@ export const createMarkdownPresetPatch = async (
 	menu.addItem((item) => {
 		item.setTitle(t.c.NEW_PRESET)
 			.setIcon(GraphPresetsItemViewIcon.name)
-			.setSection("action")
 			.onClick(async () => {
 				await actions.createPreset(
 					undefined,
@@ -20,6 +19,4 @@ export const createMarkdownPresetPatch = async (
 				);
 			});
 	});
-	//@ts-ignore
-	menu.items.unshift(menu.items.pop());
 };

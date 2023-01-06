@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { UnsavedChangesIndicator } from "./shared/unsaved-changes-indicator";
 
 type Props = {
 	enabled: boolean;
@@ -8,10 +9,16 @@ type Props = {
 
 export const Toggle: React.FC<Props> = ({ enabled, name, onChange }) => {
 	const [localEnabled, setLocalEnabled] = useState(enabled);
+	useEffect(() => {
+		if (localEnabled !== enabled) {
+			setLocalEnabled(enabled);
+		}
+	}, [enabled]);
 
 	return (
-		<div className="setting-item mod-toggle border-none">
+		<div className="setting-item mod-toggle border-none relative">
 			<div className="setting-item-info">
+				<UnsavedChangesIndicator show={localEnabled !== enabled} />
 				<div className="setting-item-name">{name}</div>
 				<div className="setting-item-description"></div>
 			</div>

@@ -8,13 +8,25 @@ export interface ColorGroup {
 	color: Color;
 }
 
-export interface FilterOptions {
+ interface GlobalFilterOptions {
+	showOrphans: boolean;
+}
+
+ interface LocalFilterOptions {
+	localBacklinks: boolean;
+	localForelinks: boolean;
+	localInterlinks: boolean;
+	localJumps: number;
+}
+
+export interface FilterOptions
+	extends Partial<GlobalFilterOptions>,
+		Partial<LocalFilterOptions> {
 	"collapse-filter": boolean;
 	search: string;
 	showTags: boolean;
 	showAttachments: boolean;
 	hideUnresolved: boolean;
-	showOrphans: boolean;
 }
 
 export interface ColorGroupOptions {

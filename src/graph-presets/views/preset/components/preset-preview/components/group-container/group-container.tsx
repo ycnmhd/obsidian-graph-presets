@@ -5,6 +5,7 @@ import { GroupHeader } from "./group-header";
 import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
 import { actions } from "src/graph-presets/actions/actions";
 import { GraphSettings } from "src/types/graph-settings";
+import AnimateHeight from "react-animate-height";
 
 const collapsedStateKeys: Record<graphSettingsGroup, keyof GraphSettings> = {
 	filters: "collapse-filter",
@@ -44,12 +45,14 @@ export const GroupContainer: React.FC<Props> = ({
 				"tree-item graph-control-section ",
 				localCollapsed ? "is-collapsed" : "",
 				"border-none rounded-md shadow-md ",
-				"py-3 px-6"
+				"py-3 px-6",
+				"group"
 			)}
 			style={{
 				backgroundColor: "var(--background-primary)",
 				flex: 1,
-				minWidth: localCollapsed ? "100%" : 150,
+				minWidth: 150,
+				height: localCollapsed ? "fit-content" : "auto",
 			}}
 		>
 			<GroupHeader
@@ -57,9 +60,14 @@ export const GroupContainer: React.FC<Props> = ({
 				group={group}
 				setCollapsed={setLocalCollapsed}
 			/>
-			{!localCollapsed && (
+
+			<AnimateHeight
+				id={group}
+				duration={200}
+				height={!localCollapsed ? "auto" : 0} 
+			>
 				<div className="tree-item-children mt-3">{children}</div>
-			)}
+			</AnimateHeight>
 		</div>
 	);
 };

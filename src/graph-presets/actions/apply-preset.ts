@@ -14,11 +14,12 @@ export const applyPreset = async (
 	const plugin = GraphPresets.getInstance();
 	const presetsMeta = plugin.settings.data.presetsMeta;
 	const preset = await actions.getPreset(dto);
-	await obsidian.applyGraphSettings(preset, group);
+	await obsidian.graph.setSettings({ settings: preset, group, dto });
 	if (!presetsMeta[dto.created]) {
 		presetsMeta[dto.created] = {
 			meta: {
 				applied: Date.now(),
+				disableAutoApply: false,
 			},
 		};
 	} else {

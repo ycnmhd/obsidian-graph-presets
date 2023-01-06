@@ -83,9 +83,15 @@ export const PresetLabel: React.FC<Props> = ({ meta }) => {
 	return (
 		<div
 			className={
-				"nav-file-title flex items-center justify-between w-full" +
+				"nav-file-title " +
 				(meta.active ? " is-active" : "")
 			}
+			style={{
+				display: "flex",
+				justifyContent: "space-between",
+				alignItems: "center",
+				width: "100%",
+			}}
 			onClick={(e) => actions.openFile(meta, e.ctrlKey)}
 			draggable="true"
 			onDragStart={onDragStart}

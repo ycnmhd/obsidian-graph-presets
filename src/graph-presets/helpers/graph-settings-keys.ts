@@ -1,3 +1,4 @@
+import { GraphDataEngine } from "src/types/graph-data-engine";
 import {
 	FilterOptions,
 	DisplayOptions,
@@ -5,6 +6,7 @@ import {
 	ColorGroupOptions,
 	RootGraphOptions,
 } from "src/types/graph-settings";
+import { graphSettingsGroup } from "../actions/apply-preset";
 
 const filterOptionsRecord: Record<keyof FilterOptions, boolean> = {
 	"collapse-filter": false,
@@ -13,6 +15,10 @@ const filterOptionsRecord: Record<keyof FilterOptions, boolean> = {
 	showAttachments: false,
 	hideUnresolved: false,
 	showOrphans: false,
+	localBacklinks: false,
+	localForelinks: false,
+	localInterlinks: false,
+	localJumps: false,
 } as const;
 const filterOptions = Object.keys(
 	filterOptionsRecord
@@ -62,3 +68,10 @@ export const graphSettingsKeys = {
 	forceOptions,
 	rootOptions,
 };
+
+export const engineGroupMap = {
+	filters: "filterOptions",
+	groups: "colorGroupOptions",
+	display: "displayOptions",
+	forces: "forceOptions",
+} satisfies Record<graphSettingsGroup, keyof GraphDataEngine>;

@@ -1,4 +1,6 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
+import { DragEndEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { useCallback, useLayoutEffect, useReducer } from "react";
 import { ColorGroup } from "src/types/graph-settings";
 
@@ -34,6 +36,13 @@ type Action =
 			type: "remove-group";
 			payload: {
 				currentIndex: number;
+			};
+	  }
+	| {
+			type: "sort-groups";
+			payload: {
+				newIndex: number;
+				oldIndex: number;
 			};
 	  };
 const colorGroupsReducer =
@@ -101,6 +110,14 @@ const colorGroupsReducer =
 				onChange(newState.groups);
 				return newState;
 			}
+			case "sort-groups": {
+				const newState: State = {
+					...state,
+					groups: arrayMove(state.groups, action.payload.oldIndex-1, action.payload.newIndex-1)
+				};
+				onChange(newState.groups);
+				return newState;
+			}
 
 			default:
 				return state;
@@ -152,6 +169,18 @@ export const useColorGroups = (groups: ColorGroup[], onChange: OnChange) => {
 		});
 	}, []);
 
+	const sortGroups = useCallback((event: DragEndEvent) => {
+		if (!event.over) return;
+		if (event.over.id === event.active.id) return;
+		dispatch({
+			type: "sort-groups",
+			payload: {
+				newIndex: event.over.id as number,
+				oldIndex: event.active.id as number,
+			},
+		});
+	}, []);
+
 	useLayoutEffect(() => {
 		if (!groups.length) return;
 		dispatch({
@@ -168,5 +197,6 @@ export const useColorGroups = (groups: ColorGroup[], onChange: OnChange) => {
 		updateQuery,
 		addGroup,
 		removeGroup,
+		sortGroups,
 	};
 };
