@@ -4,8 +4,8 @@ import { GetPresetDTO } from "./get-preset";
 
 export const openFile = async (dto: GetPresetDTO, newLeaf = false) => {
 	const plugin = GraphPresets.getInstance();
-	const file = dto.file ||plugin.store.getSnapshot().state.filesByCtime[dto.created];
-	plugin.viewManager.setFileBeingOpened(file.path);
+	const file =
+		dto.file || plugin.store.getSnapshot().state.filesByCtime[dto.created];
 
 	await obsidian.fs.openFile({
 		file,
@@ -15,6 +15,4 @@ export const openFile = async (dto: GetPresetDTO, newLeaf = false) => {
 			? "right-replace-adjacent-leaf"
 			: undefined,
 	});
-
-	plugin.viewManager.unsetFileBeingOpened(file.path);
 };

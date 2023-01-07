@@ -12,7 +12,9 @@ export const activePresetCommands: Command[] = [
 			const leaf = app.workspace.activeLeaf;
 			if (leaf && leaf.view.getViewType() === PresetViewType) {
 				const view = leaf.view as PresetView;
-				actions.applyPreset(view.getPresetMeta());
+				actions.applyPreset({
+					created: view.file.stat.ctime,
+				});
 			} else {
 				new Notice(t.c.NO_PRESET_SELECTED);
 			}
@@ -26,7 +28,7 @@ export const activePresetCommands: Command[] = [
 			if (leaf && leaf.view.getViewType() === PresetViewType) {
 				const view = leaf.view as PresetView;
 				actions.updatePreset({
-					created: view.getPresetMeta().created,
+					created: view.file.stat.ctime,
 				});
 			} else {
 				new Notice(t.c.NO_PRESET_SELECTED);

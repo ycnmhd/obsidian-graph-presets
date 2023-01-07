@@ -18,7 +18,8 @@ import {
 	PluginSettings,
 } from "./settings/default-settings";
 import { PresetView, PresetViewType } from "./views/preset/preset-view";
-import { ViewManager } from "./views/preset/view-manager";
+import { Router } from "./views/preset/helpers/router";
+import { setViewState } from "./monkey-patches/set-view-state";
 import { FRONTMATTER_KEY } from "./helpers/constants";
 import { around } from "monkey-around";
 import { renderLeafAsPreset } from "./monkey-patches/render-leaf-as-preset";
@@ -51,20 +52,18 @@ export class GraphPresets extends Plugin {
 	public static getInstance(): GraphPresets {
 		return this.instance;
 	}
-	viewManager: ViewManager<PresetView> = new ViewManager(
-		this.registerEvent.bind(this),
-		PresetViewType,
-		FRONTMATTER_KEY
-	);
+
 	store: Store<GraphPresetsStore> = new Store();
 
 	settings: PluginSettings;
 
 	async onload() {
 		GraphPresets.instance = this;
+		Router.getInstance().frontmatter = FRONTMATTER_KEY;
+		Router.getInstance().viewType = PresetViewType;
 		await this.loadSettings();
 		await this.loadMarkdownPresetsMeta();
-		this.viewManager.onload();
+
 		this.addCommand(openGraphPresetsView);
 		activePresetCommands.forEach((command) => {
 			this.addCommand(command);
@@ -76,10 +75,7 @@ export class GraphPresets extends Plugin {
 			GraphPresetsItemViewType,
 			(leaf) => new GraphPresetsItemView(leaf)
 		);
-		this.registerView(
-			PresetViewType,
-			(leaf) => new PresetView(leaf, this.viewManager)
-		);
+		this.registerView(PresetViewType, (leaf) => new PresetView(leaf));
 		this.addSettingTab(new SettingsView(this.app, this));
 		app.workspace.onLayoutReady(this.initView);
 		// inspired from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/main.ts#L259
@@ -90,7 +86,7 @@ export class GraphPresets extends Plugin {
 	}
 
 	onunload(): void {
-		return this.viewManager.onunload();
+		(app.workspace as any).unregisterHoverLinkSource(PresetViewType);
 	}
 
 	async loadSettings() {
@@ -181,9 +177,7 @@ export class GraphPresets extends Plugin {
 			})
 		);
 
-		this.register(
-			around(WorkspaceLeaf.prototype, this.viewManager.patch())
-		);
+		this.register(around(WorkspaceLeaf.prototype, { setViewState }));
 		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const self = this;
 		this.register(
