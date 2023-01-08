@@ -1,17 +1,12 @@
-import { addIcon, Plugin, TFile, TFolder, WorkspaceLeaf } from "obsidian";
+import { addIcon, Plugin, WorkspaceLeaf } from "obsidian";
 import { applyGraphPreset } from "./commands/apply-graph-preset";
 import { openGraphPresetsView } from "./commands/open-graph-presets-view";
 import {
-	GraphPresetsItemView,
+	PresetsView,
 	GraphPresetsItemViewIcon,
 	GraphPresetsItemViewType,
-} from "./components/presets-view/graph-presets-item-view";
-import { fileIsPreset, fileIsPresetAsync } from "./helpers/file-is-preset";
+} from "./views/presets/presets-view";
 import { mergeDeep } from "./helpers/merge-deep";
-import { Store } from "./helpers/store";
-import { applyMarkdownPresetPatch } from "./monkey-patches/apply-markdown-preset/apply-markdown-preset-patch";
-import { createMarkdownPresetPatch } from "./monkey-patches/create-markdown-preset-patch";
-import { updateMarkdownPresetPatch } from "./monkey-patches/update-markdown-preset-patch";
 import {
 	DEFAULT_SETTINGS,
 	PersistedPresetMeta,
@@ -22,10 +17,17 @@ import { Router } from "./views/preset/helpers/router";
 import { setViewState } from "./monkey-patches/set-view-state";
 import { FRONTMATTER_KEY } from "./helpers/constants";
 import { around } from "monkey-around";
-import { renderLeafAsPreset } from "./monkey-patches/render-leaf-as-preset";
 import { migrateSettings } from "./settings/settings-migration";
 import { SettingsView } from "./views/settings/settings-view";
 import { activePresetCommands } from "./commands/active-graph-preset";
+import { ac } from "./store/store";
+import { fileMenuEventListeners } from "./event-listeners/file-menu-event-listeners";
+import {
+	fileEventListeners,
+	fileEvents,
+} from "./event-listeners/file-event-listeners";
+import { onItemsChanged } from "./monkey-patches/on-items-change";
+import { activeLeafEventListener } from "./event-listeners/active-leaf-event-listener";
 import { getStarredFiles } from "./helpers/get-starred-files";
 
 export type MarkdownPresetMeta = PersistedPresetMeta & {
@@ -33,53 +35,33 @@ export type MarkdownPresetMeta = PersistedPresetMeta & {
 	updated: number;
 	name: string;
 	path: string;
-	starred: boolean;
-	active: boolean;
 };
 
-export type PluginState = {
-	meta: Record<number, MarkdownPresetMeta>;
-	filesByCtime: Record<string, TFile>;
-	filesByPath: Record<string, TFile>;
-	filter: string;
-};
-export type GraphPresetsStore = {
-	settings: PluginSettings;
-	state: PluginState;
-};
 export class GraphPresets extends Plugin {
 	private static instance: GraphPresets;
 	public static getInstance(): GraphPresets {
 		return this.instance;
 	}
 
-	store: Store<GraphPresetsStore> = new Store();
-
-	settings: PluginSettings;
+	private _settings: PluginSettings;
 
 	async onload() {
 		GraphPresets.instance = this;
 		Router.getInstance().frontmatter = FRONTMATTER_KEY;
 		Router.getInstance().viewType = PresetViewType;
 		await this.loadSettings();
-		await this.loadMarkdownPresetsMeta();
+		ac.refreshCache();
 
-		this.addCommand(openGraphPresetsView);
-		activePresetCommands.forEach((command) => {
-			this.addCommand(command);
-		});
-		this.loadPresetCommands();
+		this.loadCommands();
 		addIcon(GraphPresetsItemViewIcon.name, GraphPresetsItemViewIcon.svg);
 
-		this.registerView(
-			GraphPresetsItemViewType,
-			(leaf) => new GraphPresetsItemView(leaf)
-		);
-		this.registerView(PresetViewType, (leaf) => new PresetView(leaf));
 		this.addSettingTab(new SettingsView(this.app, this));
-		app.workspace.onLayoutReady(this.initView);
-		// inspired from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/main.ts#L259
+
+		PresetsView.enable();
 		this.registerMonkeyPatches();
+		this.registerEventListeners();
+		this.registerViews();
+		ac.setStarredFiles(getStarredFiles());
 		app.workspace.onLayoutReady(async () => {
 			await migrateSettings();
 		});
@@ -90,152 +72,57 @@ export class GraphPresets extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = mergeDeep(
+		this._settings = mergeDeep(
 			(await this.loadData()) || {},
 			DEFAULT_SETTINGS
 		);
-		this.store.set({ settings: this.settings });
+		ac.loadSettings(this._settings);
 	}
 
-	async saveSettings() {
-		await this.saveData(this.settings);
-		this.store.set({ settings: { ...this.settings } });
-	}
-
-	loadPresetCommands() {
-		if (this.settings.preferences.enablePresetCommands)
+	private loadCommands() {
+		this.addCommand(openGraphPresetsView);
+		activePresetCommands.forEach((command) => {
+			this.addCommand(command);
+		});
+		if (this._settings.preferences.enablePresetCommands)
 			applyGraphPreset().forEach((command) => {
 				this.addCommand(command);
 			});
 	}
 
-	private async initView(): Promise<void> {
-		const leafs = app.workspace.getLeavesOfType(GraphPresetsItemViewType);
-		await Promise.all(
-			leafs
-				.filter((leaf) => !(leaf.view instanceof GraphPresetsItemView))
-				.map(async (leaf) => {
-					return await leaf.setViewState({ type: "empty" });
-				})
-		);
-		const leaf = leafs.at(-1) || app.workspace.getLeftLeaf(false);
-		leaf.setViewState({
-			type: GraphPresetsItemViewType,
-			active: true,
+	private registerEventListeners() {
+		this.registerEvent(fileMenuEventListeners());
+		this.registerEvent(activeLeafEventListener());
+
+		fileEvents.forEach((event) => {
+			this.registerEvent(fileEventListeners(event));
 		});
 	}
-
 	private registerMonkeyPatches() {
-		this.registerEvent(
-			app.workspace.on("file-menu", async (menu, file, source, leaf) => {
-				if (source === "more-options") {
-					if (fileIsPreset(file)) {
-						if (leaf?.view.getViewType() !== PresetViewType)
-							renderLeafAsPreset(menu, leaf as WorkspaceLeaf);
-						updateMarkdownPresetPatch(menu, file);
-						applyMarkdownPresetPatch(menu, file as TFile);
-					}
-				} else if (
-					source === "file-explorer-context-menu" ||
-					source === "graph-presets-context-menu"
-				) {
-					if (fileIsPreset(file)) {
-						updateMarkdownPresetPatch(menu, file);
-						applyMarkdownPresetPatch(menu, file as TFile);
-					} else if (file instanceof TFolder)
-						await createMarkdownPresetPatch(menu, file);
-				}
-			})
-		);
-
-		["create", "modify", "delete", "rename"].forEach((event) => {
-			this.registerEvent(
-				app.vault.on(event as any, async (file) => {
-					let isPreset;
-					if (event === "delete") {
-						if (file instanceof TFile) {
-							isPreset =
-								!!this.store.getSnapshot().state.meta[
-									file.stat.ctime
-								];
-						}
-					} else {
-						isPreset = await fileIsPresetAsync(file);
-					}
-					if (isPreset) {
-						this.loadMarkdownPresetsMeta();
-					}
-				})
-			);
-		});
-		this.registerEvent(
-			app.workspace.on("active-leaf-change", async (leaf) => {
-				const activeFile = app.workspace.getActiveFile();
-				if (activeFile && (await fileIsPresetAsync(activeFile))) {
-					this.loadMarkdownPresetsMeta();
-				}
-			})
-		);
-
+		// inspired from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/main.ts#L259
 		this.register(around(WorkspaceLeaf.prototype, { setViewState }));
-		// eslint-disable-next-line @typescript-eslint/no-this-alias
-		const self = this;
+
 		this.register(
 			around((app as any).internalPlugins.plugins.starred.instance, {
-				onItemsChanged(next) {
-					return function (e: any, ...args: any) {
-						setTimeout(() => {
-							self.loadMarkdownPresetsMeta();
-						}, 0);
-						next.apply(this, [e, ...args]);
-					};
-				},
+				onItemsChanged,
 			})
 		);
 	}
 
-	loadMarkdownPresetsMeta(): void {
-		const persistedMeta = this.settings.data.presetsMeta;
-		const mdFiles = app.vault.getMarkdownFiles().filter((f) => {
-			return fileIsPreset(f);
-		});
-		const starredFiles = getStarredFiles();
-		const activePath = app.workspace.getActiveFile()?.path;
-		const meta = Object.fromEntries(
-			mdFiles.map((f) => {
-				const meta = persistedMeta[f.stat.ctime]?.meta;
-				return [
-					f.stat.ctime,
-					{
-						applied: meta?.applied || 0,
-						disableAutoApply: Boolean(meta?.disableAutoApply),
-						created: f.stat.ctime,
-						updated: f.stat.mtime,
-						name: f.basename,
-						path: f.path,
-						starred: starredFiles.has(f.path),
-						active: activePath === f.path,
-					} as MarkdownPresetMeta,
-				];
-			})
+	private registerViews() {
+		this.registerView(
+			GraphPresetsItemViewType,
+			(leaf) => new PresetsView(leaf)
 		);
-		const filesByCtime = Object.fromEntries(
-			mdFiles.map((f) => {
-				return [f.stat.ctime, f];
-			})
-		);
-		const filesByPath = Object.fromEntries(
-			mdFiles.map((f) => {
-				return [f.path, f];
-			})
-		);
-		this.store.set((store) => ({
-			state: {
-				meta,
-				filesByCtime,
-				filesByPath,
-				filter: store.state?.filter || "",
-			},
-		}));
+		this.registerView(PresetViewType, (leaf) => new PresetView(leaf));
+	}
+
+	get settings(): PluginSettings {
+		return JSON.parse(JSON.stringify(this._settings));
+	}
+
+	async setVersion(version: string) {
+		this._settings.version = version;
+		await this.saveData(this._settings);
 	}
 }

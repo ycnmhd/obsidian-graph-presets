@@ -1,13 +1,13 @@
-import { SortMode } from "src/graph-presets/settings/default-settings";
+import { useAppSelector } from "src/graph-presets/store/hooks";
 import { AddPreset } from "./components/add-preset";
 import { SortPresets } from "./components/sort-presets";
 export const navBarHeight = 40;
 type Props = {
 	createPreset: () => void;
-	sortBy: SortMode;
 };
 
-export const NavHeader: React.FC<Props> = ({ createPreset, sortBy }) => {
+export const NavHeader: React.FC<Props> = ({ createPreset }) => {
+	const sortBy = useAppSelector((state) => state.preferences.sortBy);
 	return (
 		<div className="nav-header" style={{ height: navBarHeight }}>
 			<div className="nav-buttons-container">

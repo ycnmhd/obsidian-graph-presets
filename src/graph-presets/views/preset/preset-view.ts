@@ -40,9 +40,10 @@ export class PresetView extends TextFileView {
 			item.setTitle("Open as Markdown")
 				.setIcon("document")
 				.onClick(() => {
-					Router.getInstance().setLeafType({
-						leaf: this.leaf,
+					Router.getInstance().setFileType({
+						path: this.file.path,
 						type: "markdown",
+						leaf: this.leaf,
 					});
 				});
 		}).addSeparator();
@@ -67,14 +68,7 @@ export class PresetView extends TextFileView {
 		return this.data;
 	}
 
-	onunload(): void {
-		Router.getInstance().setLeafType({
-			leaf: this.leaf,
-			type: "markdown",
-		});
-		this.actionButtons.unmount();
-		this.presetContent.unmount();
-	}
+	onunload(): void {}
 
 	clear(): void {}
 }

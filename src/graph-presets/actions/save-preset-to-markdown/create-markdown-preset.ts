@@ -1,5 +1,5 @@
 import { TAbstractFile, TFile, normalizePath } from "obsidian";
-import GraphPresets from "src/main";
+import { getSnapshot } from "src/graph-presets/store/store";
 import { obsidian } from "src/obsidian/obsidian";
 import { GraphSettings } from "src/types/graph-settings";
 import { mapPresetToMarkdown } from "./helpers/map-preset-to-markdown";
@@ -13,18 +13,18 @@ export const createMarkdownPreset = async ({
 	filename?: string;
 	preset?: GraphSettings;
 }) => {
-	const plugin = GraphPresets.getInstance();
+	const store = getSnapshot();
 	let newFile: TFile | undefined = undefined;
 	const preset =
 		presetToSave ||
 		((await obsidian.graph.getSettings({ dto: null })) as GraphSettings);
 	const markdownPreset = mapPresetToMarkdown(
 		preset,
-		plugin.settings.preferences.markdownPresets
+		store.preferences.markdownPresets
 	);
 	const folderName = file instanceof TFile ? file.parent.path : file.path;
 	const folderPath = normalizePath(
-		folderName ? folderName : plugin.settings.preferences.presetsFolder
+		folderName ? folderName : store.preferences.presetsFolder
 	);
 	newFile = await obsidian.fs.createFile({
 		folderPath,

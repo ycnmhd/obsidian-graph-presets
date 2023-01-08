@@ -1,6 +1,5 @@
 import { TextFileView } from "obsidian";
-import { actions } from "src/graph-presets/actions/actions";
-import { GraphPresets } from "src/graph-presets/graph-presets";
+import { ac, getSnapshot } from "src/graph-presets/store/store";
 import { t } from "src/graph-presets/lang/text";
 import { Router } from "../helpers/router";
 
@@ -27,38 +26,38 @@ export class PresetActionButtons {
 			"file-symlink",
 			t.c.AUTO_APPLY,
 			() => {
-				actions.toggleAutoApply({
+				ac.toggleAutoApply({
 					created: this.view.file.stat.ctime,
-					file: this.view.file,
 				});
-				this.render();
+				setTimeout(() => {
+					this.render();
+				}, 200);
 			}
 		);
 		this.addAction("file-text", t.c.OPEN_AS_MARKDOWN, () => {
-			Router.getInstance().setLeafType({
+			Router.getInstance().setFileType({
 				leaf: this.view.leaf,
 				type: "markdown",
+				path: this.view.file.path,
 			});
 		});
 		this.addAction("edit", t.c.UPDATE, () => {
-			actions.updatePreset({
+			ac.updatePreset({
 				created: this.view.file.stat.ctime,
-				file: this.view.file,
 			});
 		});
 		this.addAction("file-check", t.c.APPLY, () => {
-			actions.applyPreset({
+			ac.applyPreset({
 				created: this.view.file.stat.ctime,
-				file: this.view.file,
 			});
 		});
 	}
 
 	render() {
-		const plugin = GraphPresets.getInstance();
 		const disableAutoApply =
-			plugin.store.getSnapshot().state.meta[this.view.file.stat.ctime]
+			getSnapshot().presets.meta[this.view.file.stat.ctime]
 				.disableAutoApply;
+
 		if (this.buttons.disableAutoApply) {
 			if (disableAutoApply) {
 				this.buttons.disableAutoApply.classList.add("opacity-20");

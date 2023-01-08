@@ -1,5 +1,5 @@
-import { Menu, WorkspaceLeaf } from "obsidian";
-import { GraphPresetsItemViewIcon } from "src/graph-presets/components/presets-view/graph-presets-item-view";
+import { MarkdownView, Menu, WorkspaceLeaf } from "obsidian";
+import { GraphPresetsItemViewIcon } from "src/graph-presets/views/presets/presets-view";
 import { Router } from "../views/preset/helpers/router";
 import { t } from "../lang/text";
 import { PresetViewType } from "../views/preset/preset-view";
@@ -10,10 +10,10 @@ export const renderLeafAsPreset = async (menu: Menu, leaf: WorkspaceLeaf) => {
 			.setIcon(GraphPresetsItemViewIcon.name)
 			.setSection("pane")
 			.onClick(async () => {
-				Router.getInstance().setLeafType({
-					leaf,
+				Router.getInstance().setFileType({
+					path: (leaf.view as MarkdownView).file.path,
 					type: PresetViewType,
-					setState: true,
+					leaf,
 				});
 			});
 	});

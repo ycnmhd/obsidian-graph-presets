@@ -1,5 +1,7 @@
 import { TextFileView } from "obsidian";
 import { createRoot, Root } from "react-dom/client";
+import { Provider } from "react-redux";
+import { store } from "src/graph-presets/store/store";
 import { PresetPreview } from "./preset-preview/preset-preview";
 
 export class PresetContent {
@@ -23,10 +25,12 @@ export class PresetContent {
 	render() {
 		const view = (
 			<div className="flex justify-center items-center h-full ">
-				<PresetPreview
-					ctime={this.view.file.stat.ctime}
-					key={this.view.file.stat.ctime}
-				/>
+				<Provider store={store}>
+					<PresetPreview
+						ctime={this.view.file.stat.ctime}
+						key={this.view.file.stat.ctime}
+					/>
+				</Provider>
 			</div>
 		);
 		this.rootContainer.render(view);

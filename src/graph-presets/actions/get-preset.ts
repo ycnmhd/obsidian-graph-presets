@@ -1,24 +1,22 @@
-import { Notice, TFile } from "obsidian";
+import { Notice } from "obsidian";
 import { obsidian } from "src/obsidian/obsidian";
-import { GraphPresets } from "../graph-presets";
 import { t } from "../lang/text";
 import { parseMarkDownPreset } from "../monkey-patches/apply-markdown-preset/helpers/parse-markdown-preset/parse-markdown-preset";
+import { graphSettingsGroup } from "../../types/apply-preset";
+import { filesByCtime } from "../store/cache/files-by-time";
 
 export type GetPresetDTO = {
 	created: number;
-	file?: TFile;
+	group?: graphSettingsGroup;
 };
 
 export const getPreset = async ({ created }: GetPresetDTO) => {
-	const plugin = GraphPresets.getInstance();
-	const file = plugin.store.getSnapshot().state.filesByCtime[created];
+	const file = filesByCtime.current[created];
 	const data = await obsidian.fs.readFile({ file });
-	try{
-
+	try {
 		return parseMarkDownPreset(data);
-	}
-	catch(e){		
+	} catch (e) {
 		new Notice(t.c.MARKDOWN_PARSING_ERROR);
-		throw e
+		throw e;
 	}
 };

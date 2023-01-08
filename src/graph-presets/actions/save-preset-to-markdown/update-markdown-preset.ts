@@ -1,13 +1,14 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 import { TFile } from "obsidian";
-import GraphPresets from "src/main";
+import { getSnapshot } from "src/graph-presets/store/store";
 import { obsidian } from "src/obsidian/obsidian";
 import { GraphSettings } from "src/types/graph-settings";
 import { actions } from "../actions";
-import { graphSettingsGroup } from "../apply-preset";
+import { graphSettingsGroup } from "../../../types/apply-preset";
 import { GetPresetDTO } from "../get-preset";
 import { mapPresetToMarkdown } from "./helpers/map-preset-to-markdown";
 import { mergeWithExistingPreset } from "./helpers/merge-with-existing-preset";
+import { filesByCtime } from "src/graph-presets/store/cache/files-by-time";
 
 type Props = { dto: GetPresetDTO } & (
 	| {
@@ -46,15 +47,12 @@ export const updateMarkdownPreset = async ({ dto, mode, ...props }: Props) => {
 		} as GraphSettings;
 	}
 
-	const plugin = GraphPresets.getInstance();
-
 	if (presetToSave) {
-		const file = await plugin.store.getSnapshot().state.filesByCtime[
-			dto.created
-		];
+		const store = getSnapshot();
+		const file = filesByCtime.current[dto.created];
 		const markdownPreset = mapPresetToMarkdown(
 			await mergeWithExistingPreset(presetToSave, dto),
-			plugin.settings.preferences.markdownPresets
+			store.preferences.markdownPresets
 		);
 		const newFile = await obsidian.fs.updateFile({
 			file: file as TFile,

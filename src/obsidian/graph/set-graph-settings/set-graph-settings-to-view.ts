@@ -1,4 +1,4 @@
-import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
+import { graphSettingsGroup } from "src/types/apply-preset";
 import { GraphDataEngine } from "src/types/graph-data-engine";
 import { GraphSettings } from "src/types/graph-settings";
 import { WorkspaceLeaf } from "obsidian";

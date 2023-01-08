@@ -1,5 +1,5 @@
 import { WorkspaceLeaf } from "obsidian";
-import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
+import { graphSettingsGroup } from "src/types/apply-preset";
 import { GraphDataEngine } from "src/types/graph-data-engine";
 import { pickGroup } from "src/graph-presets/actions/helpers/pick-group";
 

@@ -1,4 +1,4 @@
-import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
+import { graphSettingsGroup } from "src/types/apply-preset";
 import { getGraphSettingsFromView } from "./get-graph-settings-from-view";
 import { GraphSettings } from "src/types/graph-settings";
 import { getSavedGraphSettings } from "src/obsidian/graph/get-graph-settings/get-saved-graph-settings";

@@ -1,7 +1,7 @@
 import { Menu, TFile } from "obsidian";
-import { actions } from "src/graph-presets/actions/actions";
+import { ac } from "src/graph-presets/store/store";
 import { t } from "src/graph-presets/lang/text";
-import { GraphPresetsItemViewIcon } from "../../components/presets-view/graph-presets-item-view";
+import { GraphPresetsItemViewIcon } from "../../views/presets/presets-view";
 
 export const applyMarkdownPresetPatch = (menu: Menu, file: TFile) => {
 	menu.addItem((item) => {
@@ -9,7 +9,7 @@ export const applyMarkdownPresetPatch = (menu: Menu, file: TFile) => {
 			.setIcon(GraphPresetsItemViewIcon.name)
 			.setSection("action")
 			.onClick(async () => {
-				await actions.applyPreset({ created: file.stat.ctime });
+				await ac.applyPreset({ created: file.stat.ctime });
 			});
 	});
 	//@ts-ignore

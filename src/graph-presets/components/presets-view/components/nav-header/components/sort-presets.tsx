@@ -1,6 +1,6 @@
 import { Menu } from "obsidian";
 import { svgs } from "src/assets/svgs";
-import { actions } from "src/graph-presets/actions/actions";
+import { ac } from "src/graph-presets/store/store";
 import { t } from "src/graph-presets/lang/text";
 import { SortMode } from "src/graph-presets/settings/default-settings";
 
@@ -15,16 +15,16 @@ const modes: { mode: SortMode; label: string }[][] = [
 	],
 	[
 		{ mode: "dateCreatedDesc", label: t.c.SORT_BY_DATE_CREATED_DESC },
-		{ mode: "dateCreatedAsc", label:  t.c.SORT_BY_DATE_CREATED_ASC },
+		{ mode: "dateCreatedAsc", label: t.c.SORT_BY_DATE_CREATED_ASC },
 	],
 	[
 		{ mode: "dateModifiedDesc", label: t.c.SORT_BY_DATE_MODIFIED_DESC },
 		{ mode: "dateModifiedAsc", label: t.c.SORT_BY_DATE_MODIFIED_ASC },
 	],
-    [
+	[
 		{ mode: "dateAppliedDesc", label: t.c.SORT_BY_DATE_APPLIED_DESC },
-        { mode: "dateAppliedAsc", label: t.c.SORT_BY_DATE_APPLIED_ASC },
-    ]
+		{ mode: "dateAppliedAsc", label: t.c.SORT_BY_DATE_APPLIED_ASC },
+	],
 ];
 
 export const SortPresets: React.FC<Props> = ({ sortBy }) => {
@@ -39,8 +39,8 @@ export const SortPresets: React.FC<Props> = ({ sortBy }) => {
 						menu.addItem((item) => {
 							item.setTitle(mode.label);
 							item.onClick(async () => {
-                                await actions.setSortBy(mode.mode);
-                            });
+								ac.setSortBy(mode.mode);
+							});
 							item.setChecked(mode.mode === sortBy);
 						});
 					});

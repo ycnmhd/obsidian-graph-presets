@@ -1,12 +1,13 @@
+import { TFile } from "obsidian";
 import { obsidian } from "src/obsidian/obsidian";
-import { GraphPresets } from "../graph-presets";
+import { filesByCtime } from "../store/cache/files-by-time";
 import { GetPresetDTO } from "./get-preset";
 
-export const openFile = async (dto: GetPresetDTO, newLeaf = false) => {
-	const plugin = GraphPresets.getInstance();
-	const file =
-		dto.file || plugin.store.getSnapshot().state.filesByCtime[dto.created];
-
+export const openFile = async (
+	dto: GetPresetDTO | { file: TFile },
+	newLeaf = false
+) => {
+	const file = "file" in dto ? dto.file : filesByCtime.current[dto.created];
 	await obsidian.fs.openFile({
 		file,
 		position: newLeaf

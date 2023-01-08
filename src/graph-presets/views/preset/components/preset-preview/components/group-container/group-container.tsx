@@ -2,10 +2,10 @@ import classnames from "classnames";
 import { useEffect, useState } from "react";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { GroupHeader } from "./group-header";
-import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
-import { actions } from "src/graph-presets/actions/actions";
+import { graphSettingsGroup } from "src/types/apply-preset";
 import { GraphSettings } from "src/types/graph-settings";
 import AnimateHeight from "react-animate-height";
+import { ac } from "src/graph-presets/store/store";
 
 const collapsedStateKeys: Record<graphSettingsGroup, keyof GraphSettings> = {
 	filters: "collapse-filter",
@@ -30,7 +30,8 @@ export const GroupContainer: React.FC<Props> = ({
 	const [localCollapsed, setLocalCollapsed] = useState(collapsed);
 	useEffect(() => {
 		if (localCollapsed !== collapsed)
-			actions.saveAttribute(meta, {
+			ac.updateAttribute({
+				...meta,
 				name: collapsedStateKeys[group],
 				value: localCollapsed,
 			});
@@ -64,7 +65,7 @@ export const GroupContainer: React.FC<Props> = ({
 			<AnimateHeight
 				id={group}
 				duration={200}
-				height={!localCollapsed ? "auto" : 0} 
+				height={!localCollapsed ? "auto" : 0}
 			>
 				<div className="tree-item-children mt-3">{children}</div>
 			</AnimateHeight>

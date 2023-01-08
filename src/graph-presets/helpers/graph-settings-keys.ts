@@ -6,7 +6,7 @@ import {
 	ColorGroupOptions,
 	RootGraphOptions,
 } from "src/types/graph-settings";
-import { graphSettingsGroup } from "../actions/apply-preset";
+import { graphSettingsGroup } from "../../types/apply-preset";
 
 const filterOptionsRecord: Record<keyof FilterOptions, boolean> = {
 	"collapse-filter": false,

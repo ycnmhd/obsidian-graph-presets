@@ -1,5 +1,5 @@
 import { WorkspaceLeaf } from "obsidian";
-import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
+import { graphSettingsGroup } from "src/types/apply-preset";
 import { GetPresetDTO } from "src/graph-presets/actions/get-preset";
 import { obsidian } from "src/obsidian/obsidian";
 import { GraphSettings } from "src/types/graph-settings";

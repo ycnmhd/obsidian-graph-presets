@@ -1,7 +1,7 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 import { actions } from "src/graph-presets/actions/actions";
-import { GraphPresets } from "src/graph-presets/graph-presets";
 import { logger } from "src/graph-presets/helpers/logger";
+import { useAppSelector } from "src/graph-presets/store/hooks";
 import { GraphSettings } from "src/types/graph-settings";
 import { ColorGroupsOptionsPreview } from "./components/groups/color-groups-options-preview";
 import { DisplayOptionsPreview } from "./components/groups/display-options-preview";
@@ -13,14 +13,10 @@ type Props = {
 };
 
 export const PresetPreview: React.FC<Props> = ({ ctime }) => {
-	const plugin = GraphPresets.getInstance();
 	const [preset, setPreset] = useState<GraphSettings>();
 	const [error, setError] = useState(false);
-	const store = useSyncExternalStore(
-		plugin.store.subscribe,
-		plugin.store.getSnapshot
-	);
-	const meta = plugin.store.getSnapshot().state.meta[ctime];
+
+	const meta = useAppSelector((state) => state.presets.meta[ctime]);
 
 	useEffect(() => {
 		const loadPreset = async () => {
@@ -33,7 +29,7 @@ export const PresetPreview: React.FC<Props> = ({ ctime }) => {
 			}
 		};
 		loadPreset();
-	}, [store.state.meta]);
+	}, [meta]);
 	if (error)
 		return (
 			<div style={{ padding: 10, backgroundColor: "#ff000010" }}>

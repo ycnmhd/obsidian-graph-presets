@@ -1,7 +1,6 @@
 import { Command } from "obsidian";
-import { GraphPresetsItemViewType } from "../components/presets-view/graph-presets-item-view";
+import { GraphPresetsItemViewType } from "../views/presets/presets-view";
 import { t } from "../lang/text";
-
 
 export const openGraphPresetsView: Command = {
 	id: "open-graph-presets-view",

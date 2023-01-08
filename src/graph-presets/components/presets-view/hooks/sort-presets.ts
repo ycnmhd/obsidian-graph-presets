@@ -1,9 +1,7 @@
 import { useMemo } from "react";
-import {
-	GraphPresetsStore,
-	MarkdownPresetMeta,
-} from "src/graph-presets/graph-presets";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { PluginSettings } from "src/graph-presets/settings/default-settings";
+import { useAppSelector } from "src/graph-presets/store/hooks";
 
 const sortPresets = (
 	unsortedEntries: MarkdownPresetMeta[],
@@ -56,18 +54,26 @@ const sortPresets = (
 	return sortedEntries;
 };
 
-export const useSortPresets = (store: GraphPresetsStore) => {
+export const useSortPresets = () => {
+	const presets = useAppSelector((state) => state.presets.meta);
+	const filter = useAppSelector((state) => state.preferences.filter);
+	const sortBy = useAppSelector((state) => state.preferences.sortBy);
+	const starred = useAppSelector((state) => state.presets.starredPresets);
 	return useMemo(() => {
-		const fullList = Object.values(store.state.meta);
+		const fullList = Object.values(presets);
 		const filteredList = fullList.filter((preset) =>
-			preset.path.toLowerCase().includes(store.state.filter.toLowerCase())
+			preset.path.toLowerCase().includes(filter.toLowerCase())
 		);
-		const staredList = filteredList.filter((preset) => preset.starred);
-		const unStarredList = filteredList.filter((preset) => !preset.starred);
+		const staredList = filteredList.filter(
+			(preset) => starred[preset.created]
+		);
+		const unStarredList = filteredList.filter(
+			(preset) => !starred[preset.created]
+		);
 
 		return [
-			...sortPresets(staredList, store.settings.preferences.sortBy),
-			...sortPresets(unStarredList, store.settings.preferences.sortBy),
+			...sortPresets(staredList, sortBy),
+			...sortPresets(unStarredList, sortBy),
 		];
-	}, [store.settings, store.state]);
+	}, [presets, filter, sortBy, starred]);
 };

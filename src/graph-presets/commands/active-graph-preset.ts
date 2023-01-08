@@ -1,5 +1,5 @@
 import { Command, Notice } from "obsidian";
-import { actions } from "src/graph-presets/actions/actions";
+import { ac } from "../store/store";
 
 import { t } from "../lang/text";
 import { PresetView, PresetViewType } from "../views/preset/preset-view";
@@ -12,7 +12,7 @@ export const activePresetCommands: Command[] = [
 			const leaf = app.workspace.activeLeaf;
 			if (leaf && leaf.view.getViewType() === PresetViewType) {
 				const view = leaf.view as PresetView;
-				actions.applyPreset({
+				ac.applyPreset({
 					created: view.file.stat.ctime,
 				});
 			} else {
@@ -27,7 +27,7 @@ export const activePresetCommands: Command[] = [
 			const leaf = app.workspace.activeLeaf;
 			if (leaf && leaf.view.getViewType() === PresetViewType) {
 				const view = leaf.view as PresetView;
-				actions.updatePreset({
+				ac.updatePreset({
 					created: view.file.stat.ctime,
 				});
 			} else {

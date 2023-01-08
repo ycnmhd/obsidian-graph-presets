@@ -1,6 +1,6 @@
 import { svgs } from "src/assets/svgs";
-import { actions } from "src/graph-presets/actions/actions";
-import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
+import { ac } from "src/graph-presets/store/store";
+import { graphSettingsGroup } from "src/types/apply-preset";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { t } from "src/graph-presets/lang/text";
 
@@ -51,7 +51,7 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 					{svgs["document-check"]({
 						width: 16,
 						onClick: () => {
-							actions.applyPreset(meta, group);
+							ac.applyPreset({ ...meta, group });
 						},
 					})}
 				</div>
@@ -63,7 +63,7 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 					{svgs["edit"]({
 						width: 14,
 						onClick: () => {
-							actions.updatePreset(meta, group);
+							ac.updatePreset({ ...meta, group });
 						},
 					})}
 				</div>

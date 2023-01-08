@@ -1,4 +1,4 @@
-import { graphSettingsGroup } from "src/graph-presets/actions/apply-preset";
+import { graphSettingsGroup } from "src/types/apply-preset";
 import { pickGroup } from "src/graph-presets/actions/helpers/pick-group";
 import { GraphSettings } from "src/types/graph-settings";
 

@@ -1,5 +1,11 @@
-import { GraphSettings, FilterOptions, ColorGroupOptions, ForceOptions, DisplayOptions } from "src/types/graph-settings";
-import { graphSettingsGroup } from "../apply-preset";
+import {
+	GraphSettings,
+	FilterOptions,
+	ColorGroupOptions,
+	ForceOptions,
+	DisplayOptions,
+} from "src/types/graph-settings";
+import { graphSettingsGroup } from "../../../types/apply-preset";
 
 export const pickGroup = (
 	group: graphSettingsGroup,

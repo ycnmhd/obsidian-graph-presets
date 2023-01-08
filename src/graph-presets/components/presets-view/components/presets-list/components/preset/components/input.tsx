@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { actions } from "src/graph-presets/actions/actions";
+import { ac } from "src/graph-presets/store/store";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { t } from "src/graph-presets/lang/text";
 
@@ -22,8 +22,11 @@ export const Input: React.FC<Props> = ({
 			cancelRenaming();
 		} else {
 			if (meta.name)
-				actions.renamePreset({ created: meta.created }, value);
-			else actions.createPreset(value);
+				ac.renamePreset({ created: meta.created, newName: value });
+			else
+				ac.createPreset({
+					presetName: value,
+				});
 			if (deleteUnsavedPreset) deleteUnsavedPreset();
 			if (cancelRenaming) cancelRenaming();
 		}

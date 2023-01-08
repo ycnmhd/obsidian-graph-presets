@@ -1,8 +1,4 @@
-import React, {
-	useCallback,
-	useRef,
-	useState,
-} from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { actions } from "src/graph-presets/actions/actions";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { rtf1, t } from "src/graph-presets/lang/text";
@@ -10,6 +6,7 @@ import { rtf1, t } from "src/graph-presets/lang/text";
 import { svgs } from "src/assets/svgs";
 import { ApplyPreset } from "./apply-preset";
 import { PresetViewType } from "src/graph-presets/views/preset/preset-view";
+import { useAppSelector } from "src/graph-presets/store/hooks";
 
 const relativeTime = (updated: number) => {
 	const difference = Date.now() - updated;
@@ -35,8 +32,10 @@ type Props = {
 };
 
 export const PresetLabel: React.FC<Props> = ({ meta }) => {
+	const starred = useAppSelector((state) => state.presets.starredPresets);
+	const active = useAppSelector((state) => state.presets.activePreset);
 	const star =
-		meta.starred &&
+		starred[meta.created] &&
 		svgs["lucid-star"]({
 			width: 12,
 			fill: "#facc15",
@@ -84,7 +83,7 @@ export const PresetLabel: React.FC<Props> = ({ meta }) => {
 		<div
 			className={
 				"nav-file-title " +
-				(meta.active ? " is-active" : "")
+				(active === meta.created ? " is-active" : "")
 			}
 			style={{
 				display: "flex",

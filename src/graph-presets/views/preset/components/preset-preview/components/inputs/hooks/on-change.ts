@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { actions } from "src/graph-presets/actions/actions";
+import { ac } from "src/graph-presets/store/store";
 import { GraphSettings } from "src/types/graph-settings";
 
 export const useOnChange = <k extends keyof GraphSettings>(
@@ -7,12 +7,6 @@ export const useOnChange = <k extends keyof GraphSettings>(
 	name: k
 ) => {
 	return useCallback((value: GraphSettings[k]) => {
-		actions.saveAttribute<typeof name>(
-			{ created },
-			{
-				name,
-				value,
-			}
-		);
+		ac.updateAttribute({ created, name, value });
 	}, []);
 };

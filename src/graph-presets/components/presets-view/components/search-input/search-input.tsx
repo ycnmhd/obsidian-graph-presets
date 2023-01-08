@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { actions } from "src/graph-presets/actions/actions";
+import { ac } from "src/graph-presets/store/store";
 import { t } from "src/graph-presets/lang/text";
+import { useAppSelector } from "src/graph-presets/store/hooks";
 
 export const searchInputHeight = 38;
-type Props = {
-	currentValue: string;
-};
 
-export const SearchInput: React.FC<Props> = ({ currentValue = "" }) => {
+export const SearchInput: React.FC = () => {
+	const currentValue = useAppSelector((state) => state.preferences.filter);
 	const [value, setValue] = useState(currentValue);
 
 	const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
@@ -15,7 +14,7 @@ export const SearchInput: React.FC<Props> = ({ currentValue = "" }) => {
 		if (value !== currentValue) {
 			if (timeoutRef.current) clearTimeout(timeoutRef.current);
 			timeoutRef.current = setTimeout(() => {
-				actions.setFilter(value);
+				ac.setFilter(value);
 			}, 200);
 			return () => {
 				if (timeoutRef.current) clearTimeout(timeoutRef.current);

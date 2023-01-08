@@ -1,13 +1,13 @@
 import { ViewState, WorkspaceLeaf } from "obsidian";
 
 type State = {
-	leafTypeMap: Map<WorkspaceLeaf, string>;
+	fileTypeMap: Map<string, string>;
 };
 
 export class Router {
 	private static instance: Router;
 	private state: State = {
-		leafTypeMap: new Map(),
+		fileTypeMap: new Map(),
 	};
 	private _viewType: string;
 	private _frontmatter: string;
@@ -32,29 +32,26 @@ export class Router {
 		return this.instance;
 	}
 
-	setLeafType = async ({
-		leaf,
+	setFileType = async ({
+		path,
 		type,
-		setState,
+		leaf,
 	}: {
-		leaf: WorkspaceLeaf;
+		path: string;
 		type: string;
-		setState?: boolean;
+		leaf?: WorkspaceLeaf;
 	}) => {
-		this.state.leafTypeMap.set(leaf, type);
-		if (setState || type === "markdown") {
-			await leaf.setViewState(
-				{
-					type: type,
-					state: leaf.view.getState(),
-					popstate: true,
-				} as ViewState,
-				{ focus: setState }
-			);
+		this.state.fileTypeMap.set(path, type);
+		if (leaf) {
+			leaf.setViewState({
+				type: type,
+				popstate: true,
+				state: leaf.view.getState(),
+			} as ViewState);
 		}
 	};
 
-	getLeafType = (leaf: WorkspaceLeaf): string | undefined => {
-		return this.state.leafTypeMap.get(leaf);
+	getFileType = (path: string): string | undefined => {
+		return this.state.fileTypeMap.get(path);
 	};
 }

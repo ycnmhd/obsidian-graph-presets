@@ -1,11 +1,13 @@
 import { ItemView, WorkspaceLeaf } from "obsidian";
 import { svgs } from "src/assets/svgs";
-import { PresetsView } from "./presets-view";
+import { PresetsView as P } from "../../components/presets-view/presets-view";
 import * as ReactDOM from "react-dom";
 import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "src/graph-presets/components/shared/error-fallback";
+import { Provider } from "react-redux";
+import { store } from "src/graph-presets/store/store";
 
 export const GraphPresetsItemViewType = "graph-presets-list-view";
 export const GraphPresetsItemViewIcon = {
@@ -13,7 +15,7 @@ export const GraphPresetsItemViewIcon = {
 	svg: svgs["graph-presets"],
 };
 
-export class GraphPresetsItemView extends ItemView {
+export class PresetsView extends ItemView {
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
 	}
@@ -33,7 +35,9 @@ export class GraphPresetsItemView extends ItemView {
 		root.render(
 			<StrictMode>
 				<ErrorBoundary FallbackComponent={ErrorFallback}>
-					<PresetsView />
+					<Provider store={store}>
+						<P />
+					</Provider>
 				</ErrorBoundary>
 			</StrictMode>
 		);
@@ -42,5 +46,24 @@ export class GraphPresetsItemView extends ItemView {
 	async onClose() {
 		ReactDOM.unmountComponentAtNode(this.containerEl);
 	}
-	
+
+	static enable() {
+		app.workspace.onLayoutReady(async () => {
+			const leafs = app.workspace.getLeavesOfType(
+				GraphPresetsItemViewType
+			);
+			await Promise.all(
+				leafs
+					.filter((leaf) => !(leaf.view instanceof PresetsView))
+					.map(async (leaf) => {
+						return await leaf.setViewState({ type: "empty" });
+					})
+			);
+			const leaf = leafs.at(-1) || app.workspace.getLeftLeaf(false);
+			leaf.setViewState({
+				type: GraphPresetsItemViewType,
+				active: true,
+			});
+		});
+	}
 }

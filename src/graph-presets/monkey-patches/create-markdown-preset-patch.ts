@@ -1,6 +1,6 @@
 import { Menu, TAbstractFile, TFolder } from "obsidian";
-import { GraphPresetsItemViewIcon } from "../components/presets-view/graph-presets-item-view";
-import { actions } from "../actions/actions";
+import { GraphPresetsItemViewIcon } from "../views/presets/presets-view";
+import { ac } from "../store/store";
 import { t } from "../lang/text";
 
 export const createMarkdownPresetPatch = async (
@@ -11,12 +11,11 @@ export const createMarkdownPresetPatch = async (
 		item.setTitle(t.c.NEW_PRESET)
 			.setIcon(GraphPresetsItemViewIcon.name)
 			.onClick(async () => {
-				await actions.createPreset(
-					undefined,
-					undefined,
-					file instanceof TFolder ? file.path : file.parent.path,
-					true
-				);
+				await ac.createPreset({
+					presetName: "",
+					folderPath:
+						file instanceof TFolder ? file.path : file.parent.path,
+				});
 			});
 	});
 };

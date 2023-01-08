@@ -1,8 +1,9 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { obsidian } from "src/obsidian/obsidian";
 import { GraphSettings } from "src/types/graph-settings";
-import { GraphPresets } from "../graph-presets";
-import { GetPresetDTO } from "./get-preset";
-import { updateMarkdownPreset } from "./save-preset-to-markdown/update-markdown-preset";
+import { getSnapshot } from "../store";
+import { GetPresetDTO } from "../../actions/get-preset";
+import { updateMarkdownPreset } from "../../actions/save-preset-to-markdown/update-markdown-preset";
 
 type State = {
 	unsavedValues: Record<number, Partial<GraphSettings>>;
@@ -35,8 +36,7 @@ const addUnsavedValue = <k extends keyof GraphSettings>({
 };
 
 const saveAllUnsavedValues = async () => {
-	const plugin = GraphPresets.getInstance();
-	const presetsMeta = plugin.store.getSnapshot().settings.data.presetsMeta;
+	const presetsMeta = getSnapshot().presets.meta;
 	const promises = Object.entries(state.unsavedValues).map(
 		async ([created, preset]) => {
 			const p = presetsMeta[+created];
@@ -45,7 +45,7 @@ const saveAllUnsavedValues = async () => {
 				mode: "partial-from-props",
 				props: preset,
 			});
-			if (!p?.meta?.disableAutoApply) {
+			if (!p?.disableAutoApply) {
 				obsidian.graph.setSettings({
 					settings: preset,
 					openGraph: false,
@@ -59,9 +59,14 @@ const saveAllUnsavedValues = async () => {
 	await Promise.all(promises);
 };
 
-export const saveAttribute = async <k extends keyof GraphSettings>(
-	dto: GetPresetDTO,
-	{ name, value }: { name: k; value: GraphSettings[k] }
-) => {
-	addUnsavedValue({ dto, name, value });
+export type UpdateAttributeDTO<k extends keyof GraphSettings> = GetPresetDTO & {
+	name: k;
+	value: GraphSettings[k];
 };
+
+export const updateAttributeThunk = createAsyncThunk(
+	"root/updateAttribute",
+	<k extends keyof GraphSettings>(dto: UpdateAttributeDTO<k>) => {
+		addUnsavedValue({ dto, name: dto.name, value: dto.value });
+	}
+);

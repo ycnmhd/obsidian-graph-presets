@@ -4,7 +4,7 @@ import { ColorGroupOptions } from "src/types/graph-settings";
 import { ColorOption } from "../inputs/color-option";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { useColorGroups } from "./hooks/color-groups";
-import { actions } from "src/graph-presets/actions/actions";
+import { ac } from "src/graph-presets/store/store";
 import { hexToRgb } from "../../helpers/map-colors";
 import {
 	DndContext,
@@ -36,7 +36,8 @@ export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 		removeGroup,
 		sortGroups,
 	} = useColorGroups(options.colorGroups, (groups) => {
-		actions.saveAttribute(meta, {
+		ac.updateAttribute({
+			...meta,
 			name: "colorGroups",
 			value: groups,
 		});
@@ -63,14 +64,14 @@ export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 				<SortableContext
 					items={state.groups.map((group, i) => ({
 						...group,
-						id: i+1,
+						id: i + 1,
 					}))}
 					strategy={verticalListSortingStrategy}
 				>
 					{state.groups.map((color, i) => (
 						<ColorOption
 							color={color}
-							key={i+1}
+							key={i + 1}
 							onColorChange={(value) => {
 								updateColor(i, hexToRgb(value));
 							}}
@@ -78,7 +79,7 @@ export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 								updateQuery(i, query);
 							}}
 							removeGroup={() => removeGroup(i)}
-							id={i+1}
+							id={i + 1}
 						/>
 					))}
 					<div className="graph-color-button-container">

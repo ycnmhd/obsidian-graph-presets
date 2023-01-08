@@ -1,15 +1,16 @@
 import { Notice } from "obsidian";
 import { GraphSettings } from "src/types/graph-settings";
-import { actions } from "../actions/actions";
+import { ac, getSnapshot } from "../store/store";
 import { GraphPresets } from "../graph-presets";
 import { logger } from "../helpers/logger";
 import { t } from "../lang/text";
-import { CURRENT_VERSION } from "./default-settings";
+import { CURRENT_VERSION, PluginSettings } from "./default-settings";
 
 const migrations = {
 	"0.5.0": async () => {
-		const plugin = GraphPresets.getInstance();
-		const settings = plugin.settings as any;
+		const store = getSnapshot();
+		const settings = GraphPresets.getInstance()
+			.settings as PluginSettings & { __migratedData__: any[] };
 
 		if ("presets" in settings && typeof settings.presets === "object") {
 			const presets = settings.presets as {
@@ -25,14 +26,13 @@ const migrations = {
 
 			try {
 				const folderPath =
-					plugin.store.getSnapshot().settings.preferences
-						.presetsFolder + "/migrated/0.5.0";
+					store.preferences.presetsFolder + "/migrated/0.5.0";
 				for (const [name, preset] of Object.entries(presets)) {
-					await actions.createPreset(
-						name,
-						preset.settings,
-						folderPath
-					);
+					await ac.createPreset({
+						presetName: name,
+						preset: preset.settings,
+						folderPath,
+					});
 				}
 				if (!settings.__migratedData__) settings.__migratedData__ = [];
 				settings.__migratedData__.push({
@@ -44,12 +44,11 @@ const migrations = {
 					},
 				});
 				delete settings.presets;
-				
-				new Notice(t.c.PRESETS_MIGRATED)
-			} catch (e) {
 
+				new Notice(t.c.PRESETS_MIGRATED);
+			} catch (e) {
 				logger.error(e);
-				new Notice(t.c.ERROR_MIGRATING_PRESETS+": " + e.message);
+				new Notice(t.c.ERROR_MIGRATING_PRESETS + ": " + e.message);
 			}
 		}
 	},
@@ -57,11 +56,10 @@ const migrations = {
 
 export const migrateSettings = async () => {
 	const plugin = GraphPresets.getInstance();
-	const settings = plugin.settings as any;
-	if (settings.version === CURRENT_VERSION) return;
-	if (!settings.version) {
+
+	if (plugin.settings.version === CURRENT_VERSION) return;
+	if (!plugin.settings.version) {
 		await migrations["0.5.0"]();
 	}
-    settings.version = CURRENT_VERSION;
-    await plugin.saveSettings();
+	await plugin.setVersion(CURRENT_VERSION);
 };

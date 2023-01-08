@@ -21,7 +21,7 @@ export const parseYamlPreset = (file: string) => {
 				settings[key as keyof GraphSettings] = payload.value as any;
 			}
 		} else {
-			logger.log("Invalid key", key);
+			logger.error("Invalid key", key);
 		}
 	}
 

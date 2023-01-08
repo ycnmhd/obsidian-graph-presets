@@ -5,23 +5,26 @@ import { Router } from "../views/preset/helpers/router";
 export function setViewState(next: any) {
 	return function (state: ViewState, ...rest: any[]) {
 		const router = Router.getInstance();
+		const isMarkdownView = state.type === "markdown";
+		const fileType = router.getFileType(state?.state?.file);
+		const typeIsMd = fileType === "markdown";
 
-		if (
-			state.type === "markdown" &&
-			state.state?.file &&
-			router.getLeafType(this) !== "markdown"
-		) {
+		if (isMarkdownView && !typeIsMd) {
 			const cache = app.metadataCache.getCache(state.state.file);
 
-			if (cache?.frontmatter && cache.frontmatter[router.frontmatter]) {
+			const hasPresetFrontmatter =
+				cache?.frontmatter && cache.frontmatter[router.frontmatter];
+			const typeIsPreset = fileType === router.viewType;
+			if (hasPresetFrontmatter) {
 				const newState = {
 					...state,
 					type: router.viewType,
 				};
-				router.setLeafType({
-					leaf: this,
-					type: router.viewType,
-				});
+				if (!typeIsPreset)
+					router.setFileType({
+						path: state.state.file,
+						type: router.viewType,
+					});
 
 				return next.apply(this, [newState, ...rest]);
 			}
