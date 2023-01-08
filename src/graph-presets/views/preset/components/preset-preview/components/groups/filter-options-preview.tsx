@@ -3,35 +3,32 @@ import { GroupContainer } from "../group-container/group-container";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { TextInput } from "../inputs/text-input/text-input";
 import { Toggle } from "../inputs/toggle";
-import { useOnChange } from "../inputs/hooks/on-change";
 import { Slider } from "../inputs/slider";
+import { UpdateAttribute } from "src/graph-presets/views/preset/preset-view";
+import { useCallback } from "react";
 
 type Props = {
 	options: FilterOptions;
 	meta: MarkdownPresetMeta;
+	updateAttribute: UpdateAttribute;
 };
 
-export const FilterOptionsPreview: React.FC<Props> = ({ options, meta }) => {
-	const onSearchChange = useOnChange(meta.created, "search");
-	const onShowTagsChange = useOnChange(meta.created, "showTags");
-	const onShowAttachmentsChange = useOnChange(
-		meta.created,
-		"showAttachments"
+export const FilterOptionsPreview: React.FC<Props> = ({
+	options,
+	meta,
+	updateAttribute,
+}) => {
+	const onSearchChange = useCallback(
+		(value: string) => updateAttribute("search", value),
+		[]
 	);
-	const onHideUnresolvedChange = useOnChange(meta.created, "hideUnresolved");
-	const onShowOrphansChange = useOnChange(meta.created, "showOrphans");
-	const onLocalJumpsChange = useOnChange(meta.created, "localJumps");
-	const onLocalBacklinksChange = useOnChange(meta.created, "localBacklinks");
-	const onLocalForelinksChange = useOnChange(meta.created, "localForelinks");
-	const onLocalInterlinksChange = useOnChange(
-		meta.created,
-		"localInterlinks"
-	);
+
 	return (
 		<GroupContainer
 			meta={meta}
 			group="filters"
 			collapsed={options["collapse-filter"]}
+			updateAttribute={updateAttribute}
 		>
 			<TextInput
 				value={options.search}
@@ -40,54 +37,54 @@ export const FilterOptionsPreview: React.FC<Props> = ({ options, meta }) => {
 			/>
 			{typeof options.localJumps === "number" && (
 				<Slider
-					name="Depth"
+					name="localJumps"
 					value={options.localJumps}
 					min={1}
 					max={5}
-					onChange={onLocalJumpsChange}
+					onChange={updateAttribute}
 				/>
 			)}
 			{typeof options.localBacklinks === "boolean" && (
 				<Toggle
 					enabled={options.localBacklinks}
-					name="Incoming links"
-					onChange={onLocalBacklinksChange}
+					name="localBacklinks"
+					onChange={updateAttribute}
 				/>
 			)}
 			{typeof options.localForelinks === "boolean" && (
 				<Toggle
 					enabled={options.localForelinks}
-					name="Outgoing links"
-					onChange={onLocalForelinksChange}
+					name="localForelinks"
+					onChange={updateAttribute}
 				/>
 			)}
 			{typeof options.localInterlinks === "boolean" && (
 				<Toggle
 					enabled={options.localInterlinks}
-					name="Neighbor links"
-					onChange={onLocalInterlinksChange}
+					name="localInterlinks"
+					onChange={updateAttribute}
 				/>
 			)}
 			<Toggle
 				enabled={options.showTags}
-				name="Tags"
-				onChange={onShowTagsChange}
+				name="showTags"
+				onChange={updateAttribute}
 			/>
 			<Toggle
 				enabled={options.showAttachments}
-				name="Attachments"
-				onChange={onShowAttachmentsChange}
+				name="showAttachments"
+				onChange={updateAttribute}
 			/>
 			<Toggle
 				enabled={options.hideUnresolved}
-				name="Existing files only"
-				onChange={onHideUnresolvedChange}
+				name="hideUnresolved"
+				onChange={updateAttribute}
 			/>
 			{typeof options.showOrphans === "boolean" && (
 				<Toggle
 					enabled={options.showOrphans}
-					name="Orphans"
-					onChange={onShowOrphansChange}
+					name="showOrphans"
+					onChange={updateAttribute}
 				/>
 			)}
 		</GroupContainer>

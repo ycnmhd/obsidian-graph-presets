@@ -5,7 +5,7 @@ import { GroupHeader } from "./group-header";
 import { graphSettingsGroup } from "src/types/apply-preset";
 import { GraphSettings } from "src/types/graph-settings";
 import AnimateHeight from "react-animate-height";
-import { ac } from "src/graph-presets/store/store";
+import { UpdateAttribute } from "src/graph-presets/views/preset/preset-view";
 
 const collapsedStateKeys: Record<graphSettingsGroup, keyof GraphSettings> = {
 	filters: "collapse-filter",
@@ -19,6 +19,7 @@ type Props = {
 	group: graphSettingsGroup;
 	children?: React.ReactNode;
 	collapsed: boolean;
+	updateAttribute: UpdateAttribute;
 };
 
 export const GroupContainer: React.FC<Props> = ({
@@ -26,15 +27,12 @@ export const GroupContainer: React.FC<Props> = ({
 	meta,
 	children,
 	collapsed,
+	updateAttribute,
 }) => {
 	const [localCollapsed, setLocalCollapsed] = useState(collapsed);
 	useEffect(() => {
 		if (localCollapsed !== collapsed)
-			ac.updateAttribute({
-				...meta,
-				name: collapsedStateKeys[group],
-				value: localCollapsed,
-			});
+			updateAttribute(collapsedStateKeys[group], localCollapsed);
 	}, [localCollapsed]);
 	useEffect(() => {
 		if (localCollapsed !== collapsed) setLocalCollapsed(collapsed);

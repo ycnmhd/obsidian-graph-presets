@@ -1,12 +1,14 @@
+import { GraphSettings } from "src/types/graph-settings";
 import { useInputState } from "./hooks/input-state";
+import { graphInputLabels } from "../../../../../../lang/graph-input-labels";
 import { UnsavedChangesIndicator } from "./shared/unsaved-changes-indicator";
 
 type Props = {
-	name: string;
+	name: keyof GraphSettings;
 	min: number;
 	max: number;
 	value: number;
-	onChange: (value: number) => void;
+	onChange: (name: keyof GraphSettings, value: number) => void;
 };
 export const Slider: React.FC<Props> = ({
 	name,
@@ -16,7 +18,7 @@ export const Slider: React.FC<Props> = ({
 	onChange,
 }) => {
 	const { inputRef, unsavedChanges } = useInputState({
-		onChangeDebounced: (value: string) => onChange(parseFloat(value)),
+		onChangeDebounced: (value: string) => onChange(name, parseFloat(value)),
 		value: value,
 	});
 	return (
@@ -26,7 +28,9 @@ export const Slider: React.FC<Props> = ({
 					show={unsavedChanges}
 					className="top-[28px]"
 				/>
-				<div className="setting-item-name">{name}</div>
+				<div className="setting-item-name">
+					{graphInputLabels[name]}
+				</div>
 				<div className="setting-item-description"></div>
 			</div>
 			<div

@@ -3,47 +3,52 @@ import { GroupContainer } from "../group-container/group-container";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { Toggle } from "../inputs/toggle";
 import { Slider } from "../inputs/slider";
-import { useOnChange } from "../inputs/hooks/on-change";
+import { UpdateAttribute } from "src/graph-presets/views/preset/preset-view";
 
 type Props = {
 	options: DisplayOptions;
 	meta: MarkdownPresetMeta;
+	updateAttribute: UpdateAttribute;
 };
 
-export const DisplayOptionsPreview: React.FC<Props> = ({ options, meta }) => {
-	const onShowArrowChange = useOnChange(meta.created, "showArrow");
-	const onTextFadeChange = useOnChange(meta.created, "textFadeMultiplier");
-	const onNodeSizeChange = useOnChange(meta.created, "nodeSizeMultiplier");
-	const onLineSizeChange = useOnChange(meta.created, "lineSizeMultiplier");
-
+export const DisplayOptionsPreview: React.FC<Props> = ({
+	options,
+	meta,
+	updateAttribute,
+}) => {
 	return (
-		<GroupContainer meta={meta} group="display" collapsed={options["collapse-display"]}>
+		<GroupContainer
+			meta={meta}
+			group="display"
+			collapsed={options["collapse-display"]}
+			updateAttribute={updateAttribute}
+		>
 			<Toggle
 				enabled={options.showArrow}
-				name="Arrows"
-				onChange={onShowArrowChange}
+				name="showArrow"
+				onChange={updateAttribute}
 			/>
 			<Slider
-				name="Text fade threshold"
+				name="textFadeMultiplier"
 				value={options.textFadeMultiplier}
 				min={-3}
 				max={3}
 				// step={0.1}
-				onChange={onTextFadeChange}
+				onChange={updateAttribute}
 			/>
 			<Slider
-				name="Node size"
+				name="nodeSizeMultiplier"
 				value={options.nodeSizeMultiplier}
 				min={0.1}
 				max={5}
-				onChange={onNodeSizeChange}
+				onChange={updateAttribute}
 			/>
 			<Slider
-				name="Link thickness"
+				name="lineSizeMultiplier"
 				value={options.lineSizeMultiplier}
 				min={0.1}
 				max={5}
-				onChange={onLineSizeChange}
+				onChange={updateAttribute}
 			/>
 		</GroupContainer>
 	);

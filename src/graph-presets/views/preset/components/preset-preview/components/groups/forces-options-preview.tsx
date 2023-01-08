@@ -2,47 +2,53 @@ import { ForceOptions } from "src/types/graph-settings";
 import { GroupContainer } from "../group-container/group-container";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { Slider } from "../inputs/slider";
-import { useOnChange } from "../inputs/hooks/on-change";
+import { UpdateAttribute } from "src/graph-presets/views/preset/preset-view";
 
 type Props = {
 	options: ForceOptions;
 	meta: MarkdownPresetMeta;
+	updateAttribute: UpdateAttribute;
 };
 
-export const ForcesOptionsPreview: React.FC<Props> = ({ options, meta }) => {
-	const updateCenterStrength = useOnChange(meta.created, "centerStrength");
-	const updateRepelStrength = useOnChange(meta.created, "repelStrength");
-	const updateLinkStrength = useOnChange(meta.created, "linkStrength");
-	const updateLinkDistance = useOnChange(meta.created, "linkDistance");
+export const ForcesOptionsPreview: React.FC<Props> = ({
+	options,
+	meta,
+	updateAttribute,
+}) => {
 	return (
-		<GroupContainer meta={meta} group="forces" collapsed={options["collapse-forces"]}>
+		<GroupContainer
+			meta={meta}
+			group="forces"
+			collapsed={options["collapse-forces"]}
+			updateAttribute={updateAttribute}
+		>
 			<Slider
-				name={"Center force"}
+				name={"centerStrength"}
 				value={options.centerStrength}
 				min={0}
 				max={1}
-				onChange={updateCenterStrength}
+				onChange={updateAttribute}
 			/>
 			<Slider
-				name={"Repel force"}
+				name={"repelStrength"}
 				value={options.repelStrength}
 				min={0}
 				max={20}
-				onChange={updateRepelStrength}
+				onChange={updateAttribute}
 			/>
 			<Slider
-				name={"Link force"}
+				name={"linkStrength"}
 				value={options.linkStrength}
 				min={0}
 				max={1}
-				onChange={updateLinkStrength}
+				onChange={updateAttribute}
 			/>
 			<Slider
-				name={"Link distance"}
+				name={"linkDistance"}
 				value={options.linkDistance}
 				min={30}
 				max={500}
-				onChange={updateLinkDistance}
+				onChange={updateAttribute}
 			/>
 		</GroupContainer>
 	);

@@ -4,7 +4,6 @@ import { ColorGroupOptions } from "src/types/graph-settings";
 import { ColorOption } from "../inputs/color-option";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { useColorGroups } from "./hooks/color-groups";
-import { ac } from "src/graph-presets/store/store";
 import { hexToRgb } from "../../helpers/map-colors";
 import {
 	DndContext,
@@ -19,14 +18,17 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { UpdateAttribute } from "src/graph-presets/views/preset/preset-view";
 type Props = {
 	options: ColorGroupOptions;
 	meta: MarkdownPresetMeta;
+	updateAttribute: UpdateAttribute;
 };
 
 export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 	options,
 	meta,
+	updateAttribute,
 }) => {
 	const {
 		state,
@@ -36,11 +38,7 @@ export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 		removeGroup,
 		sortGroups,
 	} = useColorGroups(options.colorGroups, (groups) => {
-		ac.updateAttribute({
-			...meta,
-			name: "colorGroups",
-			value: groups,
-		});
+		updateAttribute("colorGroups", groups);
 	});
 
 	const sensors = useSensors(
@@ -55,6 +53,7 @@ export const ColorGroupsOptionsPreview: React.FC<Props> = ({
 			meta={meta}
 			group="groups"
 			collapsed={options["collapse-color-groups"]}
+			updateAttribute={updateAttribute}
 		>
 			<DndContext
 				sensors={sensors}

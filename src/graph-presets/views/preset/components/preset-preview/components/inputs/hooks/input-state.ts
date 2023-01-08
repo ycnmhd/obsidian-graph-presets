@@ -26,12 +26,7 @@ export const useInputState = <
 
 	useEffect(() => {
 		if (inputRef.current) {
-			const wasDisabled = inputRef.current.disabled;
 			inputRef.current.value = String(value);
-			inputRef.current.disabled = false;
-			if (wasDisabled) {
-				inputRef.current.focus();
-			}
 		}
 		setUnsavedChanges(false);
 	}, [value]);
@@ -42,9 +37,7 @@ export const useInputState = <
 			const onInput = (event: Event) => {
 				setUnsavedChanges(true);
 				if (timeoutRef.current) clearTimeout(timeoutRef.current);
-				const element = event.target as T;
 				timeoutRef.current = setTimeout(() => {
-					element.disabled = true;
 					onChange(event);
 				}, delaySeconds * 1000);
 			};

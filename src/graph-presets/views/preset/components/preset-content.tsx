@@ -1,13 +1,14 @@
-import { TextFileView } from "obsidian";
 import { createRoot, Root } from "react-dom/client";
 import { Provider } from "react-redux";
 import { store } from "src/graph-presets/store/store";
+import { PresetView } from "../preset-view";
 import { PresetPreview } from "./preset-preview/preset-preview";
 
 export class PresetContent {
 	private rootContainer: Root;
 	private container: HTMLDivElement;
-	constructor(private view: TextFileView) {
+
+	constructor(private view: PresetView) {
 		this.mount();
 	}
 
@@ -26,10 +27,18 @@ export class PresetContent {
 		const view = (
 			<div className="flex justify-center items-center h-full ">
 				<Provider store={store}>
-					<PresetPreview
-						ctime={this.view.file.stat.ctime}
-						key={this.view.file.stat.ctime}
-					/>
+					{this.view.preset ? (
+						<PresetPreview
+							ctime={this.view.file.stat.ctime}
+							key={this.view.file.stat.ctime}
+							preset={this.view.preset}
+							updateAttribute={this.view.updateAttribute}
+						/>
+					) : this.view.parsingError ? (
+						<div className="text-center">
+							<p className="text-3xl ">Could not parse preset</p>
+						</div>
+					) : undefined}
 				</Provider>
 			</div>
 		);

@@ -8,7 +8,10 @@ import { PluginSettings } from "src/graph-presets/settings/default-settings";
 
 export const mapPresetToMarkdown = (
 	preset: GraphSettings,
-	markdownPresets: PluginSettings["preferences"]["markdownPresets"]
+	markdownPresets: PluginSettings["preferences"]["markdownPresets"] = {
+		inlineColorGroups: false,
+		inlineSearchQuery: false,
+	}
 ): string => {
 	const inlineColorGroups = markdownPresets.inlineColorGroups;
 	const inlineSearchQuery = markdownPresets.inlineSearchQuery;
