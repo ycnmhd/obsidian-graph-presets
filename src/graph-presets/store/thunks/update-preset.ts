@@ -5,7 +5,7 @@ import { updateMarkdownPreset } from "src/graph-presets/actions/save-preset-to-m
 import { t } from "src/graph-presets/lang/text";
 
 export const updatePresetThunk = createAsyncThunk(
-	"root/updatePreset",
+	"preset/update",
 	async (dto: GetPresetDTO) => {
 		await updateMarkdownPreset({
 			dto,

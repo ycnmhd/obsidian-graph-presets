@@ -1,4 +1,6 @@
 import { ViewState, WorkspaceLeaf } from "obsidian";
+import { FRONTMATTER_KEY } from "src/graph-presets/helpers/constants";
+import { PresetViewType } from "../preset-view";
 
 type State = {
 	fileTypeMap: Map<string, string>;
@@ -9,21 +11,9 @@ export class Router {
 	private state: State = {
 		fileTypeMap: new Map(),
 	};
-	private _viewType: string;
-	private _frontmatter: string;
+	private _viewType: string = PresetViewType;
+	private _frontmatter: string = FRONTMATTER_KEY;
 	private constructor() {}
-	set viewType(viewType: string) {
-		this._viewType = viewType;
-	}
-	get viewType() {
-		return this._viewType;
-	}
-	set frontmatter(frontmatter: string) {
-		this._frontmatter = frontmatter;
-	}
-	get frontmatter() {
-		return this._frontmatter;
-	}
 
 	static getInstance() {
 		if (!this.instance) {
@@ -54,4 +44,12 @@ export class Router {
 	getFileType = (path: string): string | undefined => {
 		return this.state.fileTypeMap.get(path);
 	};
+
+	get viewType() {
+		return this._viewType;
+	}
+
+	get frontmatter() {
+		return this._frontmatter;
+	}
 }

@@ -13,11 +13,8 @@ import {
 	PluginSettings,
 } from "./settings/default-settings";
 import { PresetView, PresetViewType } from "./views/preset/preset-view";
-import { Router } from "./views/preset/helpers/router";
-import { setViewState } from "./monkey-patches/set-view-state";
-import { FRONTMATTER_KEY } from "./helpers/constants";
+import { setViewState } from "./patches/set-view-state";
 import { around } from "monkey-around";
-import { migrateSettings } from "./settings/settings-migration";
 import { SettingsView } from "./views/settings/settings-view";
 import { activePresetCommands } from "./commands/active-graph-preset";
 import { ac } from "./store/store";
@@ -26,9 +23,8 @@ import {
 	fileEventListeners,
 	fileEvents,
 } from "./event-listeners/file-event-listeners";
-import { onItemsChanged } from "./monkey-patches/on-items-change";
+import { onItemsChanged } from "./patches/on-items-change";
 import { activeLeafEventListener } from "./event-listeners/active-leaf-event-listener";
-import { getStarredFiles } from "./helpers/get-starred-files";
 
 export type MarkdownPresetMeta = PersistedPresetMeta & {
 	created: number;
@@ -47,10 +43,7 @@ export class GraphPresets extends Plugin {
 
 	async onload() {
 		GraphPresets.instance = this;
-		Router.getInstance().frontmatter = FRONTMATTER_KEY;
-		Router.getInstance().viewType = PresetViewType;
 		await this.loadSettings();
-		ac.refreshCache();
 
 		this.loadCommands();
 		addIcon(GraphPresetsItemViewIcon.name, GraphPresetsItemViewIcon.svg);
@@ -61,9 +54,9 @@ export class GraphPresets extends Plugin {
 		this.registerMonkeyPatches();
 		this.registerEventListeners();
 		this.registerViews();
-		ac.setStarredFiles(getStarredFiles());
+
 		app.workspace.onLayoutReady(async () => {
-			await migrateSettings();
+			ac.refreshCache();
 		});
 	}
 

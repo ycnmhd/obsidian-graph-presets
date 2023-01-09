@@ -6,7 +6,7 @@ import { filesByCtime } from "../cache/files-by-time";
 export type RenamePresetDTO = GetPresetDTO & { newName: string };
 
 export const renamePresetThunk = createAsyncThunk(
-	"root/renamePreset",
+	"preset/rename",
 	async (dto: RenamePresetDTO) => {
 		const existingFile = filesByCtime.current[dto.created];
 		if (!existingFile) throw new Error(`Preset does not exist`);

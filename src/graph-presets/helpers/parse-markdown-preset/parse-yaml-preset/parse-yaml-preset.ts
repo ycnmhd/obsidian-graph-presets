@@ -1,9 +1,6 @@
 import { GraphSettings } from "src/types/graph-settings";
 import { logger } from "src/graph-presets/helpers/logger";
-import {
-	ValueValidator,
-	yamlPresetValidators,
-} from "./helpers/yaml-preset-validators";
+import { yamlPresetValidators, ValueValidator } from "./yaml-preset-validators";
 import { getYamlBlock } from "src/graph-presets/helpers/get-yaml-block";
 import { yaml } from "src/graph-presets/helpers/yaml";
 

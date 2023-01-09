@@ -4,7 +4,7 @@ import { obsidian } from "src/obsidian/obsidian";
 import { filesByCtime } from "../cache/files-by-time";
 
 export const deletePresetThunk = createAsyncThunk(
-	"root/deletePreset",
+	"preset/delete",
 	async (dto: GetPresetDTO) => {
 		const preset = filesByCtime.current[dto.created];
 		await obsidian.fs.deleteFile(preset);

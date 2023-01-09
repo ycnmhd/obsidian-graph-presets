@@ -1,8 +1,10 @@
-import { Menu, TFile } from "obsidian";
+import { Menu } from "obsidian";
 import { MouseEventHandler } from "react";
+import { DeletePresetMenuItem } from "src/graph-presets/context-menu-items/delete-preset-menu-item";
+import { MakeACopyMenuItem } from "src/graph-presets/context-menu-items/make-a-copy-menu-item";
+import { RenamePresetMenuItem } from "src/graph-presets/context-menu-items/rename-preset-menu-item";
 import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
-import { t } from "src/graph-presets/lang/text";
-import { obsidian } from "src/obsidian/obsidian";
+import { filesByCtime } from "src/graph-presets/store/cache/files-by-time";
 
 export const presetContextMenu =
 	(
@@ -10,35 +12,11 @@ export const presetContextMenu =
 		toggleRenamePreset: () => void
 	): MouseEventHandler<HTMLDivElement> =>
 	(event) => {
-		const file = app.vault.getAbstractFileByPath(meta.path) as TFile;
+		const file = filesByCtime.current[meta.created];
 		const menu = new Menu();
-		menu.addItem((item) => {
-			item.setTitle(t.c.RENAME);
-			item.setIcon("pencil");
-			item.onClick(() => {
-				toggleRenamePreset();
-			}).setSection("action");
-		});
-		menu.addItem((item) => {
-			item.setTitle(t.c.MAKE_A_COPY)
-				.setIcon("copy")
-				.onClick(async () => {
-					const name = obsidian.fs.uniqueFileName({
-						filename: file.basename,
-						folderPath: file.parent.path,
-					});
-				
-					app.vault.copy(file, name);
-				})
-				.setSection("action");
-		});
-		menu.addItem((item) => {
-			item.setTitle(t.c.DELETE);
-			item.setIcon("trash");
-			item.onClick(() => {
-				if (file) obsidian.fs.deleteFile(file);
-			}).setSection("danger");
-		});
+		RenamePresetMenuItem(menu, toggleRenamePreset);
+		MakeACopyMenuItem(menu, file);
+		DeletePresetMenuItem(menu, file);
 		app.workspace.trigger(
 			"file-menu",
 			menu,

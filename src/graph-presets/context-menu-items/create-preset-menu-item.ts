@@ -3,10 +3,7 @@ import { GraphPresetsItemViewIcon } from "../views/presets/presets-view";
 import { ac } from "../store/store";
 import { t } from "../lang/text";
 
-export const createMarkdownPresetPatch = async (
-	menu: Menu,
-	file: TAbstractFile
-) => {
+export const CreatePresetMenuItem = async (menu: Menu, file: TAbstractFile) => {
 	menu.addItem((item) => {
 		item.setTitle(t.c.NEW_PRESET)
 			.setIcon(GraphPresetsItemViewIcon.name)

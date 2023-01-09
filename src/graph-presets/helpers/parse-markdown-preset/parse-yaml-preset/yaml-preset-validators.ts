@@ -9,7 +9,7 @@ import {
 export type ValueValidator<T> = (value: T) => {
 	value: T | undefined;
 	valid: boolean;
-}
+};
 const isBoolean: ValueValidator<boolean> = (value) => {
 	if (typeof value === "boolean")
 		return {

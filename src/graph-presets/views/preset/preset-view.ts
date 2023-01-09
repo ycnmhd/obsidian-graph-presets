@@ -4,11 +4,12 @@ import { Router } from "./helpers/router";
 import { PresetActionButtons } from "./components/preset-action-buttons";
 import { PresetContent } from "./components/preset-content";
 import { GraphSettings } from "src/types/graph-settings";
-import { parseMarkDownPreset } from "src/graph-presets/monkey-patches/apply-markdown-preset/helpers/parse-markdown-preset/parse-markdown-preset";
+import { parseMarkDownPreset } from "src/graph-presets/helpers/parse-markdown-preset/parse-markdown-preset";
 import { mapPresetToMarkdown } from "src/graph-presets/actions/save-preset-to-markdown/helpers/map-preset-to-markdown";
 import { getSnapshot } from "src/graph-presets/store/store";
 import { obsidian } from "src/obsidian/obsidian";
 import { logger } from "src/graph-presets/helpers/logger";
+import { OpenAsMarkdownMenuItem } from "src/graph-presets/context-menu-items/open-as-markdown-menu-item";
 
 const isPresetNote = (data: string) => {
 	return /---\s+graph-presets-plugin: basic/.test(data);
@@ -22,6 +23,7 @@ export type UpdateAttribute = <k extends keyof GraphSettings>(
 type State = {
 	preset?: GraphSettings;
 	parsingError: string;
+	savePresetTimeout: ReturnType<typeof setTimeout> | null;
 };
 export const PresetViewType = "markdown-preset-view";
 
@@ -32,6 +34,7 @@ export class PresetView extends TextFileView {
 	private state: State = {
 		preset: undefined,
 		parsingError: "",
+		savePresetTimeout: null,
 	};
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
@@ -55,17 +58,7 @@ export class PresetView extends TextFileView {
 			super.onPaneMenu(menu, source);
 			return;
 		}
-		menu.addItem((item) => {
-			item.setTitle("Open as Markdown")
-				.setIcon("document")
-				.onClick(() => {
-					Router.getInstance().setFileType({
-						path: this.file.path,
-						type: "markdown",
-						leaf: this.leaf,
-					});
-				});
-		}).addSeparator();
+		OpenAsMarkdownMenuItem(menu, this.leaf);
 
 		if (callSuper) {
 			super.onPaneMenu(menu, source);
@@ -76,9 +69,6 @@ export class PresetView extends TextFileView {
 		this.data = data;
 		if (isPresetNote(data)) {
 			this.parsePreset();
-			if (this.preset) {
-				this.applyPreset(this.preset);
-			}
 			this.presetContent.render();
 			if (this.currentFile !== this.file) {
 				this.currentFile = this.file;
@@ -128,10 +118,10 @@ export class PresetView extends TextFileView {
 		this.savePreset();
 	};
 
-	timeout: ReturnType<typeof setTimeout>;
 	savePreset = () => {
-		clearTimeout(this.timeout);
-		this.timeout = setTimeout(() => {
+		if (this.state.savePresetTimeout)
+			clearTimeout(this.state.savePresetTimeout);
+		this.state.savePresetTimeout = setTimeout(() => {
 			this.data = mapPresetToMarkdown(this.state.preset as GraphSettings);
 			this.save();
 		}, 200);

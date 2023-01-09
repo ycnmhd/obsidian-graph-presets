@@ -1,9 +1,9 @@
 import { WorkspaceLeaf, TFile, TFolder } from "obsidian";
 import { fileIsPreset } from "../helpers/file-is-preset";
-import { applyMarkdownPresetPatch } from "../monkey-patches/apply-markdown-preset/apply-markdown-preset-patch";
-import { createMarkdownPresetPatch } from "../monkey-patches/create-markdown-preset-patch";
-import { renderLeafAsPreset } from "../monkey-patches/render-leaf-as-preset";
-import { updateMarkdownPresetPatch } from "../monkey-patches/update-markdown-preset-patch";
+import { ApplyPresetMenuItem } from "../context-menu-items/apply-preset-menu-item";
+import { CreatePresetMenuItem } from "../context-menu-items/create-preset-menu-item";
+import { OpenAsPresetMenuItem } from "../context-menu-items/open-as-preset-menu-item";
+import { UpdatePresetMenuItem } from "../context-menu-items/update-preset-menu-item";
 import { PresetViewType } from "../views/preset/preset-view";
 
 export const fileMenuEventListeners = () =>
@@ -11,18 +11,18 @@ export const fileMenuEventListeners = () =>
 		if (source === "more-options") {
 			if (fileIsPreset(file)) {
 				if (leaf?.view.getViewType() !== PresetViewType)
-					renderLeafAsPreset(menu, leaf as WorkspaceLeaf);
-				updateMarkdownPresetPatch(menu, file);
-				applyMarkdownPresetPatch(menu, file as TFile);
+					OpenAsPresetMenuItem(menu, leaf as WorkspaceLeaf);
+				UpdatePresetMenuItem(menu, file);
+				ApplyPresetMenuItem(menu, file as TFile);
 			}
 		} else if (
 			source === "file-explorer-context-menu" ||
 			source === "graph-presets-context-menu"
 		) {
 			if (fileIsPreset(file)) {
-				updateMarkdownPresetPatch(menu, file);
-				applyMarkdownPresetPatch(menu, file as TFile);
+				UpdatePresetMenuItem(menu, file);
+				ApplyPresetMenuItem(menu, file as TFile);
 			} else if (file instanceof TFolder)
-				await createMarkdownPresetPatch(menu, file);
+				await CreatePresetMenuItem(menu, file);
 		}
 	});

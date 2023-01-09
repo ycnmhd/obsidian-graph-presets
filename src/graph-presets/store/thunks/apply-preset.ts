@@ -6,7 +6,7 @@ import { t } from "src/graph-presets/lang/text";
 import { obsidian } from "src/obsidian/obsidian";
 
 export const applyPresetThunk = createAsyncThunk(
-	"root/applyPreset",
+	"preset/apply",
 	async (dto: GetPresetDTO) => {
 		const preset = await actions.getPreset(dto);
 		await obsidian.graph.setSettings({

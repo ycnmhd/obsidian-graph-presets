@@ -11,10 +11,19 @@ export type CreatePresetDTO = {
 	presetName?: string;
 	preset?: GraphSettings;
 	folderPath?: string;
+	dontOpenAfterCreation?: boolean;
 };
 export const createPresetThunk = createAsyncThunk(
-	"root/createPreset",
-	async ({ folderPath, preset, presetName }: CreatePresetDTO, thunkAPI) => {
+	"preset/create",
+	async (
+		{
+			folderPath,
+			preset,
+			presetName,
+			dontOpenAfterCreation,
+		}: CreatePresetDTO,
+		thunkAPI
+	) => {
 		const store = thunkAPI.getState() as RootState;
 		presetName = presetName ? sanitizePath(presetName, "-") : "preset";
 		let file = app.vault.getAbstractFileByPath(
@@ -35,6 +44,7 @@ export const createPresetThunk = createAsyncThunk(
 			created: newFile.stat.ctime,
 			path: newFile.path,
 			name: newFile.basename,
+			dontOpenAfterCreation,
 		};
 	}
 );

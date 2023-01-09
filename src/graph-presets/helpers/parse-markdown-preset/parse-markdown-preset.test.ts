@@ -31,8 +31,7 @@ export const mdToJsonSamples: Sample[] = [
 						a: 1,
 						rgb: 10074040,
 					},
-				}
-				
+				},
 			],
 			"collapse-display": false,
 			showArrow: true,

@@ -1,9 +1,9 @@
 import { Menu, TFile } from "obsidian";
 import { ac } from "src/graph-presets/store/store";
 import { t } from "src/graph-presets/lang/text";
-import { GraphPresetsItemViewIcon } from "../../views/presets/presets-view";
+import { GraphPresetsItemViewIcon } from "../views/presets/presets-view";
 
-export const applyMarkdownPresetPatch = (menu: Menu, file: TFile) => {
+export const ApplyPresetMenuItem = (menu: Menu, file: TFile) => {
 	menu.addItem((item) => {
 		item.setTitle(t.c.APPLY_PRESET)
 			.setIcon(GraphPresetsItemViewIcon.name)

@@ -6,7 +6,7 @@ import { acu } from "../ac";
 const listenerMiddleware = createListenerMiddleware();
 
 listenerMiddleware.startListening({
-	matcher: isAnyOf(acu.refreshCache, acu.updateFileMeta),
+	matcher: isAnyOf(acu.refreshCache.fulfilled, acu.updateFileMeta),
 	effect: (a) => {
 		logger.log(`[${new Date().toISOString()}][debuggerMiddleware] `, a);
 		debugger;

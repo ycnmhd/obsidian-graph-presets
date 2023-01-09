@@ -1,5 +1,6 @@
 import { configureStore, bindActionCreators } from "@reduxjs/toolkit";
 import { acu } from "./ac";
+import { migrateSettingsMiddleware } from "./effects/migrate-settings";
 import { openCreatedFileMiddleware } from "./effects/open-created-file";
 import { settingsMiddleware } from "./effects/save-settings";
 import { preferencesSlice } from "./slices/preferences-slice";
@@ -12,7 +13,11 @@ export const store = configureStore({
 	},
 	middleware: (getDefaultMiddleware) => {
 		return getDefaultMiddleware().prepend(
-			...[settingsMiddleware, openCreatedFileMiddleware]
+			...[
+				settingsMiddleware,
+				openCreatedFileMiddleware,
+				migrateSettingsMiddleware,
+			]
 		);
 	},
 });

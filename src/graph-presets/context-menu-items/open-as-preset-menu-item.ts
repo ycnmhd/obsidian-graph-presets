@@ -4,7 +4,7 @@ import { Router } from "../views/preset/helpers/router";
 import { t } from "../lang/text";
 import { PresetViewType } from "../views/preset/preset-view";
 
-export const renderLeafAsPreset = async (menu: Menu, leaf: WorkspaceLeaf) => {
+export const OpenAsPresetMenuItem = async (menu: Menu, leaf: WorkspaceLeaf) => {
 	menu.addItem((item) => {
 		item.setTitle(t.c.OPEN_AS_PRESET)
 			.setIcon(GraphPresetsItemViewIcon.name)

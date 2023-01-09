@@ -1,10 +1,15 @@
 import { Notice } from "obsidian";
 import { GraphSettings } from "src/types/graph-settings";
-import { ac, getSnapshot } from "../store/store";
-import { GraphPresets } from "../graph-presets";
-import { logger } from "../helpers/logger";
-import { t } from "../lang/text";
-import { CURRENT_VERSION, PluginSettings } from "./default-settings";
+import { ac, getSnapshot } from "../store";
+import { GraphPresets } from "../../graph-presets";
+import { logger } from "../../helpers/logger";
+import { t } from "../../lang/text";
+import {
+	CURRENT_VERSION,
+	PluginSettings,
+} from "../../settings/default-settings";
+import { createListenerMiddleware } from "@reduxjs/toolkit";
+import { acu } from "../ac";
 
 const migrations = {
 	"0.5.0": async () => {
@@ -32,6 +37,7 @@ const migrations = {
 						presetName: name,
 						preset: preset.settings,
 						folderPath,
+						dontOpenAfterCreation: true,
 					});
 				}
 				if (!settings.__migratedData__) settings.__migratedData__ = [];
@@ -63,3 +69,12 @@ export const migrateSettings = async () => {
 	}
 	await plugin.setVersion(CURRENT_VERSION);
 };
+
+const listenerMiddleware = createListenerMiddleware();
+
+listenerMiddleware.startListening({
+	actionCreator: acu.refreshCache.fulfilled,
+	effect: migrateSettings,
+});
+
+export const migrateSettingsMiddleware = listenerMiddleware.middleware;

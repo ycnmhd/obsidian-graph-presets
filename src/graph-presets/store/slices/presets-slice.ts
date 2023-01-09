@@ -1,15 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import {
-	GraphPresets,
-	MarkdownPresetMeta,
-} from "src/graph-presets/graph-presets";
+import { MarkdownPresetMeta } from "src/graph-presets/graph-presets";
 import { GetPresetDTO } from "src/graph-presets/actions/get-preset";
 import { fileIsPreset } from "src/graph-presets/helpers/file-is-preset";
 import { applyPresetThunk } from "../thunks/apply-preset";
 import { filesByCtime } from "../cache/files-by-time";
 import { FileEvent } from "src/graph-presets/event-listeners/file-event-listeners";
 import { TFile } from "obsidian";
+import { createPresetThunk } from "../thunks/create-preset";
+import { refreshCacheThunk } from "../thunks/refresh-cache";
+import { duplicatePresetThunk } from "../thunks/duplicate-preset";
 
 export type PluginState = {
 	filter: string;
@@ -55,51 +55,9 @@ export const presetsSlice = createSlice({
 					action.payload.updated;
 			} else if (action.payload.eventType === "rename") {
 				state.meta[action.payload.created].name = action.payload.name;
-			} else if (action.payload.eventType === "create") {
-				const dto = action.payload;
-				state.meta[dto.created] = {
-					applied: 0,
-					disableAutoApply: false,
-					created: dto.created,
-					updated: dto.created,
-					name: dto.name,
-					path: dto.path,
-				};
-				filesByCtime.current[dto.created] =
-					app.vault.getAbstractFileByPath(dto.path) as TFile;
 			}
 		},
-		refreshCache: (state) => {
-			const persistedMeta =
-				GraphPresets.getInstance().settings.data.presetsMeta;
-			const mdFiles = app.vault.getMarkdownFiles().filter((f) => {
-				return fileIsPreset(f);
-			});
 
-			const meta = Object.fromEntries(
-				mdFiles.map((f) => {
-					const meta = persistedMeta[f.stat.ctime]?.meta;
-					return [
-						f.stat.ctime,
-						{
-							applied: meta?.applied || 0,
-							disableAutoApply: Boolean(meta?.disableAutoApply),
-							created: f.stat.ctime,
-							updated: f.stat.mtime,
-							name: f.basename,
-							path: f.path,
-						},
-					] as [number, MarkdownPresetMeta];
-				})
-			);
-
-			state.meta = meta;
-			filesByCtime.current = Object.fromEntries(
-				mdFiles.map((f) => {
-					return [f.stat.ctime, f];
-				})
-			);
-		},
 		setActivePreset: (state, action: PayloadAction<GetPresetDTO>) => {
 			state.activePreset = action.payload.created;
 		},
@@ -119,5 +77,28 @@ export const presetsSlice = createSlice({
 
 			state.meta[dto.created].applied = Date.now();
 		});
+		builder.addCase(refreshCacheThunk.fulfilled, (state, action) => {
+			const meta = action.payload;
+			state.meta = meta;
+		});
+		builder.addMatcher(
+			isAnyOf(
+				duplicatePresetThunk.fulfilled,
+				createPresetThunk.fulfilled
+			),
+			(state, action) => {
+				const dto = action.payload;
+				state.meta[dto.created] = {
+					applied: 0,
+					disableAutoApply: false,
+					created: dto.created,
+					updated: dto.created,
+					name: dto.name,
+					path: dto.path,
+				};
+				filesByCtime.current[dto.created] =
+					app.vault.getAbstractFileByPath(dto.path) as TFile;
+			}
+		);
 	},
 });

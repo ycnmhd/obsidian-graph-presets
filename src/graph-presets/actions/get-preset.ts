@@ -1,7 +1,7 @@
 import { Notice } from "obsidian";
 import { obsidian } from "src/obsidian/obsidian";
 import { t } from "../lang/text";
-import { parseMarkDownPreset } from "../monkey-patches/apply-markdown-preset/helpers/parse-markdown-preset/parse-markdown-preset";
+import { parseMarkDownPreset } from "../helpers/parse-markdown-preset/parse-markdown-preset";
 import { graphSettingsGroup } from "../../types/apply-preset";
 import { filesByCtime } from "../store/cache/files-by-time";
 
