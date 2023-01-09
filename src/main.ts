@@ -1,3 +1,3 @@
-import { GraphPresets } from "./graph-presets/graph-presets";
+import { GraphPresets } from "./graph-presets";
 
 export default GraphPresets;
