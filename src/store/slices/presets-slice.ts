@@ -4,16 +4,15 @@ import { MarkdownPresetMeta } from "src/graph-presets";
 import { GetPresetDTO } from "src/helpers/get-preset";
 import { applyPresetThunk } from "../thunks/apply-preset";
 import { filesByCtime } from "../cache/files-by-time";
-import { FileEvent } from "src/event-listeners/file-event-listeners";
 import { TFile } from "obsidian";
 import { createPresetThunk } from "../thunks/create-preset";
 import { refreshCacheThunk } from "../thunks/refresh-cache";
 import { duplicatePresetThunk } from "../thunks/duplicate-preset";
 import { fileIsPreset } from "../../helpers/file-is-preset";
 
-export type PluginState = {
-	filter: string;
-};
+export const fileEvents = ["modify", "delete", "rename"] as const;
+export type FileEvent = typeof fileEvents[number];
+
 type PresetsSlice = {
 	meta: Record<number, MarkdownPresetMeta>;
 	activePreset: number;

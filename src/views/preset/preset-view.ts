@@ -6,7 +6,7 @@ import { PresetContent } from "./components/preset-content";
 import { GraphSettings } from "src/types/graph-settings";
 import { parseMarkDownPreset } from "src/helpers/parse-markdown-preset/parse-markdown-preset";
 import { mapPresetToMarkdown } from "src/helpers/save-preset-to-markdown/helpers/map-preset-to-markdown";
-import { getSnapshot } from "src/store/store";
+import { ac, getSnapshot } from "src/store/store";
 import { obsidian } from "src/helpers/obsidian/obsidian";
 import { logger } from "src/helpers/logger";
 import { OpenAsMarkdownMenuItem } from "src/context-menu-items/open-as-markdown-menu-item";
@@ -121,9 +121,13 @@ export class PresetView extends TextFileView {
 	savePreset = () => {
 		if (this.state.savePresetTimeout)
 			clearTimeout(this.state.savePresetTimeout);
-		this.state.savePresetTimeout = setTimeout(() => {
+		this.state.savePresetTimeout = setTimeout(async () => {
 			this.data = mapPresetToMarkdown(this.state.preset as GraphSettings);
-			this.save();
+			await this.save();
+			ac.updateFileMeta({
+				created: this.file.stat.ctime,
+				eventType: "modify",
+			});
 		}, 200);
 	};
 

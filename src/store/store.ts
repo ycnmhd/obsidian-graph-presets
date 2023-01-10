@@ -6,6 +6,7 @@ import { presetsSlice } from "./slices/presets-slice";
 import { preferencesSlice } from "./slices/preferences-slice";
 import { settingsMiddleware } from "./effects/save-settings";
 import { loadPluginMiddleware } from "./effects/load-plugin";
+import { toggleFileEventListener } from "./effects/toggle-file-event-listener";
 
 export const store = configureStore({
 	reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
 				openCreatedFileMiddleware,
 				migrateSettingsMiddleware,
 				loadPluginMiddleware,
+				toggleFileEventListener,
 			]
 		);
 	},

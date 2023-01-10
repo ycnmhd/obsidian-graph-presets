@@ -7,6 +7,7 @@ import { duplicatePresetThunk } from "./thunks/duplicate-preset";
 import { refreshCacheThunk } from "./thunks/refresh-cache";
 import { renamePresetThunk } from "./thunks/rename-preset";
 import { updatePresetThunk } from "./thunks/update-preset";
+import { createAction } from "@reduxjs/toolkit";
 
 export const acu = {
 	...presetsSlice.actions,
@@ -18,4 +19,5 @@ export const acu = {
 	updatePreset: updatePresetThunk,
 	refreshCache: refreshCacheThunk,
 	duplicatePreset: duplicatePresetThunk,
+	presetsView: createAction("presets/view"),
 };
