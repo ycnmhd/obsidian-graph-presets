@@ -5,6 +5,7 @@ import { migrateSettingsMiddleware } from "./effects/migrate-settings";
 import { presetsSlice } from "./slices/presets-slice";
 import { preferencesSlice } from "./slices/preferences-slice";
 import { settingsMiddleware } from "./effects/save-settings";
+import { loadPluginMiddleware } from "./effects/load-plugin";
 
 export const store = configureStore({
 	reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
 				settingsMiddleware,
 				openCreatedFileMiddleware,
 				migrateSettingsMiddleware,
+				loadPluginMiddleware,
 			]
 		);
 	},

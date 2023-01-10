@@ -15,9 +15,6 @@ export const fileEventListeners = (event: FileEvent) =>
 			ac.updateFileMeta({
 				created: file.stat.ctime,
 				eventType: event as FileEvent,
-				updated: file.stat.mtime,
-				name: file.basename,
-				path: file.path,
 			});
 		}
 	});

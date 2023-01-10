@@ -7,6 +7,7 @@ import { ApplyPreset } from "./apply-preset";
 import { PresetViewType } from "src/views/preset/preset-view";
 import { useAppSelector } from "src/store/hooks";
 import { Star } from "src/assets/svg/lucid/star";
+import { filesByCtime } from "../../../../../../../../../store/cache/files-by-time";
 
 const relativeTime = (updated: number) => {
 	const difference = Date.now() - updated;
@@ -34,45 +35,40 @@ type Props = {
 export const PresetLabel: React.FC<Props> = ({ meta }) => {
 	const starred = useAppSelector((state) => state.presets.starredPresets);
 	const active = useAppSelector((state) => state.presets.activePreset);
+	const preset = filesByCtime.current[meta.created];
 	const star = starred[meta.created] && (
 		<Star width={12} fill={"#facc15"} color={"#facc15"} />
 	);
 	const name = (
-		<span className="nav-file-title-content text-md ">{meta.name}</span>
+		<span className="nav-file-title-content text-md ">
+			{preset.basename}
+		</span>
 	);
 
 	const [label, setLabel] = useState("");
 	const onDragStart = useCallback(
 		(event: React.DragEvent) => {
-			const file = app.metadataCache.getFirstLinkpathDest(meta.path, "");
-
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const dragManager = (app as any).dragManager;
-			const dragData = dragManager.dragFile(event, file);
+			const dragData = dragManager.dragFile(event, preset);
 			dragManager.onDragStart(event, dragData);
 		},
-		[meta.path]
+		[preset]
 	);
 
-	const onMouseOver = useCallback(
-		(event: React.MouseEvent) => {
-			app.workspace.trigger("hover-link", {
-				event,
-				source: PresetViewType,
-				hoverParent: ref.current,
-				targetEl: ref.current,
-				linktext: meta.path,
-			});
-		},
-		[meta.path]
-	);
+	const onMouseOver = useCallback((event: React.MouseEvent) => {
+		app.workspace.trigger("hover-link", {
+			event,
+			source: PresetViewType,
+			hoverParent: ref.current,
+			targetEl: ref.current,
+			linktext: preset.path,
+		});
+	}, []);
 
-	const onMouseEnter = useCallback(
-		(event: React.MouseEvent) => {
-			setLabel(relativeTime(meta.updated));
-		},
-		[meta.updated]
-	);
+	const onMouseEnter = useCallback(() => {
+		setLabel(relativeTime(preset.stat.mtime));
+	}, [meta]);
 
 	const ref = useRef<HTMLDivElement>(null);
 	return (

@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { ac } from "src/store/store";
 import { MarkdownPresetMeta } from "src/graph-presets";
 import { t } from "src/lang/text";
+import { filesByCtime } from "../../../../../../../../../store/cache/files-by-time";
 
 type Props = {
 	meta: MarkdownPresetMeta;
@@ -15,13 +16,14 @@ export const Input: React.FC<Props> = ({
 	deleteUnsavedPreset,
 }) => {
 	const inputRef = useRef<HTMLInputElement>(null);
+	const preset = filesByCtime.current[meta.created] || {};
 	const save = () => {
 		const value = inputRef.current?.value;
 		if (!value) return;
-		if (meta.name === value) {
+		if (preset.basename === value) {
 			cancelRenaming();
 		} else {
-			if (meta.name)
+			if (preset.basename)
 				ac.renamePreset({ created: meta.created, newName: value });
 			else
 				ac.createPreset({
@@ -35,7 +37,7 @@ export const Input: React.FC<Props> = ({
 		<input
 			type="text"
 			placeholder={t.c.PRESET_NAME}
-			defaultValue={meta.name}
+			defaultValue={preset.basename}
 			ref={inputRef}
 			autoFocus={true}
 			className="w-[100%] mx-[4px]"

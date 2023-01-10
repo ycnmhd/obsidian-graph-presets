@@ -3,5 +3,6 @@
     "useTabs": true,
     "tabWidth": 4,
     "indent": 4,
-    "semi": true
+    "semi": true,
+	"printWidth": 80
 }

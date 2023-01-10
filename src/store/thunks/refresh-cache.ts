@@ -32,9 +32,6 @@ export const refreshCacheThunk = createAsyncThunk(
 						applied: meta?.applied || 0,
 						disableAutoApply: Boolean(meta?.disableAutoApply),
 						created: f.stat.ctime,
-						updated: f.stat.mtime,
-						name: f.basename,
-						path: f.path,
 					},
 				] as [number, MarkdownPresetMeta];
 			})

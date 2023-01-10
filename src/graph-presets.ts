@@ -29,9 +29,6 @@ import { activeLeafEventListener } from "./event-listeners/active-leaf-event-lis
 
 export type MarkdownPresetMeta = PersistedPresetMeta & {
 	created: number;
-	updated: number;
-	name: string;
-	path: string;
 };
 
 export class GraphPresets extends Plugin {
@@ -46,15 +43,7 @@ export class GraphPresets extends Plugin {
 		GraphPresets.instance = this;
 		await this.loadSettings();
 
-		this.loadCommands();
 		addIcon(GraphPresetsItemViewIcon.name, GraphPresetsItemViewIcon.svg);
-
-		this.addSettingTab(new SettingsView(this.app, this));
-
-		PresetsView.enable();
-		this.registerMonkeyPatches();
-		this.registerEventListeners();
-		this.registerViews();
 
 		app.workspace.onLayoutReady(async () => {
 			ac.refreshCache();
@@ -63,6 +52,20 @@ export class GraphPresets extends Plugin {
 
 	onunload(): void {
 		(app.workspace as any).unregisterHoverLinkSource(PresetViewType);
+	}
+
+	private _deferredLoad: Promise<void> | undefined;
+	async deferredLoad() {
+		if (!this._deferredLoad) {
+			this._deferredLoad = new Promise(() => {
+				this.loadCommands();
+				this.addSettingTab(new SettingsView(this.app, this));
+				this.registerMonkeyPatches();
+				this.registerEventListeners();
+				this.registerViews();
+			});
+		}
+		return this._deferredLoad;
 	}
 
 	async loadSettings() {
@@ -109,6 +112,7 @@ export class GraphPresets extends Plugin {
 			(leaf) => new PresetsView(leaf)
 		);
 		this.registerView(PresetViewType, (leaf) => new PresetView(leaf));
+		PresetsView.enable();
 	}
 
 	get settings(): PluginSettings {

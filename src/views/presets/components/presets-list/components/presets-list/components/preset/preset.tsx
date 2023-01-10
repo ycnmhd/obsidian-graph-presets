@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { MarkdownPresetMeta } from "src/graph-presets";
 import { presetContextMenu } from "./callbacks/preset-context-menu";
 import { Input } from "./components/input";
+import { filesByCtime } from "../../../../../../../../store/cache/files-by-time";
 
 type Props = {
 	meta: MarkdownPresetMeta;
@@ -38,7 +39,7 @@ export const Preset: React.FC<Props> = ({
 						: presetContextMenu(meta, toggleRenamePreset)
 				}
 			>
-				{!renaming && meta.name !== "" ? (
+				{!renaming && filesByCtime.current[meta.created] ? (
 					<PresetLabel meta={meta} />
 				) : (
 					<Input

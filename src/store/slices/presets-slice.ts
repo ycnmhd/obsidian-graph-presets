@@ -42,20 +42,18 @@ export const presetsSlice = createSlice({
 			state,
 			action: PayloadAction<{
 				created: number;
-				updated: number;
-				name: string;
 				eventType: FileEvent;
-				path: string;
 			}>
 		) => {
 			if (action.payload.eventType === "delete") {
 				delete state.meta[action.payload.created];
-			} else if (action.payload.eventType === "modify") {
-				state.meta[action.payload.created].updated =
-					action.payload.updated;
-			} else if (action.payload.eventType === "rename") {
-				state.meta[action.payload.created].name = action.payload.name;
-				state.meta[action.payload.created].path = action.payload.path
+			} else if (
+				action.payload.eventType === "rename" ||
+				action.payload.eventType === "modify"
+			) {
+				state.meta[action.payload.created] = {
+					...state.meta[action.payload.created],
+				};
 			}
 		},
 
@@ -93,9 +91,6 @@ export const presetsSlice = createSlice({
 					applied: 0,
 					disableAutoApply: false,
 					created: dto.created,
-					updated: dto.created,
-					name: dto.name,
-					path: dto.path,
 				};
 				filesByCtime.current[dto.created] =
 					app.vault.getAbstractFileByPath(dto.path) as TFile;

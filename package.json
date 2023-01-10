@@ -5,7 +5,9 @@
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.js",
-		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.js production",
+		"types": "tsc -noEmit -skipLibCheck",
+		"prebuild": "npm run types",
+		"build": "node esbuild.config.js production",
 		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"test:watch": "vitest",
 		"test": "vitest run",
