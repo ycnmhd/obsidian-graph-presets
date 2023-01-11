@@ -4,7 +4,7 @@ import {
 	DEFAULT_SETTINGS,
 	PluginSettings,
 	SortMode,
-} from "src/settings/default-settings";
+} from "src/types/settings/settings";
 
 export type PreferencesSlice = PluginSettings["preferences"] & {
 	filter: string;

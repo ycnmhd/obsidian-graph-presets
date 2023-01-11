@@ -1,7 +1,7 @@
 import { Menu } from "obsidian";
 import { ac } from "src/store/store";
 import { t } from "src/lang/text";
-import { SortMode } from "src/settings/default-settings";
+import { SortMode } from "src/types/settings/settings";
 import { SortDesc } from "src/assets/svg/lucid/sort-desc";
 
 type Props = {

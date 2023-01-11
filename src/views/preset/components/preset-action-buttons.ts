@@ -2,6 +2,7 @@ import { getIcon, TextFileView } from "obsidian";
 import { ac, getSnapshot } from "src/store/store";
 import { t } from "src/lang/text";
 import { Router } from "../helpers/router";
+import { GraphPresets } from "src/graph-presets";
 
 export class PresetActionButtons {
 	private buttons: {
@@ -19,6 +20,9 @@ export class PresetActionButtons {
 			disableAutoApply: null,
 		};
 		this.mount();
+		GraphPresets.getInstance().status.onReady(() => {
+			this.render();
+		});
 	}
 
 	private mount() {
@@ -54,23 +58,32 @@ export class PresetActionButtons {
 	}
 
 	render() {
-		const disableAutoApply =
-			getSnapshot().presets.meta[this.view.file.stat.ctime]
-				.disableAutoApply;
+		const preset = this.view.file
+			? getSnapshot().presets.meta[this.view.file.stat.ctime]
+			: undefined;
+		if (preset) {
+			if (this.buttons.disableAutoApply) {
+				const disableAutoApply = preset.disableAutoApply || false;
+				const disableAutoApplyUpToDate =
+					this.buttons.disableAutoApply.dataset[
+						"disableAutoApply"
+					] === disableAutoApply.toString();
 
-		if (this.buttons.disableAutoApply) {
-			if (disableAutoApply) {
-				this.buttons.disableAutoApply.innerHTML = "";
-				this.buttons.disableAutoApply.appendChild(
-					getIcon("toggle-left") as SVGSVGElement
-				);
-				this.buttons.disableAutoApply.classList.add("opacity-50");
-			} else {
-				this.buttons.disableAutoApply.innerHTML = "";
-				this.buttons.disableAutoApply.appendChild(
-					getIcon("toggle-right") as SVGSVGElement
-				);
-				this.buttons.disableAutoApply.classList.remove("opacity-50");
+				if (!disableAutoApplyUpToDate) {
+					this.buttons.disableAutoApply.innerHTML = "";
+					const icon = (
+						disableAutoApply
+							? getIcon("toggle-left")
+							: getIcon("toggle-right")
+					) as SVGSVGElement;
+					this.buttons.disableAutoApply.appendChild(icon);
+					this.buttons.disableAutoApply.dataset["disableAutoApply"] =
+						disableAutoApply.toString();
+					this.buttons.disableAutoApply.style.setProperty(
+						"opacity",
+						disableAutoApply ? "0.3" : "1"
+					);
+				}
 			}
 		}
 	}

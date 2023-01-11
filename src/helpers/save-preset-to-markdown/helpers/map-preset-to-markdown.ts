@@ -4,7 +4,7 @@ import { PRESET_FRONTMATTER } from "src/helpers/constants";
 import { graphSettingsKeys } from "src/helpers/obsidian/graph/helpers/graph-settings-keys";
 import { GraphSettings } from "src/types/graph-settings";
 import { parseSearchQuery } from "./parse-search-query";
-import { PluginSettings } from "src/settings/default-settings";
+import { PluginSettings } from "src/types/settings/settings";
 
 export const mapPresetToMarkdown = (
 	preset: GraphSettings,

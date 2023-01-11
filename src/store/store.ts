@@ -1,11 +1,10 @@
 import { configureStore, bindActionCreators } from "@reduxjs/toolkit";
 import { acu } from "./ac";
 import { openCreatedFileMiddleware } from "./effects/open-created-file";
-import { migrateSettingsMiddleware } from "./effects/migrate-settings";
 import { presetsSlice } from "./slices/presets-slice";
 import { preferencesSlice } from "./slices/preferences-slice";
-import { settingsMiddleware } from "./effects/save-settings";
-import { loadPluginMiddleware } from "./effects/load-plugin";
+import { saveSettingsMiddleware } from "./effects/save-settings";
+import { loadPluginMiddleware } from "./effects/load-settings/load-plugin";
 import { toggleFileEventListener } from "./effects/toggle-file-event-listener";
 
 export const store = configureStore({
@@ -16,9 +15,8 @@ export const store = configureStore({
 	middleware: (getDefaultMiddleware) => {
 		return getDefaultMiddleware().prepend(
 			...[
-				settingsMiddleware,
+				saveSettingsMiddleware,
 				openCreatedFileMiddleware,
-				migrateSettingsMiddleware,
 				loadPluginMiddleware,
 				toggleFileEventListener,
 			]

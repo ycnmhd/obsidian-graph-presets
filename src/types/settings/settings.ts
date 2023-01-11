@@ -1,6 +1,6 @@
 export type PersistedPresetMeta = {
-	applied: number;
-	disableAutoApply: boolean;
+	applied?: number;
+	disableAutoApply?: boolean;
 };
 
 export type SortMode =
@@ -16,10 +16,8 @@ export type SortMode =
 export type PluginSettings = {
 	version: string | undefined;
 	data: {
-		presetsMeta: {
-			[key: string]: {
-				meta: PersistedPresetMeta;
-			};
+		presets: {
+			[key: string]: PersistedPresetMeta;
 		};
 	};
 	preferences: {
@@ -33,13 +31,13 @@ export type PluginSettings = {
 	};
 };
 
-export const CURRENT_VERSION = "0.5.0";
+export const CURRENT_VERSION = "0.8.0";
 
 export const DEFAULT_SETTINGS: PluginSettings = {
 	version: undefined,
 
 	data: {
-		presetsMeta: {},
+		presets: {},
 	},
 	preferences: {
 		sortBy: "presetNameAsc",

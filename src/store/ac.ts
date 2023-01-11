@@ -19,5 +19,6 @@ export const acu = {
 	updatePreset: updatePresetThunk,
 	refreshCache: refreshCacheThunk,
 	duplicatePreset: duplicatePresetThunk,
-	presetsView: createAction("presets/view"),
+	presetsView: createAction("presets-view/life-cycle"),
+	loadPlugin: createAction("load-plugin"),
 };

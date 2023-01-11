@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 import { MarkdownPresetMeta } from "src/graph-presets";
-import { PluginSettings } from "src/settings/default-settings";
+import { PluginSettings } from "src/types/settings/settings";
 import { useAppSelector } from "src/store/hooks";
-import { filesByCtime } from "../../../../../store/cache/files-by-time";
+import { filesByCtime } from "src/store/cache/files-by-time";
 
 const sortPresets = (
 	unsortedEntries: MarkdownPresetMeta[],

@@ -88,7 +88,6 @@ export const presetsSlice = createSlice({
 				const dto = action.payload;
 				state.meta[dto.created] = {
 					applied: 0,
-					disableAutoApply: false,
 					created: dto.created,
 				};
 				filesByCtime.current[dto.created] =

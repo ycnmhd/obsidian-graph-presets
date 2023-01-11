@@ -2,7 +2,7 @@ import { createListenerMiddleware, isAnyOf } from "@reduxjs/toolkit";
 import {
 	PersistedPresetMeta,
 	PluginSettings,
-} from "src/settings/default-settings";
+} from "src/types/settings/settings";
 import GraphPresets from "src/main";
 import { getSnapshot, RootState } from "../store";
 import { acu } from "../ac";
@@ -18,18 +18,22 @@ const mapStoreToSettings = (
 			markdownPresets: store.preferences.markdownPresets,
 		},
 		data: {
-			presetsMeta: Object.fromEntries(
-				Object.entries(store.presets.meta).map(([key, value]) => {
-					return [
-						key,
-						{
-							meta: {
-								applied: value.applied,
-								disableAutoApply: value.disableAutoApply,
+			presets: Object.fromEntries(
+				Object.entries(store.presets.meta)
+					.map(([key, value]) => {
+						return [
+							key,
+							{
+								...(value.applied && {
+									applied: value.applied,
+								}),
+								...(value.disableAutoApply && {
+									disableAutoApply: value.disableAutoApply,
+								}),
 							} satisfies PersistedPresetMeta,
-						},
-					];
-				})
+						] as const;
+					})
+					.filter(([, p]) => p.disableAutoApply || p.applied)
 			),
 		},
 	};
@@ -37,7 +41,7 @@ const mapStoreToSettings = (
 
 const saveSettings = async () => {
 	const plugin = GraphPresets.getInstance();
-	plugin.saveData({
+	await plugin.setSettings({
 		...plugin.settings,
 		...mapStoreToSettings(getSnapshot()),
 	});
@@ -56,4 +60,4 @@ listenerMiddleware.startListening({
 	effect: saveSettings,
 });
 
-export const settingsMiddleware = listenerMiddleware.middleware;
+export const saveSettingsMiddleware = listenerMiddleware.middleware;

@@ -1,18 +1,12 @@
 import "src/assets/svg";
-import { addIcon, EventRef, Plugin, WorkspaceLeaf } from "obsidian";
+import { EventRef, Plugin, WorkspaceLeaf } from "obsidian";
 import { applyGraphPreset } from "./commands/apply-graph-preset";
 import { openGraphPresetsView } from "./commands/open-graph-presets-view";
 import {
-	PresetsView,
-	GraphPresetsItemViewIcon,
 	GraphPresetsItemViewType,
+	PresetsView,
 } from "./views/presets/presets-view";
-import { mergeDeep } from "./helpers/merge-deep";
-import {
-	DEFAULT_SETTINGS,
-	PersistedPresetMeta,
-	PluginSettings,
-} from "./settings/default-settings";
+import { PersistedPresetMeta, PluginSettings } from "./types/settings/settings";
 import { PresetView, PresetViewType } from "./views/preset/preset-view";
 import { setViewState } from "./patches/set-view-state";
 import { around } from "monkey-around";
@@ -25,9 +19,11 @@ import { FileEvent } from "./store/slices/presets-slice";
 import { fileEvent } from "./event-listeners/file-event";
 import { onItemsChanged } from "./patches/on-items-change";
 import { activeLeafEventListener } from "./event-listeners/active-leaf-event-listener";
+import { Status } from "./helpers/status";
 
 export type MarkdownPresetMeta = PersistedPresetMeta & {
 	created: number;
+	applied: number;
 };
 
 export class GraphPresets extends Plugin {
@@ -38,6 +34,8 @@ export class GraphPresets extends Plugin {
 		rename: undefined,
 	};
 
+	status: Status = new Status();
+
 	public static getInstance(): GraphPresets {
 		return this.instance;
 	}
@@ -46,46 +44,25 @@ export class GraphPresets extends Plugin {
 
 	async onload() {
 		GraphPresets.instance = this;
-		await this.loadSettings();
-
-		addIcon(GraphPresetsItemViewIcon.name, GraphPresetsItemViewIcon.svg);
-
-		app.workspace.onLayoutReady(async () => {
-			ac.refreshCache();
+		this.registerViews();
+		this.loadStaticCommands();
+		this.registerMonkeyPatches();
+		this.registerEventListeners();
+		app.workspace.onLayoutReady(() => {
+			ac.loadPlugin();
+		});
+		this.status.onReady(() => {
+			this.loadDynamicCommands();
 		});
 	}
 
-	onunload(): void {
-		(app.workspace as any).unregisterHoverLinkSource(PresetViewType);
-	}
-
-	private _deferredLoad: Promise<void> | undefined;
-	async deferredLoad() {
-		if (!this._deferredLoad) {
-			this._deferredLoad = new Promise(() => {
-				this.loadCommands();
-				this.addSettingTab(new SettingsView(this.app, this));
-				this.registerMonkeyPatches();
-				this.registerEventListeners();
-				this.registerViews();
-			});
-		}
-		return this._deferredLoad;
-	}
-
-	async loadSettings() {
-		this._settings = mergeDeep(
-			(await this.loadData()) || {},
-			DEFAULT_SETTINGS
-		);
-		ac.loadSettings(this._settings);
-	}
-
-	private loadCommands() {
+	private loadStaticCommands() {
 		this.addCommand(openGraphPresetsView);
 		activePresetCommands.forEach((command) => {
 			this.addCommand(command);
 		});
+	}
+	private loadDynamicCommands() {
 		if (this._settings.preferences.enablePresetCommands)
 			applyGraphPreset().forEach((command) => {
 				this.addCommand(command);
@@ -108,6 +85,7 @@ export class GraphPresets extends Plugin {
 	}
 
 	private registerViews() {
+		this.addSettingTab(new SettingsView(this.app, this));
 		this.registerView(
 			GraphPresetsItemViewType,
 			(leaf) => new PresetsView(leaf)
@@ -119,9 +97,9 @@ export class GraphPresets extends Plugin {
 		return JSON.parse(JSON.stringify(this._settings));
 	}
 
-	async setVersion(version: string) {
-		this._settings.version = version;
-		await this.saveData(this._settings);
+	async setSettings(settings: PluginSettings) {
+		this._settings = settings;
+		await this.saveData(settings);
 	}
 
 	toggleFileEventListener(event: FileEvent, enable: boolean) {

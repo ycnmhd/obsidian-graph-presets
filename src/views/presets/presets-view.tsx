@@ -6,13 +6,11 @@ import { StrictMode } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { ErrorFallback } from "src/views/shared/error-fallback";
 import { Provider } from "react-redux";
-import { ac, store } from "../../store/store";
-import { graphPresets } from "../../assets/svg/custom/graph-presets";
+import { ac, store } from "src/store/store";
 
 export const GraphPresetsItemViewType = "graph-presets-list";
 export const GraphPresetsItemViewIcon = {
 	name: "graph-presets",
-	svg: graphPresets,
 };
 
 export class PresetsView extends ItemView {

@@ -27,7 +27,7 @@ export class PresetContent {
 		const view = (
 			<div className="flex justify-center items-center h-full ">
 				<Provider store={store}>
-					{this.view.preset ? (
+					{this.view.file && this.view.preset ? (
 						<PresetPreview
 							ctime={this.view.file.stat.ctime}
 							key={this.view.file.stat.ctime}
