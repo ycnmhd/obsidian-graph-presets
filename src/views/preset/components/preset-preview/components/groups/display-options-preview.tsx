@@ -31,23 +31,16 @@ export const DisplayOptionsPreview: React.FC<Props> = ({
 			<Slider
 				name="textFadeMultiplier"
 				value={options.textFadeMultiplier}
-				min={-3}
-				max={3}
-				// step={0.1}
 				onChange={updateAttribute}
 			/>
 			<Slider
 				name="nodeSizeMultiplier"
 				value={options.nodeSizeMultiplier}
-				min={0.1}
-				max={5}
 				onChange={updateAttribute}
 			/>
 			<Slider
 				name="lineSizeMultiplier"
 				value={options.lineSizeMultiplier}
-				min={0.1}
-				max={5}
 				onChange={updateAttribute}
 			/>
 		</GroupContainer>

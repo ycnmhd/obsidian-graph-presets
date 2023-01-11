@@ -25,29 +25,21 @@ export const ForcesOptionsPreview: React.FC<Props> = ({
 			<Slider
 				name={"centerStrength"}
 				value={options.centerStrength}
-				min={0}
-				max={1}
 				onChange={updateAttribute}
 			/>
 			<Slider
 				name={"repelStrength"}
 				value={options.repelStrength}
-				min={0}
-				max={20}
 				onChange={updateAttribute}
 			/>
 			<Slider
 				name={"linkStrength"}
 				value={options.linkStrength}
-				min={0}
-				max={1}
 				onChange={updateAttribute}
 			/>
 			<Slider
 				name={"linkDistance"}
 				value={options.linkDistance}
-				min={30}
-				max={500}
 				onChange={updateAttribute}
 			/>
 		</GroupContainer>

@@ -39,8 +39,6 @@ export const FilterOptionsPreview: React.FC<Props> = ({
 				<Slider
 					name="localJumps"
 					value={options.localJumps}
-					min={1}
-					max={5}
 					onChange={updateAttribute}
 				/>
 			)}
