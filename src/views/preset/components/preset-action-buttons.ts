@@ -86,6 +86,11 @@ export class PresetActionButtons {
 				}
 			}
 		}
+		if (!GraphPresets.getInstance().status.ready) {
+			this.view.contentEl.classList.add("is-loading");
+		} else {
+			this.view.contentEl.classList.remove("is-loading");
+		}
 	}
 
 	unmount() {

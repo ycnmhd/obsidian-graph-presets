@@ -14,15 +14,17 @@ const sortableWrapper =
 		if (target.localName === "textarea") {
 			return;
 		}
-		let svg;
-		if (target.localName === "path") {
-			svg = target.closest("svg");
-		} else if (target.localName === "svg") {
-			svg = target;
+
+		if (
+			target.localName === "line" ||
+			target.localName === "path" ||
+			target.localName === "svg"
+		) {
+			const parent = target.closest("div[data-non-draggable]");
+			if (parent) return;
 		}
-		if (svg && svg.dataset.nonDraggable) {
-			return;
-		}
+		if (target.localName === "div" && target.dataset.nonDraggable) return;
+
 		handler(e as SortableEvent);
 	};
 

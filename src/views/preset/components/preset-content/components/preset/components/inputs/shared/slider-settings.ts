@@ -17,12 +17,12 @@ export const sliderSettings = {
 		max: 3,
 	},
 	nodeSizeMultiplier: {
-		step: "any",
+		step: 0.1, // any
 		min: 0.1,
 		max: 5,
 	},
 	lineSizeMultiplier: {
-		step: "any",
+		step: 0.1, // any
 		min: 0.1,
 		max: 5,
 	},

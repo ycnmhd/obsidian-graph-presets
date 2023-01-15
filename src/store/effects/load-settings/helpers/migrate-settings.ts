@@ -66,7 +66,11 @@ export const migrations = {
 	): Promise<PluginSettings> => {
 		return {
 			version: "0.8.0",
-			preferences: oldSettings.preferences,
+			preferences: {
+				...oldSettings.preferences,
+				restoreZoom: true,
+				restoreCollapsedState: false,
+			},
 			data: {
 				presets: Object.fromEntries(
 					Object.entries(oldSettings.data.presetsMeta).map(

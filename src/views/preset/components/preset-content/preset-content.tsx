@@ -1,9 +1,6 @@
 import { createRoot, Root } from "react-dom/client";
-import { Provider } from "react-redux";
-import { store } from "src/store/store";
-import { PresetView } from "../preset-view";
-import { PresetPreview } from "./preset-preview/preset-preview";
-
+import { PresetView } from "../../preset-view";
+import { PresetWrapper } from "src/views/preset/components/preset-content/components/preset/preset-wrapper";
 export class PresetContent {
 	private rootContainer: Root;
 	private container: HTMLDivElement;
@@ -21,29 +18,15 @@ export class PresetContent {
 		this.container = contentEl.createDiv("container");
 		this.container.style.setProperty("height", "100%");
 		this.rootContainer = createRoot(this.container);
-	}
-
-	render() {
 		const view = (
 			<div className="flex justify-center items-center h-full ">
-				<Provider store={store}>
-					{this.view.file && this.view.preset ? (
-						<PresetPreview
-							ctime={this.view.file.stat.ctime}
-							key={this.view.file.stat.ctime}
-							preset={this.view.preset}
-							updateAttribute={this.view.updateAttribute}
-						/>
-					) : this.view.parsingError ? (
-						<div className="text-center">
-							<p className="text-3xl ">Could not parse preset</p>
-						</div>
-					) : undefined}
-				</Provider>
+				<PresetWrapper viewStore={this.view.store} />
 			</div>
 		);
 		this.rootContainer.render(view);
 	}
+
+	render() {}
 
 	unmount() {
 		this.rootContainer.unmount();

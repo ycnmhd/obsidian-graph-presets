@@ -1,5 +1,5 @@
 import { yaml } from "src/helpers/yaml";
-import { rgbToHex } from "src/views/preset/components/preset-preview/helpers/map-colors";
+import { rgbToHex } from "src/views/preset/components/preset-content/components/preset/helpers/map-colors";
 import { PRESET_FRONTMATTER } from "src/helpers/constants";
 import { graphSettingsKeys } from "src/helpers/obsidian/graph/helpers/graph-settings-keys";
 import { GraphSettings } from "src/types/graph-settings";

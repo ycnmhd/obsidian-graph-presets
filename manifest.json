@@ -1,9 +1,9 @@
 {
 	"id": "obsidian-graph-presets",
 	"name": "Graph Presets",
-	"version": "0.7.1",
+	"version": "0.8.0",
 	"minAppVersion": "0.15.0",
-	"description": "Save and load graph settings",
+	"description": "Markdown-based graph controls.",
 	"author": "ycnmhd",
 	"authorUrl": "https://github.com/ycnmhd/obsidian-graph-presets",
 	"isDesktopOnly": false

@@ -1,16 +1,19 @@
 import { configureStore, bindActionCreators } from "@reduxjs/toolkit";
 import { acu } from "./ac";
 import { openCreatedFileMiddleware } from "./effects/open-created-file";
-import { presetsSlice } from "./slices/presets-slice";
+import { presetsSlice } from "src/store/slices/presets-slice";
+import { presetSlice } from "./slices/preset-slice";
 import { preferencesSlice } from "./slices/preferences-slice";
 import { saveSettingsMiddleware } from "./effects/save-settings";
 import { loadPluginMiddleware } from "./effects/load-settings/load-plugin";
 import { toggleFileEventListener } from "./effects/toggle-file-event-listener";
+import { updateAttributeMiddleware } from "./effects/save-file";
 
 export const store = configureStore({
 	reducer: {
 		presets: presetsSlice.reducer,
 		preferences: preferencesSlice.reducer,
+		preset: presetSlice.reducer,
 	},
 	middleware: (getDefaultMiddleware) => {
 		return getDefaultMiddleware().prepend(
@@ -19,6 +22,7 @@ export const store = configureStore({
 				openCreatedFileMiddleware,
 				loadPluginMiddleware,
 				toggleFileEventListener,
+				updateAttributeMiddleware,
 			]
 		);
 	},

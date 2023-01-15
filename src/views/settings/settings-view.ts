@@ -42,5 +42,25 @@ export class SettingsView extends PluginSettingTab {
 					}
 				);
 			});
+
+		new Setting(containerEl)
+			.setName(t.c.RESTORE_ZOOM_LEVEL)
+			.setDesc(t.c.RESTORE_ZOOM_LEVEL_DESCRIPTION)
+			.addToggle((cb) => {
+				cb.setValue(store.preferences.restoreZoom).onChange((e) => {
+					ac.setRestoreZoom(e);
+				});
+			});
+
+		new Setting(containerEl)
+			.setName(t.c.RESTORE_COLLAPSED_STATE)
+			.setDesc(t.c.RESTORE_COLLAPSED_STATE_DESCRIPTION)
+			.addToggle((cb) => {
+				cb.setValue(store.preferences.restoreCollapsedState).onChange(
+					(e) => {
+						ac.setRestoreCollapsedState(e);
+					}
+				);
+			});
 	}
 }

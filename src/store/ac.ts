@@ -1,5 +1,6 @@
 import { preferencesSlice } from "./slices/preferences-slice";
-import { presetsSlice } from "./slices/presets-slice";
+import { presetsSlice } from "src/store/slices/presets-slice";
+import { presetSlice } from "./slices/preset-slice";
 import { applyPresetThunk } from "./thunks/apply-preset";
 import { createPresetThunk } from "./thunks/create-preset";
 import { deletePresetThunk } from "./thunks/delete-preset";
@@ -12,6 +13,7 @@ import { createAction } from "@reduxjs/toolkit";
 export const acu = {
 	...presetsSlice.actions,
 	...preferencesSlice.actions,
+	...presetSlice.actions,
 	applyPreset: applyPresetThunk,
 	createPreset: createPresetThunk,
 	deletePreset: deletePresetThunk,

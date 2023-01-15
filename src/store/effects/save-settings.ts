@@ -16,6 +16,8 @@ const mapStoreToSettings = (
 			presetsFolder: store.preferences.presetsFolder,
 			sortBy: store.preferences.sortBy,
 			markdownPresets: store.preferences.markdownPresets,
+			restoreZoom: store.preferences.restoreZoom,
+			restoreCollapsedState: store.preferences.restoreCollapsedState,
 		},
 		data: {
 			presets: Object.fromEntries(
@@ -55,7 +57,9 @@ listenerMiddleware.startListening({
 		acu.setEnablePresetCommands,
 		acu.setSortBy,
 		acu.toggleAutoApply,
-		acu.applyPreset.fulfilled
+		acu.applyPreset.fulfilled,
+		acu.setRestoreZoom,
+		acu.setRestoreCollapsedState
 	),
 	effect: saveSettings,
 });

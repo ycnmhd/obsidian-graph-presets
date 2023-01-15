@@ -48,6 +48,11 @@ export class GraphPresets extends Plugin {
 		this.loadStaticCommands();
 		this.registerMonkeyPatches();
 		this.registerEventListeners();
+		this.addRibbonIcon(
+			"graph-presets",
+			"Graph Presets",
+			openGraphPresetsView.callback
+		);
 		app.workspace.onLayoutReady(() => {
 			ac.loadPlugin();
 		});

@@ -1,11 +1,10 @@
 import classnames from "classnames";
-import { useEffect, useState } from "react";
-import { MarkdownPresetMeta } from "src/graph-presets";
 import { GroupHeader } from "./group-header";
 import { graphSettingsGroup } from "src/types/apply-preset";
 import { GraphSettings } from "src/types/graph-settings";
 import AnimateHeight from "react-animate-height";
-import { UpdateAttribute } from "src/views/preset/preset-view";
+import { useAppSelector } from "src/store/hooks";
+import { ac } from "src/store/store";
 
 const collapsedStateKeys: Record<graphSettingsGroup, keyof GraphSettings> = {
 	filters: "collapse-filter",
@@ -15,34 +14,25 @@ const collapsedStateKeys: Record<graphSettingsGroup, keyof GraphSettings> = {
 };
 
 type Props = {
-	meta: MarkdownPresetMeta;
+	created: number;
 	group: graphSettingsGroup;
 	children?: React.ReactNode;
-	collapsed: boolean;
-	updateAttribute: UpdateAttribute;
 };
 
 export const GroupContainer: React.FC<Props> = ({
 	group,
-	meta,
+	created,
 	children,
-	collapsed,
-	updateAttribute,
 }) => {
-	const [localCollapsed, setLocalCollapsed] = useState(collapsed);
-	useEffect(() => {
-		if (localCollapsed !== collapsed)
-			updateAttribute(collapsedStateKeys[group], localCollapsed);
-	}, [localCollapsed]);
-	useEffect(() => {
-		if (localCollapsed !== collapsed) setLocalCollapsed(collapsed);
-	}, [collapsed]);
+	const collapsed = useAppSelector(
+		(state) => state.preset.presets[created][collapsedStateKeys[group]]
+	);
 
 	return (
 		<div
 			className={classnames(
 				"tree-item graph-control-section ",
-				localCollapsed ? "is-collapsed" : "",
+				collapsed ? "is-collapsed" : "",
 				"border-none rounded-md shadow-md ",
 				"py-3 px-6",
 				"group"
@@ -51,19 +41,25 @@ export const GroupContainer: React.FC<Props> = ({
 				backgroundColor: "var(--background-primary)",
 				flex: 1,
 				minWidth: 150,
-				height: localCollapsed ? "fit-content" : "auto",
+				height: collapsed ? "fit-content" : "auto",
 			}}
 		>
 			<GroupHeader
-				meta={meta}
+				created={created}
 				group={group}
-				setCollapsed={setLocalCollapsed}
+				setCollapsed={() => {
+					ac.updateAttribute({
+						created,
+						name: collapsedStateKeys[group],
+						value: !collapsed,
+					});
+				}}
 			/>
 
 			<AnimateHeight
 				id={group}
 				duration={200}
-				height={!localCollapsed ? "auto" : 0}
+				height={!collapsed ? "auto" : 0}
 			>
 				<div className="tree-item-children mt-3">{children}</div>
 			</AnimateHeight>

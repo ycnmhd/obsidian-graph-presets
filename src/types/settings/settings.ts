@@ -28,6 +28,8 @@ export type PluginSettings = {
 			inlineColorGroups: boolean;
 		};
 		enablePresetCommands: boolean;
+		restoreZoom: boolean;
+		restoreCollapsedState: boolean;
 	};
 };
 
@@ -46,6 +48,8 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 			inlineSearchQuery: false,
 			inlineColorGroups: false,
 		},
-		enablePresetCommands: true,
+		enablePresetCommands: false,
+		restoreZoom: true,
+		restoreCollapsedState: false,
 	},
 };

@@ -2,7 +2,7 @@ import { Command } from "obsidian";
 import { GraphPresetsItemViewType } from "../views/presets/presets-view";
 import { t } from "../lang/text";
 
-export const openGraphPresetsView: Command = {
+export const openGraphPresetsView = {
 	id: "open-graph-presets-view",
 	name: t.c.OPEN,
 	callback: async () => {
@@ -19,4 +19,4 @@ export const openGraphPresetsView: Command = {
 			app.workspace.revealLeaf(newLeaf);
 		}
 	},
-};
+} satisfies Command;

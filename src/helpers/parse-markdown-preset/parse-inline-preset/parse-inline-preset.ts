@@ -1,4 +1,4 @@
-import { hexToRgb } from "src/views/preset/components/preset-preview/helpers/map-colors";
+import { hexToRgb } from "src/views/preset/components/preset-content/components/preset/helpers/map-colors";
 import { ColorGroup, GraphSettings } from "src/types/graph-settings";
 import {
 	SearchQueryVariant,

@@ -1,6 +1,5 @@
 import { ac } from "src/store/store";
 import { graphSettingsGroup } from "src/types/apply-preset";
-import { MarkdownPresetMeta } from "src/graph-presets";
 import { t } from "src/lang/text";
 import { ChevronDown } from "src/assets/svg/lucid/obsidian-chevron";
 import React from "react";
@@ -16,11 +15,15 @@ const labels: Record<graphSettingsGroup, string> = {
 
 type Props = {
 	group: graphSettingsGroup;
-	meta: MarkdownPresetMeta;
+	created: number;
 	setCollapsed: (callback: (collapsed: boolean) => boolean) => void;
 };
 
-export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
+export const GroupHeader: React.FC<Props> = ({
+	group,
+	created,
+	setCollapsed,
+}) => {
 	return (
 		<div className="tree-item-self mod-collapsible items-center">
 			<div
@@ -54,7 +57,7 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 					<Check
 						width={16}
 						onClick={() => {
-							ac.applyPreset({ ...meta, group });
+							ac.applyPreset({ created, group });
 						}}
 					/>
 				</div>
@@ -66,7 +69,7 @@ export const GroupHeader: React.FC<Props> = ({ group, meta, setCollapsed }) => {
 					<ArrowDown
 						width={16}
 						onClick={() => {
-							ac.updatePreset({ ...meta, group });
+							ac.updatePreset({ created, group });
 						}}
 					/>
 				</div>
