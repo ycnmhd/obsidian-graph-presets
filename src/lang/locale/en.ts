@@ -9,7 +9,7 @@ export const en = {
 	SORT_BY_DATE_MODIFIED_ASC: "Date modified (old to new)",
 	SORT_BY_DATE_APPLIED_DESC: "Date applied (new to old)",
 	SORT_BY_DATE_APPLIED_ASC: "Date applied (old to new)",
-	FILTER_PRESETS: "Filter presets by path",
+	FILTER_PRESETS: "Filter by path",
 	APPLY_PRESET: "Apply preset",
 	UPDATED: "Updated ",
 	JUST_NOW: "Just now",
@@ -24,16 +24,21 @@ export const en = {
 	DISPLAY_GROUP: "Display",
 	FORCES_GROUP: "Forces",
 	OPEN_AS_MARKDOWN: "Open as markdown",
-	OPEN_AS_PRESET: "Open as preset",
+	OPEN_AS_PRESET: "Open as a preset",
 	// settingsN
 	RESTART_TO_APPLY_CHANGES:
 		"You need to reload Obsidian for this change to take effect",
 	ENABLE_PRESET_COMMANDS_DESCRIPTION:
-		"Enable preset commands in the command palette",
-	ENABLE_PRESET_COMMANDS: "Enable preset commands",
+		"Create an `Apply Preset` command for each preset",
+	ENABLE_PRESET_COMMANDS: "Create commands for presets",
 	PRESETS_FOLDER_PLACEHOLDER: "Example: path/to/folder",
 	PRESETS_FOLDER_DESCRIPTION: "Presets will be created inside this folder",
-	PRESETS_FOLDER: "Default location",
+	PRESETS_FOLDER: "Default folder",
+	RESTORE_ZOOM_LEVEL: "Restore zoom level",
+	RESTORE_ZOOM_LEVEL_DESCRIPTION: "Restore zoom level when applying a preset",
+	RESTORE_COLLAPSED_STATE: "Restore collapsed state",
+	RESTORE_COLLAPSED_STATE_DESCRIPTION:
+		"Restore collapsed state of groups when applying a preset",
 	// commands
 	OPEN: "Open",
 	APPLY: "Apply",
@@ -58,4 +63,6 @@ export const en = {
 	GLOBAL_GRAPH: "Global graph",
 	SELECT: "Select",
 	AUTO_APPLY: "Auto-apply",
+
+	SAVE_ERROR: "Could not save preset",
 };

@@ -1,7 +1,8 @@
-import { TextFileView } from "obsidian";
+import { getIcon, TextFileView } from "obsidian";
 import { ac, getSnapshot } from "src/store/store";
 import { t } from "src/lang/text";
 import { Router } from "../helpers/router";
+import { GraphPresets } from "src/graph-presets";
 
 export class PresetActionButtons {
 	private buttons: {
@@ -19,6 +20,9 @@ export class PresetActionButtons {
 			disableAutoApply: null,
 		};
 		this.mount();
+		GraphPresets.getInstance().status.onReady(() => {
+			this.render();
+		});
 	}
 
 	private mount() {
@@ -30,7 +34,7 @@ export class PresetActionButtons {
 			});
 		});
 		this.buttons.disableAutoApply = this.addAction(
-			"refresh-ccw",
+			"toggle-right",
 			t.c.AUTO_APPLY,
 			() => {
 				ac.toggleAutoApply({
@@ -54,16 +58,38 @@ export class PresetActionButtons {
 	}
 
 	render() {
-		const disableAutoApply =
-			getSnapshot().presets.meta[this.view.file.stat.ctime]
-				.disableAutoApply;
+		const preset = this.view.file
+			? getSnapshot().presets.meta[this.view.file.stat.ctime]
+			: undefined;
+		if (preset) {
+			if (this.buttons.disableAutoApply) {
+				const disableAutoApply = preset.disableAutoApply || false;
+				const disableAutoApplyUpToDate =
+					this.buttons.disableAutoApply.dataset[
+						"disableAutoApply"
+					] === disableAutoApply.toString();
 
-		if (this.buttons.disableAutoApply) {
-			if (disableAutoApply) {
-				this.buttons.disableAutoApply.classList.add("opacity-20");
-			} else {
-				this.buttons.disableAutoApply.classList.remove("opacity-20");
+				if (!disableAutoApplyUpToDate) {
+					this.buttons.disableAutoApply.innerHTML = "";
+					const icon = (
+						disableAutoApply
+							? getIcon("toggle-left")
+							: getIcon("toggle-right")
+					) as SVGSVGElement;
+					this.buttons.disableAutoApply.appendChild(icon);
+					this.buttons.disableAutoApply.dataset["disableAutoApply"] =
+						disableAutoApply.toString();
+					this.buttons.disableAutoApply.style.setProperty(
+						"opacity",
+						disableAutoApply ? "0.3" : "1"
+					);
+				}
 			}
+		}
+		if (!GraphPresets.getInstance().status.ready) {
+			this.view.contentEl.classList.add("is-loading");
+		} else {
+			this.view.contentEl.classList.remove("is-loading");
 		}
 	}
 

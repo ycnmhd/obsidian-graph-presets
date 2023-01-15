@@ -4,16 +4,15 @@ import { MarkdownPresetMeta } from "src/graph-presets";
 import { GetPresetDTO } from "src/helpers/get-preset";
 import { applyPresetThunk } from "../thunks/apply-preset";
 import { filesByCtime } from "../cache/files-by-time";
-import { FileEvent } from "src/event-listeners/file-event-listeners";
 import { TFile } from "obsidian";
 import { createPresetThunk } from "../thunks/create-preset";
 import { refreshCacheThunk } from "../thunks/refresh-cache";
 import { duplicatePresetThunk } from "../thunks/duplicate-preset";
 import { fileIsPreset } from "../../helpers/file-is-preset";
 
-export type PluginState = {
-	filter: string;
-};
+export const fileEvents = ["modify", "delete", "rename"] as const;
+export type FileEvent = typeof fileEvents[number];
+
 type PresetsSlice = {
 	meta: Record<number, MarkdownPresetMeta>;
 	activePreset: number;
@@ -42,20 +41,18 @@ export const presetsSlice = createSlice({
 			state,
 			action: PayloadAction<{
 				created: number;
-				updated: number;
-				name: string;
 				eventType: FileEvent;
-				path: string;
 			}>
 		) => {
 			if (action.payload.eventType === "delete") {
 				delete state.meta[action.payload.created];
-			} else if (action.payload.eventType === "modify") {
-				state.meta[action.payload.created].updated =
-					action.payload.updated;
-			} else if (action.payload.eventType === "rename") {
-				state.meta[action.payload.created].name = action.payload.name;
-				state.meta[action.payload.created].path = action.payload.path
+			} else if (
+				action.payload.eventType === "rename" ||
+				action.payload.eventType === "modify"
+			) {
+				state.meta[action.payload.created] = {
+					...state.meta[action.payload.created],
+				};
 			}
 		},
 
@@ -91,11 +88,7 @@ export const presetsSlice = createSlice({
 				const dto = action.payload;
 				state.meta[dto.created] = {
 					applied: 0,
-					disableAutoApply: false,
 					created: dto.created,
-					updated: dto.created,
-					name: dto.name,
-					path: dto.path,
 				};
 				filesByCtime.current[dto.created] =
 					app.vault.getAbstractFileByPath(dto.path) as TFile;

@@ -1,5 +1,5 @@
-import { useRef } from "react";
-import { MarkdownPresetMeta } from "src/graph-presets";
+import { useEffect, useRef, useState } from "react";
+import { GraphPresets, MarkdownPresetMeta } from "src/graph-presets";
 import { PresetsViewState } from "../../hooks/unsaved-presets";
 import { navBarHeight } from "../nav-header/nav-header";
 import { searchInputHeight } from "../search-input/search-input";
@@ -17,6 +17,11 @@ export const PresetsList: React.FC<Props> = ({
 	deleteUnsavedPreset,
 }) => {
 	const presetsListRef = useRef<HTMLDivElement>(null);
+	const [ready, setReady] = useState(true);
+	useEffect(() => {
+		setReady(GraphPresets.getInstance().status.ready);
+		GraphPresets.getInstance().status.onReady(() => setReady(true));
+	}, []);
 	return (
 		<div
 			style={{
@@ -27,7 +32,7 @@ export const PresetsList: React.FC<Props> = ({
 				overflowY: "scroll",
 				scrollbarGutter: "stable both-edges",
 			}}
-			className=""
+			className={!ready ? "is-loading" : ""}
 			ref={presetsListRef}
 		>
 			{unsavedPresets.map((preset) => (

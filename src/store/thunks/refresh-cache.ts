@@ -3,18 +3,17 @@ import { GraphPresets, MarkdownPresetMeta } from "src/graph-presets";
 
 import { acu } from "../ac";
 import { filesByCtime } from "../cache/files-by-time";
-import { fileHasPresetFrontmatter } from "../../helpers/file-is-preset";
+import { fileHasPresetFrontmatter } from "src/helpers/file-is-preset";
 import {
 	getFileCacheAsync,
 	getMarkdownFilesAsync,
-} from "../../helpers/create-async-getter";
-import { getStarredFiles } from "../../helpers/get-starred-files";
+} from "src/helpers/create-async-getter";
+import { getStarredFiles } from "src/helpers/get-starred-files";
 
 export const refreshCacheThunk = createAsyncThunk(
 	"preset/refreshCache",
-	async (action, thunkAPI) => {
-		const persistedMeta =
-			GraphPresets.getInstance().settings.data.presetsMeta;
+	async (action, api) => {
+		const persistedMeta = GraphPresets.getInstance().settings.data.presets;
 		const mdFiles = await getMarkdownFilesAsync();
 
 		if (!mdFiles) throw new Error("No markdown files found");
@@ -25,18 +24,15 @@ export const refreshCacheThunk = createAsyncThunk(
 
 		const meta = Object.fromEntries(
 			presets.map((f) => {
-				const meta = persistedMeta[f.stat.ctime]?.meta;
+				const meta = persistedMeta[f.stat.ctime];
 				return [
 					f.stat.ctime,
 					{
 						applied: meta?.applied || 0,
-						disableAutoApply: Boolean(meta?.disableAutoApply),
+						disableAutoApply: meta?.disableAutoApply,
 						created: f.stat.ctime,
-						updated: f.stat.mtime,
-						name: f.basename,
-						path: f.path,
 					},
-				] as [number, MarkdownPresetMeta];
+				] satisfies [number, MarkdownPresetMeta];
 			})
 		);
 
@@ -45,7 +41,7 @@ export const refreshCacheThunk = createAsyncThunk(
 				return [f.stat.ctime, f];
 			})
 		);
-		thunkAPI.dispatch(acu.setStarredFiles(getStarredFiles()));
+		api.dispatch(acu.setStarredFiles(getStarredFiles()));
 		return meta;
 	}
 );

@@ -2,25 +2,17 @@
 
 This is a plugin for Obsidian (https://obsidian.md).
 
-Save and load graph settings
+Markdown-based graph controls.
+
+![screenshot.png](screenshot.png)
 
 ## Installation
 
 This plugin is currently in beta and cannot be installed through the community plugin store.
 
 ### Installing the plugin using BRAT
-
-1. Install the BRAT plugin
-    1. Open `Settings` -> `Community Plugins`
-    2. Disable safe mode, if enabled
-    3. *Browse*, and search for "BRAT"
-    4. Install the latest version of **Obsidian 42 - BRAT**
-2. Open BRAT settings (`Settings` -> `Obsidian 42 - BRAT`)
-    1. Scroll to the `Beta Plugin List` section
-    2. `Add Beta Plugin`
-    3. Specify this repository: `ycnmhd/obsidian-graph-presets`
-3. Enable the `Graph presets` plugin (`Settings` -> `Community Plugins`)
+[Quick Guide for using BRA](https://github.com/TfTHacker/obsidian42-brat#Quick-Guide-for-using-BRAT)
 
 ### Manually installing the plugin
 
-- Copy over `main.js` and `manifest.json` to your vault `VaultFolder/.obsidian/plugins/obsidian-graph-presets/`.
+- Download `main.js`, `styles.css`  and `manifest.json` from [obsidian-graph-presets/releases](https://github.com/ycnmhd/obsidian-graph-presets/releases) to your vault `vault/.obsidian/plugins/obsidian-graph-presets/`.

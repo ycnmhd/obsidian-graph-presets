@@ -1,7 +1,8 @@
 import { useMemo } from "react";
 import { MarkdownPresetMeta } from "src/graph-presets";
-import { PluginSettings } from "src/settings/default-settings";
+import { PluginSettings } from "src/types/settings/settings";
 import { useAppSelector } from "src/store/hooks";
+import { filesByCtime } from "src/store/cache/files-by-time";
 
 const sortPresets = (
 	unsortedEntries: MarkdownPresetMeta[],
@@ -11,12 +12,16 @@ const sortPresets = (
 	switch (sortBy) {
 		case "presetNameAsc":
 			sortedEntries = unsortedEntries.sort((a, b) =>
-				a.name.localeCompare(b.name)
+				filesByCtime.current[a.created].basename.localeCompare(
+					filesByCtime.current[b.created].basename
+				)
 			);
 			break;
 		case "presetNameDesc":
 			sortedEntries = unsortedEntries.sort((a, b) =>
-				b.name.localeCompare(a.name)
+				filesByCtime.current[b.created].basename.localeCompare(
+					filesByCtime.current[a.created].basename
+				)
 			);
 			break;
 		case "dateCreatedAsc":
@@ -30,13 +35,18 @@ const sortPresets = (
 			);
 			break;
 		case "dateModifiedAsc":
-			sortedEntries = unsortedEntries.sort(
-				(a, b) => a.updated - b.updated
-			);
+			sortedEntries = unsortedEntries.sort((a, b) => {
+				return (
+					filesByCtime.current[a.created].stat.mtime -
+					filesByCtime.current[b.created].stat.mtime
+				);
+			});
 			break;
 		case "dateModifiedDesc":
 			sortedEntries = unsortedEntries.sort(
-				(a, b) => b.updated - a.updated
+				(a, b) =>
+					filesByCtime.current[b.created].stat.mtime -
+					filesByCtime.current[a.created].stat.mtime
 			);
 
 			break;
@@ -62,7 +72,9 @@ export const useSortPresets = () => {
 	return useMemo(() => {
 		const fullList = Object.values(presets);
 		const filteredList = fullList.filter((preset) =>
-			preset.path.toLowerCase().includes(filter.toLowerCase())
+			filesByCtime.current[preset.created].path
+				.toLowerCase()
+				.includes(filter.toLowerCase())
 		);
 		const staredList = filteredList.filter(
 			(preset) => starred[preset.created]

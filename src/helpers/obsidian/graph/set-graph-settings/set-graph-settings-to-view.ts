@@ -4,12 +4,20 @@ import { GraphSettings } from "src/types/graph-settings";
 import { WorkspaceLeaf } from "obsidian";
 import { pickGroup } from "src/helpers/obsidian/graph/helpers/pick-group";
 import { engineGroupMap } from "src/helpers/obsidian/graph/helpers/graph-settings-keys";
+import { getSnapshot } from "src/store/store";
 
 type Props = {
 	leaf: WorkspaceLeaf;
 	settings: Partial<GraphSettings>;
 	group?: graphSettingsGroup;
 };
+
+const collapseKeys: Readonly<(keyof GraphSettings)[]> = [
+	"collapse-filter",
+	"collapse-color-groups",
+	"collapse-display",
+	"collapse-forces",
+] as const;
 
 export const setGraphSettingsToView = async ({
 	leaf,
@@ -25,18 +33,35 @@ export const setGraphSettingsToView = async ({
 		throw new Error("leaf is not a graph or localgraph");
 	}
 
-	if (!group) {
-		engine.setOptions(settings as GraphSettings);
-		if ("scale" in settings) {
-			const renderer = (leaf.view as any).renderer;
-			renderer.zoomTo(settings.scale);
+	const { scale, ...rest } = { ...settings } as GraphSettings;
+
+	const collapsed: Partial<GraphSettings> = {};
+	collapseKeys.forEach((key) => {
+		if (key in rest) {
+			// @ts-ignore
+			collapsed[key] = rest[key];
+			// @ts-ignore
+			delete rest[key];
 		}
-		if ("close" in settings) {
+	});
+	if (!group) {
+		engine.setOptions(rest as GraphSettings);
+		const store = getSnapshot();
+		if (store.preferences.restoreCollapsedState) {
+			engine.setOptions(collapsed as any);
+		}
+		if (scale) {
+			if (store.preferences.restoreZoom) {
+				const renderer = (leaf.view as any).renderer;
+				renderer.zoomTo(scale);
+			}
+		}
+		/*if ("close" in settings) {
 			const controlsEl = (leaf.view as any).controlsEl;
 			if (controlsEl) controlsEl.toggleClass("is-close", settings.close);
-		}
+		}*/
 	} else {
-		const settingsGroup = pickGroup(group, settings as GraphSettings);
+		const settingsGroup = pickGroup(group, rest as GraphSettings);
 		const engineGroup = engine[engineGroupMap[group]];
 		engineGroup.setOptions(settingsGroup);
 	}

@@ -1,41 +1,36 @@
-import { TextFileView, TFile, Menu, WorkspaceLeaf, Notice } from "obsidian";
+import { Menu, Notice, TextFileView, TFile, WorkspaceLeaf } from "obsidian";
 import { t } from "src/lang/text";
 import { Router } from "./helpers/router";
 import { PresetActionButtons } from "./components/preset-action-buttons";
-import { PresetContent } from "./components/preset-content";
+import { PresetContent } from "./components/preset-content/preset-content";
 import { GraphSettings } from "src/types/graph-settings";
 import { parseMarkDownPreset } from "src/helpers/parse-markdown-preset/parse-markdown-preset";
 import { mapPresetToMarkdown } from "src/helpers/save-preset-to-markdown/helpers/map-preset-to-markdown";
-import { getSnapshot } from "src/store/store";
-import { obsidian } from "src/helpers/obsidian/obsidian";
+import { ac } from "src/store/store";
 import { logger } from "src/helpers/logger";
 import { OpenAsMarkdownMenuItem } from "src/context-menu-items/open-as-markdown-menu-item";
+import {
+	addView,
+	removeView,
+} from "src/store/effects/save-file/helpers/file-views";
+import { Store } from "src/helpers/store";
+import { filesByCtime } from "src/store/cache/files-by-time";
 
-const isPresetNote = (data: string) => {
-	return /---\s+graph-presets-plugin: basic/.test(data);
-};
-
-export type UpdateAttribute = <k extends keyof GraphSettings>(
-	name: k,
-	value: GraphSettings[k]
-) => void;
-
-type State = {
-	preset?: GraphSettings;
-	parsingError: string;
-	savePresetTimeout: ReturnType<typeof setTimeout> | null;
+export type State = {
+	created: number | null;
+	parsingError: string | null;
 };
 export const PresetViewType = "markdown-preset-view";
 
 export class PresetView extends TextFileView {
 	private actionButtons: PresetActionButtons;
 	private presetContent: PresetContent;
-	private currentFile: TFile;
-	private state: State = {
-		preset: undefined,
+	private savePresetTimeout: ReturnType<typeof setTimeout> | undefined;
+	store = new Store<State>({
+		created: 0,
 		parsingError: "",
-		savePresetTimeout: null,
-	};
+	});
+
 	constructor(leaf: WorkspaceLeaf) {
 		super(leaf);
 		this.actionButtons = new PresetActionButtons(
@@ -45,12 +40,17 @@ export class PresetView extends TextFileView {
 		this.presetContent = new PresetContent(this);
 	}
 
-	getDisplayText(): string {
-		return this.file?.basename || t.c.PRESET;
+	onLoadFile(file: TFile): Promise<void> {
+		addView(this);
+		this.store.set({ created: file.stat.ctime, parsingError: "" });
+		this.actionButtons.render();
+		return super.onLoadFile(file);
 	}
 
-	getViewType(): string {
-		return PresetViewType;
+	onUnloadFile(file: TFile): Promise<void> {
+		removeView(this, file.stat.ctime);
+		this.store.set({ created: null, parsingError: null });
+		return super.onUnloadFile(file);
 	}
 
 	onPaneMenu(menu: Menu, source: string, callSuper = true): void {
@@ -67,33 +67,23 @@ export class PresetView extends TextFileView {
 
 	setViewData(data: string): void {
 		this.data = data;
-		if (isPresetNote(data)) {
-			this.parsePreset();
-			this.presetContent.render();
-			if (this.currentFile !== this.file) {
-				this.currentFile = this.file;
-				this.actionButtons.render();
-			}
-		}
+		this.parsePreset();
 	}
-
-	getViewData(): string {
-		return this.data;
-	}
-
-	onunload(): void {}
-
-	clear(): void {}
-
-	/*  */
 	private parsePreset() {
 		try {
 			const preset = parseMarkDownPreset(this.data) as GraphSettings;
-			this.state.preset = preset;
-			this.state.parsingError = "";
+			ac.setPreset({
+				created: this.file?.stat?.ctime,
+				preset,
+			});
 		} catch (e) {
-			this.state.parsingError = e.message;
+			logger.error(e);
 			new Notice(t.c.MARKDOWN_PARSING_ERROR);
+			this.store.set({ parsingError: e.message });
+			ac.setPreset({
+				created: this.file?.stat?.ctime,
+				preset: null,
+			});
 			Router.getInstance().setFileType({
 				path: this.file.path,
 				type: "markdown",
@@ -104,37 +94,46 @@ export class PresetView extends TextFileView {
 		}
 	}
 
-	get preset(): GraphSettings | undefined {
-		return this.state.preset;
-	}
-	get parsingError(): string {
-		return this.state.parsingError;
-	}
+	savePreset = async (preset: GraphSettings, created: number) => {
+		if (this.savePresetTimeout) clearTimeout(this.savePresetTimeout);
 
-	updateAttribute: UpdateAttribute = (name, value) => {
-		if (!this.state.preset) return;
-		this.state.preset[name] = value;
-		this.applyPreset({ [name]: value });
-		this.savePreset();
-	};
-
-	savePreset = () => {
-		if (this.state.savePresetTimeout)
-			clearTimeout(this.state.savePresetTimeout);
-		this.state.savePresetTimeout = setTimeout(() => {
-			this.data = mapPresetToMarkdown(this.state.preset as GraphSettings);
-			this.save();
+		if (!this.file) {
+			// attempt to reopen file
+			if (filesByCtime.current[created])
+				await Router.getInstance().setFileType({
+					path: filesByCtime.current[created].path,
+					type: PresetViewType,
+					leaf: this.leaf,
+				});
+			if (!this.file) {
+				new Notice(t.c.SAVE_ERROR);
+				throw new Error("view does not have a file");
+			}
+		}
+		this.savePresetTimeout = setTimeout(async () => {
+			try {
+				this.data = mapPresetToMarkdown(preset);
+				await this.save();
+			} catch (e) {
+				logger.error(e);
+				new Notice(t.c.SAVE_ERROR);
+			}
 		}, 200);
 	};
 
-	applyPreset = (preset: Partial<GraphSettings>) => {
-		const p = getSnapshot().presets.meta[this.file.stat.ctime];
-		if (!p?.disableAutoApply) {
-			obsidian.graph.setSettings({
-				settings: preset,
-				openGraph: false,
-				dto: { created: p.created },
-			});
-		}
-	};
+	getDisplayText(): string {
+		return this.file?.basename || t.c.PRESET;
+	}
+
+	getViewType(): string {
+		return PresetViewType;
+	}
+
+	getViewData(): string {
+		return this.data;
+	}
+
+	onunload(): void {}
+
+	clear(): void {}
 }

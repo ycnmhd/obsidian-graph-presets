@@ -4,7 +4,7 @@ import {
 	DEFAULT_SETTINGS,
 	PluginSettings,
 	SortMode,
-} from "src/settings/default-settings";
+} from "src/types/settings/settings";
 
 export type PreferencesSlice = PluginSettings["preferences"] & {
 	filter: string;
@@ -25,6 +25,9 @@ export const preferencesSlice = createSlice({
 			state.markdownPresets = action.payload.preferences.markdownPresets;
 			state.presetsFolder = action.payload.preferences.presetsFolder;
 			state.sortBy = action.payload.preferences.sortBy;
+			state.restoreZoom = action.payload.preferences.restoreZoom;
+			state.restoreCollapsedState =
+				action.payload.preferences.restoreCollapsedState;
 		},
 		setPresetsFolder: (state, action: PayloadAction<string>) => {
 			state.presetsFolder = action.payload;
@@ -38,6 +41,12 @@ export const preferencesSlice = createSlice({
 
 		setFilter: (state, action: PayloadAction<string>) => {
 			state.filter = action.payload;
+		},
+		setRestoreZoom: (state, action: PayloadAction<boolean>) => {
+			state.restoreZoom = action.payload;
+		},
+		setRestoreCollapsedState: (state, action: PayloadAction<boolean>) => {
+			state.restoreCollapsedState = action.payload;
 		},
 	},
 });
