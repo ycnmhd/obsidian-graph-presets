@@ -8,6 +8,7 @@ import { PresetViewType } from "src/views/preset/preset-view";
 import { useAppSelector } from "src/store/hooks";
 import { Star } from "src/assets/svg/lucid/star";
 import { filesByCtime } from "../../../../../../../../../store/cache/files-by-time";
+import { getPresetDisplayText } from "src/views/preset/helpers/get-preset-display-text";
 
 const relativeTime = (updated: number) => {
 	const difference = Date.now() - updated;
@@ -41,7 +42,7 @@ export const PresetLabel: React.FC<Props> = ({ meta }) => {
 	);
 	const name = (
 		<span className="nav-file-title-content text-md ">
-			{preset.basename}
+			{getPresetDisplayText(meta)}
 		</span>
 	);
 

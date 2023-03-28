@@ -5,6 +5,7 @@ import { obsidian } from "src/helpers/obsidian/obsidian";
 import { GraphSettings } from "src/types/graph-settings";
 import { getGraphLeaf } from "../helpers/get-graph-leaf/get-graph-leaf";
 import { setGraphSettingsToView } from "./set-graph-settings-to-view";
+import { RootState, store } from "src/store/store";
 
 type Props = {
 	settings: Partial<GraphSettings>;
@@ -18,14 +19,16 @@ export const setGraphSettings = async ({
 	openGraph = true,
 	dto,
 }: Props) => {
-	let leaf: WorkspaceLeaf | null = null;
+	let leaf: WorkspaceLeaf | undefined;
 	leaf = await getGraphLeaf(dto);
 	if (!leaf) {
 		if (!openGraph) {
 			return;
 		}
-		await obsidian.graph.open();
-		leaf = app.workspace.getLeavesOfType("graph")[0];
+
+		const state = store.getState() as RootState;
+		const localGraphFile = state.presets.meta[dto.created].localGraphFile;
+		leaf = await obsidian.graph.open(localGraphFile);
 	}
 	settings.search = settings.search?.replace(/\n/g, " ");
 	settings.colorGroups = settings.colorGroups?.map((c) => ({

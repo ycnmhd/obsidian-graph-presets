@@ -7,7 +7,7 @@ import { GetPresetDTO } from "src/helpers/get-preset";
 
 type Props = {
 	group?: graphSettingsGroup;
-	dto: GetPresetDTO | null;
+	dto: GetPresetDTO;
 };
 
 export const getGraphSettings = async ({ group, dto }: Props) => {

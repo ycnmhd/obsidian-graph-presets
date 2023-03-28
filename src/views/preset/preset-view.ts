@@ -136,4 +136,8 @@ export class PresetView extends TextFileView {
 	onunload(): void {}
 
 	clear(): void {}
+
+	render(): void {
+		this.actionButtons.render();
+	}
 }

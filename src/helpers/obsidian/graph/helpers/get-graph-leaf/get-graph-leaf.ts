@@ -1,35 +1,31 @@
-import { WorkspaceLeaf } from "obsidian";
-import { getActiveGraphLeaves } from "./helpers/get-active-graph-leaves";
-import { GraphSelectionModal } from "../../../../../modals/graph-selecton-modal/graph-selecton-modal";
+import { TFile, WorkspaceLeaf } from "obsidian";
 import { GetPresetDTO } from "src/helpers/get-preset";
+import { ac, getSnapshot } from "src/store/store";
+import { getOpenLocalGraphLeaf } from "./helpers/get-open-local-graph-leaf";
+import { getOpenGraphLeaf } from "./helpers/get-open-graph-leaf";
 
-const previouslySelected: Map<number, WorkspaceLeaf> = new Map();
-
-export const getGraphLeaf = async (dto: GetPresetDTO | null) => {
-	let leaf: WorkspaceLeaf | null = null;
-	const graphLeaves = getActiveGraphLeaves();
-	if (graphLeaves.length > 1) {
-		if (dto && previouslySelected.has(dto.created)) {
-			const previousLeaf = previouslySelected.get(
-				dto.created
-			) as WorkspaceLeaf;
-			if (getActiveGraphLeaves().includes(previousLeaf)) {
-				leaf = previousLeaf;
-			} else {
-				previouslySelected.delete(dto.created);
-			}
-		} else {
-			const modal = new GraphSelectionModal();
-			modal.open();
-			leaf = await modal.selected;
-			modal.close();
-			if (dto) {
-				previouslySelected.set(dto.created, leaf);
+export const getGraphLeaf = async (dto: GetPresetDTO) => {
+	let leaf: WorkspaceLeaf | undefined;
+	const store = getSnapshot();
+	const localGraphFile = dto
+		? store.presets.meta[dto?.created]?.localGraphFile
+		: undefined;
+	if (localGraphFile) {
+		leaf = getOpenLocalGraphLeaf(localGraphFile);
+	} else {
+		leaf = await getOpenGraphLeaf(dto);
+	}
+	if (leaf) {
+		app.workspace.revealLeaf(leaf);
+		if (!localGraphFile && leaf.view.getViewType() === "localgraph") {
+			const file = (leaf.view as any).file;
+			if (file instanceof TFile) {
+				ac.setLocalFile({
+					created: dto.created,
+					localGraphFile: file.stat.ctime,
+				});
 			}
 		}
-	} else if (graphLeaves.length === 1) {
-		leaf = graphLeaves[0];
 	}
-	if (leaf) app.workspace.revealLeaf(leaf);
 	return leaf;
 };

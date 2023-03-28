@@ -31,7 +31,7 @@ export const en = {
 	ENABLE_PRESET_COMMANDS_DESCRIPTION:
 		"Create an `Apply Preset` command for each preset",
 	ENABLE_PRESET_COMMANDS: "Create commands for presets",
-	PRESETS_FOLDER_PLACEHOLDER: "Example: path/to/folder",
+	PRESETS_FOLDER_PLACEHOLDER: "path/to/folder",
 	PRESETS_FOLDER_DESCRIPTION: "Presets will be created inside this folder",
 	PRESETS_FOLDER: "Default folder",
 	RESTORE_ZOOM_LEVEL: "Restore zoom level",
@@ -63,6 +63,13 @@ export const en = {
 	GLOBAL_GRAPH: "Global graph",
 	SELECT: "Select",
 	AUTO_APPLY: "Auto-apply",
-
+	AUTO_APPLY_DESCRIPTION:
+		"Automatically apply preset when attributes are changed",
 	SAVE_ERROR: "Could not save preset",
+
+	LOCAL_GRAPH_FILE: "Local graph file",
+	LOCAL_GRAPH_FILE_PLACEHOLDER: "path/to/file",
+	LOCAL_GRAPH_FILE_DESCRIPTION: "Keep empty to target global graph",
+	PRESET_SETTINGS: "Preset settings",
+	UNLINK_LOCAL_PRESET: "Unlink ",
 };

@@ -1,15 +1,17 @@
-import { getIcon, TextFileView } from "obsidian";
 import { ac, getSnapshot } from "src/store/store";
 import { t } from "src/lang/text";
 import { Router } from "../helpers/router";
 import { GraphPresets } from "src/graph-presets";
+import { PresetSettingsModal } from "src/modals/preset-settings-modal/preset-settings-modal";
+import { PresetView } from "../preset-view";
+import { getFileByCtime } from "src/helpers/obsidian/graph/helpers/get-file-by-ctime";
 
 export class PresetActionButtons {
 	private buttons: {
-		disableAutoApply: HTMLElement | null;
+		unlinkPreset: HTMLElement | null;
 	};
 	constructor(
-		private view: TextFileView,
+		private view: PresetView,
 		private addAction: (
 			icon: string,
 			text: string,
@@ -17,7 +19,7 @@ export class PresetActionButtons {
 		) => HTMLElement
 	) {
 		this.buttons = {
-			disableAutoApply: null,
+			unlinkPreset: null,
 		};
 		this.mount();
 		GraphPresets.getInstance().status.onReady(() => {
@@ -33,18 +35,14 @@ export class PresetActionButtons {
 				path: this.view.file.path,
 			});
 		});
-		this.buttons.disableAutoApply = this.addAction(
-			"toggle-right",
-			t.c.AUTO_APPLY,
-			() => {
-				ac.toggleAutoApply({
+		this.addAction("settings", t.c.PRESET_SETTINGS, () => {
+			new PresetSettingsModal(
+				{
 					created: this.view.file.stat.ctime,
-				});
-				setTimeout(() => {
-					this.render();
-				}, 200);
-			}
-		);
+				},
+				this.view
+			).open();
+		});
 		this.addAction("arrow-down", t.c.UPDATE, () => {
 			ac.updatePreset({
 				created: this.view.file.stat.ctime,
@@ -55,41 +53,40 @@ export class PresetActionButtons {
 				created: this.view.file.stat.ctime,
 			});
 		});
+		this.buttons.unlinkPreset = this.addAction(
+			"link",
+			t.c.UNLINK_LOCAL_PRESET,
+			() => {
+				ac.setLocalFile({
+					created: this.view.file.stat.ctime,
+				});
+				this.render();
+			}
+		);
+		this.buttons.unlinkPreset.style.visibility = "hidden";
 	}
 
 	render() {
-		const preset = this.view.file
-			? getSnapshot().presets.meta[this.view.file.stat.ctime]
-			: undefined;
-		if (preset) {
-			if (this.buttons.disableAutoApply) {
-				const disableAutoApply = preset.disableAutoApply || false;
-				const disableAutoApplyUpToDate =
-					this.buttons.disableAutoApply.dataset[
-						"disableAutoApply"
-					] === disableAutoApply.toString();
-
-				if (!disableAutoApplyUpToDate) {
-					this.buttons.disableAutoApply.innerHTML = "";
-					const icon = (
-						disableAutoApply
-							? getIcon("toggle-left")
-							: getIcon("toggle-right")
-					) as SVGSVGElement;
-					this.buttons.disableAutoApply.appendChild(icon);
-					this.buttons.disableAutoApply.dataset["disableAutoApply"] =
-						disableAutoApply.toString();
-					this.buttons.disableAutoApply.style.setProperty(
-						"opacity",
-						disableAutoApply ? "0.3" : "1"
-					);
-				}
-			}
-		}
 		if (!GraphPresets.getInstance().status.ready) {
 			this.view.contentEl.classList.add("is-loading");
 		} else {
 			this.view.contentEl.classList.remove("is-loading");
+			if (this.view.file) {
+				const store = getSnapshot();
+				const meta = store.presets.meta[this.view.file.stat.ctime];
+
+				if (this.buttons.unlinkPreset)
+					if (meta?.localGraphFile) {
+						this.buttons.unlinkPreset.style.visibility = "visible";
+						const file = getFileByCtime(meta?.localGraphFile);
+						this.buttons.unlinkPreset.setAttribute(
+							"aria-label",
+							t.c.UNLINK_LOCAL_PRESET + '"' + file?.basename + '"'
+						);
+					} else {
+						this.buttons.unlinkPreset.style.visibility = "hidden";
+					}
+			}
 		}
 	}
 

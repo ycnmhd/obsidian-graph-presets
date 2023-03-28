@@ -1,6 +1,7 @@
 export type PersistedPresetMeta = {
 	applied?: number;
 	disableAutoApply?: boolean;
+	localGraphFile?: number;
 };
 
 export type SortMode =

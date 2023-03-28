@@ -32,10 +32,16 @@ const mapStoreToSettings = (
 								...(value.disableAutoApply && {
 									disableAutoApply: value.disableAutoApply,
 								}),
+								...(value.localGraphFile && {
+									localGraphFile: value.localGraphFile,
+								}),
 							} satisfies PersistedPresetMeta,
 						] as const;
 					})
-					.filter(([, p]) => p.disableAutoApply || p.applied)
+					.filter(
+						([, p]) =>
+							p.disableAutoApply || p.applied || p.localGraphFile
+					)
 			),
 		},
 	};
@@ -57,6 +63,9 @@ listenerMiddleware.startListening({
 		acu.setEnablePresetCommands,
 		acu.setSortBy,
 		acu.toggleAutoApply,
+		acu.updateFileMeta,
+		acu.setLocalFile,
+		acu.createPreset.fulfilled,
 		acu.applyPreset.fulfilled,
 		acu.setRestoreZoom,
 		acu.setRestoreCollapsedState
