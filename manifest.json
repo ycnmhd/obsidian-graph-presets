@@ -1,7 +1,7 @@
 {
 	"id": "obsidian-graph-presets",
 	"name": "Graph Presets",
-	"version": "0.8.0",
+	"version": "0.9.0",
 	"minAppVersion": "0.15.0",
 	"description": "Markdown-based graph controls.",
 	"author": "ycnmhd",

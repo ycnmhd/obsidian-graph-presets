@@ -43,7 +43,7 @@ export class PresetView extends TextFileView {
 	onLoadFile(file: TFile): Promise<void> {
 		addView(this);
 		this.store.set({ created: file.stat.ctime, parsingError: "" });
-		this.actionButtons.render();
+		this.render();
 		return super.onLoadFile(file);
 	}
 

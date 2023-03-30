@@ -3,6 +3,7 @@ import { GetPresetDTO } from "src/helpers/get-preset";
 import { ac, getSnapshot } from "src/store/store";
 import { getOpenLocalGraphLeaf } from "./helpers/get-open-local-graph-leaf";
 import { getOpenGraphLeaf } from "./helpers/get-open-graph-leaf";
+import { PresetViewType, PresetView } from "src/views/preset/preset-view";
 
 export const getGraphLeaf = async (dto: GetPresetDTO) => {
 	let leaf: WorkspaceLeaf | undefined;
@@ -24,6 +25,18 @@ export const getGraphLeaf = async (dto: GetPresetDTO) => {
 					created: dto.created,
 					localGraphFile: file.stat.ctime,
 				});
+			}
+			/* render link button of local graph preset */
+			const preset = app.workspace
+				.getLeavesOfType(PresetViewType)
+				.find((l) => {
+					const file = (l.view as any).file;
+					if (file instanceof TFile)
+						return file.stat.ctime === dto.created;
+				});
+			if (preset) {
+				const view = preset.view as PresetView;
+				view.render();
 			}
 		}
 	}

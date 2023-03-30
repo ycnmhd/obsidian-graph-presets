@@ -18,6 +18,7 @@ const mapStoreToSettings = (
 			markdownPresets: store.preferences.markdownPresets,
 			restoreZoom: store.preferences.restoreZoom,
 			restoreCollapsedState: store.preferences.restoreCollapsedState,
+			globalFilter: store.preferences.globalFilter,
 		},
 		data: {
 			presets: Object.fromEntries(
@@ -68,7 +69,8 @@ listenerMiddleware.startListening({
 		acu.createPreset.fulfilled,
 		acu.applyPreset.fulfilled,
 		acu.setRestoreZoom,
-		acu.setRestoreCollapsedState
+		acu.setRestoreCollapsedState,
+		acu.setGlobalFilter
 	),
 	effect: saveSettings,
 });

@@ -19,6 +19,7 @@ export const setGraphSettings = async ({
 	openGraph = true,
 	dto,
 }: Props) => {
+	const state = store.getState() as RootState;
 	let leaf: WorkspaceLeaf | undefined;
 	leaf = await getGraphLeaf(dto);
 	if (!leaf) {
@@ -26,11 +27,15 @@ export const setGraphSettings = async ({
 			return;
 		}
 
-		const state = store.getState() as RootState;
 		const localGraphFile = state.presets.meta[dto.created].localGraphFile;
 		leaf = await obsidian.graph.open(localGraphFile);
 	}
 	settings.search = settings.search?.replace(/\n/g, " ");
+	if (state.preferences.globalFilter) {
+		settings.search = `${(settings.search || "").trim()} ${
+			state.preferences.globalFilter
+		}`;
+	}
 	settings.colorGroups = settings.colorGroups?.map((c) => ({
 		...c,
 		query: c.query.replace(/\n/g, " "),
