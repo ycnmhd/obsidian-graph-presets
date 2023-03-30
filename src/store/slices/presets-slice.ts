@@ -36,7 +36,16 @@ export const presetsSlice = createSlice({
 			state.meta[dto.created].disableAutoApply =
 				!state.meta[dto.created].disableAutoApply;
 		},
-
+		setLocalFile: (
+			state,
+			{
+				payload,
+			}: PayloadAction<GetPresetDTO & { localGraphFile?: number }>
+		) => {
+			if (state.meta[payload.created])
+				state.meta[payload.created].localGraphFile =
+					payload.localGraphFile;
+		},
 		updateFileMeta: (
 			state,
 			action: PayloadAction<{

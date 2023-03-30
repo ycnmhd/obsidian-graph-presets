@@ -50,7 +50,7 @@ export const GraphLeafListItem: React.FC<Props> = ({
 					onClick={isActive ? selectLeaf : openLeaf}
 					className={isActive ? "mod-cta" : ""}
 				>
-					{isActive ? t.c.SELECT : t.c.OPEN}
+					{isActive ? t.c.SELECT : t.c.FOCUS}
 				</button>
 			}
 		</div>

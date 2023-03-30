@@ -10,6 +10,7 @@ import { openPreset } from "src/helpers/open-preset";
 import { mapPresetToCommand } from "src/commands/apply-graph-preset";
 import { RootState } from "src/store/store";
 import { GraphPresets } from "src/graph-presets";
+import { getGraphLeaf } from "src/helpers/obsidian/graph/helpers/get-graph-leaf/get-graph-leaf";
 
 const listenerMiddleware = createListenerMiddleware();
 
@@ -22,7 +23,7 @@ listenerMiddleware.startListening({
 			type: Router.getInstance().viewType,
 		});
 		const file = await getAbstractFileByPathAsync(payload.path);
-		if (file) {
+		if (file && file instanceof TFile) {
 			await getFileCacheAsync(file as TFile);
 			await openPreset(
 				{
@@ -30,8 +31,11 @@ listenerMiddleware.startListening({
 				},
 				true
 			);
+			// to set local file
+			await getGraphLeaf(payload);
+
 			const store = api.getState() as RootState;
-			if(store.preferences.enablePresetCommands){
+			if (store.preferences.enablePresetCommands) {
 				const meta = store.presets.meta[payload.created];
 				const command = mapPresetToCommand(meta);
 				GraphPresets.getInstance().addCommand(command);

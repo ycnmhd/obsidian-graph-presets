@@ -31,6 +31,18 @@ export class SettingsView extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
+			.setName(t.c.GLOBAL_FILTER)
+			.setDesc(t.c.GLOBAL_FILTER_DESCRIPTION)
+			.addText((cb) => {
+				cb
+					.setPlaceholder(t.c.GLOBAL_FILTER_PLACEHOLDER)
+					.setValue(store.preferences.globalFilter)
+					.onChange((e) => {
+						ac.setGlobalFilter(e);
+					}).inputEl.style.width = "213px";
+			});
+
+		new Setting(containerEl)
 			.setName(t.c.ENABLE_PRESET_COMMANDS)
 			.setDesc(t.c.ENABLE_PRESET_COMMANDS_DESCRIPTION)
 			.addToggle((cb) => {

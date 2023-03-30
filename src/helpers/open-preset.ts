@@ -11,9 +11,9 @@ export const openPreset = async (
 	await obsidian.fs.openFile({
 		file,
 		position: newLeaf
-			? "right-new-leaf"
+			? "right-new-split"
 			: app.workspace.getLeaf().view.getViewType() === "graph"
-			? "right-replace-adjacent-leaf"
+			? "right-replace-tab"
 			: undefined,
 	});
 };

@@ -1,6 +1,7 @@
 export type PersistedPresetMeta = {
 	applied?: number;
 	disableAutoApply?: boolean;
+	localGraphFile?: number;
 };
 
 export type SortMode =
@@ -30,6 +31,7 @@ export type PluginSettings = {
 		enablePresetCommands: boolean;
 		restoreZoom: boolean;
 		restoreCollapsedState: boolean;
+		globalFilter: string;
 	};
 };
 
@@ -51,5 +53,6 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 		enablePresetCommands: false,
 		restoreZoom: true,
 		restoreCollapsedState: false,
+		globalFilter: "",
 	},
 };

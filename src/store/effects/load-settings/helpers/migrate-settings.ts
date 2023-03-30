@@ -70,6 +70,7 @@ export const migrations = {
 				...oldSettings.preferences,
 				restoreZoom: true,
 				restoreCollapsedState: false,
+				globalFilter: "",
 			},
 			data: {
 				presets: Object.fromEntries(

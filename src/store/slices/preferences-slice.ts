@@ -28,6 +28,7 @@ export const preferencesSlice = createSlice({
 			state.restoreZoom = action.payload.preferences.restoreZoom;
 			state.restoreCollapsedState =
 				action.payload.preferences.restoreCollapsedState;
+			state.globalFilter = action.payload.preferences.globalFilter || "";
 		},
 		setPresetsFolder: (state, action: PayloadAction<string>) => {
 			state.presetsFolder = action.payload;
@@ -47,6 +48,9 @@ export const preferencesSlice = createSlice({
 		},
 		setRestoreCollapsedState: (state, action: PayloadAction<boolean>) => {
 			state.restoreCollapsedState = action.payload;
+		},
+		setGlobalFilter: (state, action: PayloadAction<string>) => {
+			state.globalFilter = action.payload.trim();
 		},
 	},
 });

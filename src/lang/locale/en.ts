@@ -31,7 +31,7 @@ export const en = {
 	ENABLE_PRESET_COMMANDS_DESCRIPTION:
 		"Create an `Apply Preset` command for each preset",
 	ENABLE_PRESET_COMMANDS: "Create commands for presets",
-	PRESETS_FOLDER_PLACEHOLDER: "Example: path/to/folder",
+	PRESETS_FOLDER_PLACEHOLDER: "path/to/folder",
 	PRESETS_FOLDER_DESCRIPTION: "Presets will be created inside this folder",
 	PRESETS_FOLDER: "Default folder",
 	RESTORE_ZOOM_LEVEL: "Restore zoom level",
@@ -42,6 +42,7 @@ export const en = {
 	// commands
 	OPEN: "Open",
 	APPLY: "Apply",
+	FOCUS: "Focus",
 	APPLY_ACTIVE_PRESET: "Apply active preset",
 	UPDATE_ACTIVE_PRESET: "Update active preset",
 	NO_PRESET_SELECTED: "No preset selected",
@@ -63,6 +64,18 @@ export const en = {
 	GLOBAL_GRAPH: "Global graph",
 	SELECT: "Select",
 	AUTO_APPLY: "Auto-apply",
-
+	AUTO_APPLY_DESCRIPTION:
+		"Automatically apply preset when an attribute changes",
 	SAVE_ERROR: "Could not save preset",
+
+	LOCAL_GRAPH_FILE: "Local graph file",
+	LOCAL_GRAPH_FILE_PLACEHOLDER: "path/to/file",
+	LOCAL_GRAPH_FILE_DESCRIPTION: "The preset will be bound to this file",
+	PRESET_SETTINGS: "Preset settings",
+	UNLINK_LOCAL_PRESET: "Unlink ",
+
+	GLOBAL_FILTER: "Global filter",
+	GLOBAL_FILTER_DESCRIPTION:
+		"A filter that will be appended to all search queries",
+	GLOBAL_FILTER_PLACEHOLDER: "-path: graph-presets",
 };
