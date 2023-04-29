@@ -81,12 +81,13 @@ export class GraphPresets extends Plugin {
 	private registerMonkeyPatches() {
 		// inspired from https://github.com/zsviczian/obsidian-excalidraw-plugin/blob/da89e32213be8cb21ec8e0705ab5d5f8bcbac3dc/src/main.ts#L259
 		this.register(around(WorkspaceLeaf.prototype, { setViewState }));
-
-		this.register(
-			around((app as any).internalPlugins.plugins.starred.instance, {
-				onItemsChanged,
-			})
-		);
+		const starred = (app as any).internalPlugins.plugins.starred;
+		if (starred && starred.instance)
+			this.register(
+				around(starred.instance, {
+					onItemsChanged,
+				})
+			);
 	}
 
 	private registerViews() {
