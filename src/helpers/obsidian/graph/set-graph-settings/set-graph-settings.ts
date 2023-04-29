@@ -30,16 +30,20 @@ export const setGraphSettings = async ({
 		const localGraphFile = state.presets.meta[dto.created].localGraphFile;
 		leaf = await obsidian.graph.open(localGraphFile);
 	}
-	settings.search = settings.search?.replace(/\n/g, " ");
-	if (state.preferences.globalFilter) {
-		settings.search = `${(settings.search || "").trim()} ${
-			state.preferences.globalFilter
-		}`;
+	if (settings.search) {
+		settings.search = settings.search?.replace(/\n/g, " ");
+		if (state.preferences.globalFilter) {
+			settings.search = `${settings.search.trim()} ${
+				state.preferences.globalFilter
+			}`;
+		}
 	}
-	settings.colorGroups = settings.colorGroups?.map((c) => ({
-		...c,
-		query: c.query.replace(/\n/g, " "),
-	}));
+	if (settings.colorGroups) {
+		settings.colorGroups = settings.colorGroups?.map((c) => ({
+			...c,
+			query: c.query.replace(/\n/g, " "),
+		}));
+	}
 	app.workspace.revealLeaf(leaf);
 	await setGraphSettingsToView({ leaf, settings, group });
 };
