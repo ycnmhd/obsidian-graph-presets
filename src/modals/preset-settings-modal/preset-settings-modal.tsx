@@ -65,6 +65,19 @@ export class PresetSettingsModal extends Modal {
 					});
 				});
 			});
+
+		new Setting(verticalTabContent)
+			.setName(t.c.AUTO_BIND_PRESET)
+			.setDesc(t.c.AUTO_BIND_PRESET_DESCRIPTION)
+			.addToggle((cb) => {
+				cb.setValue(!preset.disableAutoBindToLocalGraph).onChange(
+					(e) => {
+						ac.toggleAutoBindToLocalGraph({
+							created: this.dto.created,
+						});
+					}
+				);
+			});
 	}
 
 	onClose() {

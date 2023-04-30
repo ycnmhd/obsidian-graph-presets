@@ -2,6 +2,7 @@ export type PersistedPresetMeta = {
 	applied?: number;
 	disableAutoApply?: boolean;
 	localGraphFile?: number;
+	disableAutoBindToLocalGraph?: boolean;
 };
 
 export type SortMode =
@@ -32,6 +33,7 @@ export type PluginSettings = {
 		restoreZoom: boolean;
 		restoreCollapsedState: boolean;
 		globalFilter: string;
+		disableAutoBindToLocalGraph: boolean;
 	};
 };
 
@@ -54,5 +56,6 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 		restoreZoom: true,
 		restoreCollapsedState: false,
 		globalFilter: "",
+		disableAutoBindToLocalGraph: false,
 	},
 };

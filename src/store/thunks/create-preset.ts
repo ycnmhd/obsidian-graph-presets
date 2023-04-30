@@ -45,6 +45,8 @@ export const createPresetThunk = createAsyncThunk(
 			path: newFile.path,
 			name: newFile.basename,
 			dontOpenAfterCreation,
+			disableAutoBindToLocalGraph:
+				store.preferences.disableAutoBindToLocalGraph,
 		};
 	}
 );

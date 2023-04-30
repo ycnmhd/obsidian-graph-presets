@@ -63,7 +63,7 @@ export const en = {
 	LOCAL_GRAPH: "Local graph",
 	GLOBAL_GRAPH: "Global graph",
 	SELECT: "Select",
-	AUTO_APPLY: "Auto-apply",
+	AUTO_APPLY: "Auto apply to current graph",
 	AUTO_APPLY_DESCRIPTION:
 		"Automatically apply preset when an attribute changes",
 	SAVE_ERROR: "Could not save preset",
@@ -78,4 +78,7 @@ export const en = {
 	GLOBAL_FILTER_DESCRIPTION:
 		"A filter that will be appended to all search queries",
 	GLOBAL_FILTER_PLACEHOLDER: "-path: graph-presets",
+	AUTO_BIND_PRESET: "Auto bind to local graph file",
+	AUTO_BIND_PRESET_DESCRIPTION:
+		"Automatically bind preset to local graph file",
 };

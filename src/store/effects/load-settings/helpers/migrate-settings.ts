@@ -71,6 +71,7 @@ export const migrations = {
 				restoreZoom: true,
 				restoreCollapsedState: false,
 				globalFilter: "",
+				disableAutoBindToLocalGraph: false,
 			},
 			data: {
 				presets: Object.fromEntries(

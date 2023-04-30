@@ -36,6 +36,13 @@ export const presetsSlice = createSlice({
 			state.meta[dto.created].disableAutoApply =
 				!state.meta[dto.created].disableAutoApply;
 		},
+		toggleAutoBindToLocalGraph: (
+			state,
+			{ payload: dto }: PayloadAction<GetPresetDTO>
+		) => {
+			state.meta[dto.created].disableAutoBindToLocalGraph =
+				!state.meta[dto.created].disableAutoBindToLocalGraph;
+		},
 		setLocalFile: (
 			state,
 			{
@@ -98,6 +105,8 @@ export const presetsSlice = createSlice({
 				state.meta[dto.created] = {
 					applied: 0,
 					created: dto.created,
+					disableAutoBindToLocalGraph:
+						dto.disableAutoBindToLocalGraph,
 				};
 				filesByCtime.current[dto.created] =
 					app.vault.getAbstractFileByPath(dto.path) as TFile;

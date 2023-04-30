@@ -32,6 +32,8 @@ export const refreshCacheThunk = createAsyncThunk(
 						disableAutoApply: meta?.disableAutoApply,
 						created: f.stat.ctime,
 						localGraphFile: meta?.localGraphFile,
+						disableAutoBindToLocalGraph:
+							meta?.disableAutoBindToLocalGraph,
 					},
 				] satisfies [number, MarkdownPresetMeta];
 			})

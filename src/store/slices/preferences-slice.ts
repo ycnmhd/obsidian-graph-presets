@@ -29,6 +29,8 @@ export const preferencesSlice = createSlice({
 			state.restoreCollapsedState =
 				action.payload.preferences.restoreCollapsedState;
 			state.globalFilter = action.payload.preferences.globalFilter || "";
+			state.disableAutoBindToLocalGraph =
+				action.payload.preferences.disableAutoBindToLocalGraph;
 		},
 		setPresetsFolder: (state, action: PayloadAction<string>) => {
 			state.presetsFolder = action.payload;
@@ -51,6 +53,12 @@ export const preferencesSlice = createSlice({
 		},
 		setGlobalFilter: (state, action: PayloadAction<string>) => {
 			state.globalFilter = action.payload.trim();
+		},
+		setDisableAutoBindToLocalGraph: (
+			state,
+			action: PayloadAction<boolean>
+		) => {
+			state.disableAutoBindToLocalGraph = action.payload;
 		},
 	},
 });

@@ -74,5 +74,19 @@ export class SettingsView extends PluginSettingTab {
 					}
 				);
 			});
+
+		containerEl.createEl("h2", {
+			text: "Default values of preset settings",
+		});
+		new Setting(containerEl)
+			.setName(t.c.AUTO_BIND_PRESET)
+			.setDesc(t.c.AUTO_BIND_PRESET_DESCRIPTION)
+			.addToggle((cb) => {
+				cb.setValue(
+					!store.preferences.disableAutoBindToLocalGraph
+				).onChange((e) => {
+					ac.setDisableAutoBindToLocalGraph(!e);
+				});
+			});
 	}
 }

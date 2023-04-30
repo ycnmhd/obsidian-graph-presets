@@ -19,6 +19,8 @@ const mapStoreToSettings = (
 			restoreZoom: store.preferences.restoreZoom,
 			restoreCollapsedState: store.preferences.restoreCollapsedState,
 			globalFilter: store.preferences.globalFilter,
+			disableAutoBindToLocalGraph:
+				store.preferences.disableAutoBindToLocalGraph,
 		},
 		data: {
 			presets: Object.fromEntries(
@@ -35,6 +37,10 @@ const mapStoreToSettings = (
 								}),
 								...(value.localGraphFile && {
 									localGraphFile: value.localGraphFile,
+								}),
+								...(value.disableAutoBindToLocalGraph && {
+									disableAutoBindToLocalGraph:
+										value.disableAutoBindToLocalGraph,
 								}),
 							} satisfies PersistedPresetMeta,
 						] as const;
@@ -70,7 +76,9 @@ listenerMiddleware.startListening({
 		acu.applyPreset.fulfilled,
 		acu.setRestoreZoom,
 		acu.setRestoreCollapsedState,
-		acu.setGlobalFilter
+		acu.setGlobalFilter,
+		acu.setDisableAutoBindToLocalGraph,
+		acu.toggleAutoBindToLocalGraph
 	),
 	effect: saveSettings,
 });
