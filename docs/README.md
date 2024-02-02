@@ -8,14 +8,15 @@ Markdown-based graph controls.
 
 ## Installation
 
-This plugin is currently in beta and cannot be installed through the community plugin store.
+This plugin cannot currently be installed through the community plugin store..
 
-### Installing the plugin using BRAT
-[Quick Guide for using BRA](https://github.com/TfTHacker/obsidian42-brat#Quick-Guide-for-using-BRAT).
+### Installing the plugin using BRAT (recommended)
+[Quick Guide for using BRA](https://github.com/TfTHacker/obsidian42-brat/tree/ac60154446f64ecfb950fa068a8bc1c14f8bdbbe?tab=readme-ov-file#adding-a-beta-plugin).
 
 ### Manually installing the plugin
 
 - Download `main.js`, `styles.css`  and `manifest.json` from [obsidian-graph-presets/releases](https://github.com/ycnmhd/obsidian-graph-presets/releases) to your vault `vault/.obsidian/plugins/obsidian-graph-presets/`.
+- Refresh the `community plugins list` in `Obsidian`, and enable the `obsidian-graph-presets` plugin.
 
 
 ## Usage
