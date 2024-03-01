@@ -20,17 +20,15 @@ export const preferencesSlice = createSlice({
 	initialState,
 	reducers: {
 		loadSettings: (state, action: PayloadAction<PluginSettings>) => {
-			state.enablePresetCommands =
-				action.payload.preferences.enablePresetCommands;
-			state.markdownPresets = action.payload.preferences.markdownPresets;
-			state.presetsFolder = action.payload.preferences.presetsFolder;
-			state.sortBy = action.payload.preferences.sortBy;
-			state.restoreZoom = action.payload.preferences.restoreZoom;
-			state.restoreCollapsedState =
-				action.payload.preferences.restoreCollapsedState;
-			state.globalFilter = action.payload.preferences.globalFilter || "";
-			state.disableAutoBindToLocalGraph =
-				action.payload.preferences.disableAutoBindToLocalGraph;
+			const preferences = action.payload.preferences;
+			state.enablePresetCommands = preferences.enablePresetCommands;
+			state.markdownPresets = preferences.markdownPresets;
+			state.presetsFolder = preferences.presetsFolder;
+			state.sortBy = preferences.sortBy;
+			state.restoreZoom = preferences.restoreZoom;
+			state.restoreCollapsedState = preferences.restoreCollapsedState;
+			state.globalFilter = preferences.globalFilter || "";
+			state.autoApplyPreset = preferences.autoApplyPreset;
 		},
 		setPresetsFolder: (state, action: PayloadAction<string>) => {
 			state.presetsFolder = action.payload;
@@ -54,11 +52,8 @@ export const preferencesSlice = createSlice({
 		setGlobalFilter: (state, action: PayloadAction<string>) => {
 			state.globalFilter = action.payload.trim();
 		},
-		setDisableAutoBindToLocalGraph: (
-			state,
-			action: PayloadAction<boolean>
-		) => {
-			state.disableAutoBindToLocalGraph = action.payload;
+		setAutoApplyPreset: (state, action: PayloadAction<boolean>) => {
+			state.autoApplyPreset = action.payload;
 		},
 	},
 });

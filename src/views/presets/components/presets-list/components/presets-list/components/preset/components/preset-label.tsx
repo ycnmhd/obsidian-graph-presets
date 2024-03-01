@@ -6,8 +6,7 @@ import { rtf1, t } from "src/lang/text";
 import { ApplyPreset } from "./apply-preset";
 import { PresetViewType } from "src/views/preset/preset-view";
 import { useAppSelector } from "src/store/hooks";
-import { Star } from "src/assets/svg/lucid/star";
-import { filesByCtime } from "../../../../../../../../../store/cache/files-by-time";
+import { filesByCtime } from "src/store/cache/files-by-time";
 import { getPresetDisplayText } from "src/views/preset/helpers/get-preset-display-text";
 
 const relativeTime = (updated: number) => {
@@ -34,12 +33,9 @@ type Props = {
 };
 
 export const PresetLabel: React.FC<Props> = ({ meta }) => {
-	const starred = useAppSelector((state) => state.presets.starredPresets);
 	const active = useAppSelector((state) => state.presets.activePreset);
 	const preset = filesByCtime.current[meta.created];
-	const star = starred[meta.created] && (
-		<Star width={12} fill={"#facc15"} color={"#facc15"} />
-	);
+
 	const name = (
 		<span className="nav-file-title-content text-md ">
 			{getPresetDisplayText(meta)}
@@ -91,9 +87,19 @@ export const PresetLabel: React.FC<Props> = ({ meta }) => {
 			onMouseEnter={onMouseEnter}
 			ref={ref}
 		>
-			<div className="flex gap-1 items-center" aria-label={label}>
-				{name}
-				{star}
+			<div className="flex gap-2 items-center" aria-label={label}>
+				<span>{name}</span>
+				{meta.target === "local" ? (
+					<span
+						style={{
+							color: "var(--text-on-accent)",
+							backgroundColor: "var(--interactive-accent)",
+						}}
+						className={"px-1 rounded-b-sm"}
+					>
+						local
+					</span>
+				) : undefined}
 			</div>
 			<ApplyPreset meta={meta} />
 		</div>

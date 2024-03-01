@@ -1,4 +1,4 @@
-import { WorkspaceLeaf } from "obsidian";
+import { Notice, WorkspaceLeaf } from "obsidian";
 import { graphSettingsGroup } from "src/types/apply-preset";
 import { GetPresetDTO } from "src/helpers/get-preset";
 import { obsidian } from "src/helpers/obsidian/obsidian";
@@ -27,8 +27,23 @@ export const setGraphSettings = async ({
 			return;
 		}
 
-		const localGraphFile = state.presets.meta[dto.created].localGraphFile;
-		leaf = await obsidian.graph.open(localGraphFile);
+		let localGraphFile: number | undefined = undefined;
+
+		const presetSettings = state.presets.meta[dto.created];
+		if (presetSettings.localGraphFile) {
+			localGraphFile = presetSettings.localGraphFile;
+		} else if (presetSettings.target === "local") {
+			const activeFile = app.workspace.getActiveFile();
+			if (activeFile) localGraphFile = activeFile?.stat.ctime;
+		}
+		if (localGraphFile) leaf = await obsidian.graph.open(localGraphFile);
+		else {
+			await obsidian.graph.open();
+		}
+	}
+	if (!leaf) {
+		new Notice("Could not find a graph");
+		return;
 	}
 	if (settings.search) {
 		settings.search = settings.search?.replace(/\n/g, " ");

@@ -19,8 +19,7 @@ const mapStoreToSettings = (
 			restoreZoom: store.preferences.restoreZoom,
 			restoreCollapsedState: store.preferences.restoreCollapsedState,
 			globalFilter: store.preferences.globalFilter,
-			disableAutoBindToLocalGraph:
-				store.preferences.disableAutoBindToLocalGraph,
+			autoApplyPreset: store.preferences.autoApplyPreset,
 		},
 		data: {
 			presets: Object.fromEntries(
@@ -32,22 +31,15 @@ const mapStoreToSettings = (
 								...(value.applied && {
 									applied: value.applied,
 								}),
-								...(value.disableAutoApply && {
-									disableAutoApply: value.disableAutoApply,
-								}),
 								...(value.localGraphFile && {
 									localGraphFile: value.localGraphFile,
 								}),
-								...(value.disableAutoBindToLocalGraph && {
-									disableAutoBindToLocalGraph:
-										value.disableAutoBindToLocalGraph,
-								}),
+								target: value.target,
 							} satisfies PersistedPresetMeta,
 						] as const;
 					})
 					.filter(
-						([, p]) =>
-							p.disableAutoApply || p.applied || p.localGraphFile
+						([, p]) => p.applied || p.localGraphFile || p.target
 					)
 			),
 		},
@@ -69,7 +61,6 @@ listenerMiddleware.startListening({
 		acu.setPresetsFolder,
 		acu.setEnablePresetCommands,
 		acu.setSortBy,
-		acu.toggleAutoApply,
 		acu.updateFileMeta,
 		acu.setLocalFile,
 		acu.createPreset.fulfilled,
@@ -77,8 +68,8 @@ listenerMiddleware.startListening({
 		acu.setRestoreZoom,
 		acu.setRestoreCollapsedState,
 		acu.setGlobalFilter,
-		acu.setDisableAutoBindToLocalGraph,
-		acu.toggleAutoBindToLocalGraph
+		acu.setPresetTarget,
+		acu.setAutoApplyPreset
 	),
 	effect: saveSettings,
 });

@@ -33,7 +33,7 @@ listenerMiddleware.startListening({
 			}
 
 			const store = api.getState() as RootState;
-			if (!store.presets.meta[created].disableAutoApply)
+			if (store.preferences.autoApplyPreset)
 				await obsidian.graph.setSettings({
 					settings: {
 						[name]: value,
