@@ -1,8 +1,8 @@
+export type PresetTarget = "local" | "global";
 export type PersistedPresetMeta = {
 	applied?: number;
-	disableAutoApply?: boolean;
 	localGraphFile?: number;
-	disableAutoBindToLocalGraph?: boolean;
+	target: PresetTarget;
 };
 
 export type SortMode =
@@ -29,11 +29,11 @@ export type PluginSettings = {
 			inlineSearchQuery: boolean;
 			inlineColorGroups: boolean;
 		};
+		autoApplyPreset: boolean;
 		enablePresetCommands: boolean;
 		restoreZoom: boolean;
 		restoreCollapsedState: boolean;
 		globalFilter: string;
-		disableAutoBindToLocalGraph: boolean;
 	};
 };
 
@@ -52,10 +52,10 @@ export const DEFAULT_SETTINGS: PluginSettings = {
 			inlineSearchQuery: false,
 			inlineColorGroups: false,
 		},
+		autoApplyPreset: true,
 		enablePresetCommands: false,
 		restoreZoom: true,
 		restoreCollapsedState: false,
 		globalFilter: "",
-		disableAutoBindToLocalGraph: false,
 	},
 };

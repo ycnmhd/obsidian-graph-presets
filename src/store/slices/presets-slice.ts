@@ -1,5 +1,5 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { MarkdownPresetMeta } from "src/graph-presets";
 import { GetPresetDTO } from "src/helpers/get-preset";
 import { applyPresetThunk } from "../thunks/apply-preset";
@@ -8,7 +8,8 @@ import { TFile } from "obsidian";
 import { createPresetThunk } from "../thunks/create-preset";
 import { refreshCacheThunk } from "../thunks/refresh-cache";
 import { duplicatePresetThunk } from "../thunks/duplicate-preset";
-import { fileIsPreset } from "../../helpers/file-is-preset";
+import { fileIsPreset } from "src/helpers/file-is-preset";
+import { PresetTarget } from "src/types/settings/settings";
 
 export const fileEvents = ["modify", "delete", "rename"] as const;
 export type FileEvent = typeof fileEvents[number];
@@ -29,19 +30,16 @@ export const presetsSlice = createSlice({
 	name: "presets",
 	initialState,
 	reducers: {
-		toggleAutoApply: (
+		setPresetTarget: (
 			state,
-			{ payload: dto }: PayloadAction<GetPresetDTO>
+			{
+				payload: dto,
+			}: PayloadAction<GetPresetDTO & { target: PresetTarget }>
 		) => {
-			state.meta[dto.created].disableAutoApply =
-				!state.meta[dto.created].disableAutoApply;
-		},
-		toggleAutoBindToLocalGraph: (
-			state,
-			{ payload: dto }: PayloadAction<GetPresetDTO>
-		) => {
-			state.meta[dto.created].disableAutoBindToLocalGraph =
-				!state.meta[dto.created].disableAutoBindToLocalGraph;
+			state.meta[dto.created].target = dto.target;
+			if (dto.target === "global") {
+				delete state.meta[dto.created].localGraphFile;
+			}
 		},
 		setLocalFile: (
 			state,
@@ -92,8 +90,7 @@ export const presetsSlice = createSlice({
 			state.meta[dto.created].applied = Date.now();
 		});
 		builder.addCase(refreshCacheThunk.fulfilled, (state, action) => {
-			const meta = action.payload;
-			state.meta = meta;
+			state.meta = action.payload;
 		});
 		builder.addMatcher(
 			isAnyOf(
@@ -105,8 +102,7 @@ export const presetsSlice = createSlice({
 				state.meta[dto.created] = {
 					applied: 0,
 					created: dto.created,
-					disableAutoBindToLocalGraph:
-						dto.disableAutoBindToLocalGraph,
+					target: "global",
 				};
 				filesByCtime.current[dto.created] =
 					app.vault.getAbstractFileByPath(dto.path) as TFile;

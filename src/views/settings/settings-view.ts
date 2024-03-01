@@ -29,7 +29,14 @@ export class SettingsView extends PluginSettingTab {
 						}
 					});
 			});
-
+		new Setting(containerEl)
+			.setName(t.c.AUTO_APPLY)
+			.setDesc(t.c.AUTO_APPLY_DESCRIPTION)
+			.addToggle((cb) => {
+				cb.setValue(store.preferences.autoApplyPreset).onChange((e) => {
+					ac.setAutoApplyPreset(e);
+				});
+			});
 		new Setting(containerEl)
 			.setName(t.c.GLOBAL_FILTER)
 			.setDesc(t.c.GLOBAL_FILTER_DESCRIPTION)
@@ -78,15 +85,5 @@ export class SettingsView extends PluginSettingTab {
 		containerEl.createEl("h2", {
 			text: "Default values of preset settings",
 		});
-		new Setting(containerEl)
-			.setName(t.c.AUTO_BIND_PRESET)
-			.setDesc(t.c.AUTO_BIND_PRESET_DESCRIPTION)
-			.addToggle((cb) => {
-				cb.setValue(
-					!store.preferences.disableAutoBindToLocalGraph
-				).onChange((e) => {
-					ac.setDisableAutoBindToLocalGraph(!e);
-				});
-			});
 	}
 }

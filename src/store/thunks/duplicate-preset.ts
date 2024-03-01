@@ -20,8 +20,7 @@ export const duplicatePresetThunk = createAsyncThunk(
 			created: newFile.stat.ctime,
 			path: newFile.path,
 			name: newFile.basename,
-			disableAutoBindToLocalGraph:
-				store.presets.meta[created].disableAutoBindToLocalGraph,
+			target: store.presets.meta[created].target,
 		};
 	}
 );

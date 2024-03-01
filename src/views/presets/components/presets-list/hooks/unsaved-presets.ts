@@ -5,12 +5,14 @@ export type PresetsViewState = {
 	unsavedPresets: Omit<MarkdownPresetMeta, "file">[];
 };
 
-type ActionName = "createPreset" | "deletePreset";
-
-type Action = {
-	type: ActionName;
-	payload?: number;
-};
+type Action =
+	| {
+			type: "deletePreset";
+			payload: { id: number };
+	  }
+	| {
+			type: "createPreset";
+	  };
 
 const reducer = (state: PresetsViewState, action: Action): PresetsViewState => {
 	switch (action.type) {
@@ -22,6 +24,7 @@ const reducer = (state: PresetsViewState, action: Action): PresetsViewState => {
 					{
 						created: ts,
 						applied: 0,
+						target: "global",
 					},
 					...state.unsavedPresets,
 				],
@@ -34,7 +37,7 @@ const reducer = (state: PresetsViewState, action: Action): PresetsViewState => {
 			return {
 				...state,
 				unsavedPresets: state.unsavedPresets.filter(
-					(preset) => preset.created !== action.payload
+					(preset) => preset.created !== action.payload.id
 				),
 			};
 		}
@@ -51,7 +54,7 @@ export const useUnsavedPresets = () => {
 	};
 
 	const deletePreset = (createdTs: number) => {
-		dispatch({ type: "deletePreset", payload: createdTs });
+		dispatch({ type: "deletePreset", payload: { id: createdTs } });
 	};
 
 	return {
