@@ -26,7 +26,7 @@ export const GroupContainer: React.FC<Props> = ({
 }) => {
 	const collapsed = useAppSelector(
 		(state) => state.preset.presets[created][collapsedStateKeys[group]]
-	);
+	) as boolean;
 
 	return (
 		<div
@@ -54,6 +54,7 @@ export const GroupContainer: React.FC<Props> = ({
 						value: !collapsed,
 					});
 				}}
+				collapsed={collapsed}
 			/>
 
 			<AnimateHeight

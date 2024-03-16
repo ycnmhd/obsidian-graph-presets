@@ -24,7 +24,11 @@ export const SearchInput: React.FC = () => {
 	return (
 		<div
 			className="search-input-container"
-			style={{ height: searchInputHeight }}
+			style={{
+				height: searchInputHeight,
+				marginInlineStart: 8,
+				marginInlineEnd: 8,
+			}}
 		>
 			<input
 				enterKeyHint="search"
